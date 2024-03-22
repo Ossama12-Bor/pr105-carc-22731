@@ -16,8 +16,8 @@ build: server client deck.o
 server:
 
 client:
-	gcc -fPIC -shared -o libplayer1.so player1.c -L install
-	gcc -fPIC -shared -o libplayer2.so player2.c -L install
+	gcc -fPIC -shared -o install/libplayer1.so src/players/player1.c -L install
+#	gcc -fPIC -shared -o libplayer2.so src/players/player2.c -L install
 
 alltests:
 
