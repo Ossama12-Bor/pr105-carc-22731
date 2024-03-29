@@ -7,8 +7,10 @@
 /* Structure to manipulate a player */
 struct player_t{
   int player_id;
-  struct gameconfig_t gamemode;
+  struct board_t* myboard;
+  unsigned int n_meeples;
   char* name;
+  int score;
 };
 
 /* Returns the player's id */

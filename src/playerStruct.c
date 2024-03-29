@@ -5,7 +5,7 @@ int get_player_id(struct player_t* p){
 }
 
 unsigned int get_player_meeples(struct player_t* p){
-  return p->;
+  return p->n_meeples;
 }
 
 void update_player_board(struct player_t* p,struct move_t m){
