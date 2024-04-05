@@ -12,13 +12,11 @@ enum direction_t {
 
 
 /* Returns a tile's colors */
-enum color_t* get_tile_colors(struct tile_t* t){
-  return t->c;
-}
+int same_colors(int *t1,int *t2,int n);
 
-enum color_t* get_tile_side(struct tile_t* t,enum direction d){
-  
-}
+enum color_t* get_tile_colors(struct tile_t* t);
+
+enum color_t* get_tile_side(struct tile_t* t,enum direction_t d);
 
 /* Checks if two tiles have compatible colors */
 int check_compatible_colors(struct tile_t* t1,struct tile_t* t2,enum direction_t d1,
