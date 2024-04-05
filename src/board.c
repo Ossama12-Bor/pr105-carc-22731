@@ -25,7 +25,7 @@ struct case__t get_cord(struct board_t board, int id){
 	if (t[i][j].id == id) return t[i][j];
       }
   }
-  struct case__t c = {.x=-1,.y=-1,.id=-1,id_is_available=-1};
+  struct case__t c = {.x=-1,.y=-1,.id=-1,is_available_available=-1};
   return c;
 }
 
@@ -72,10 +72,25 @@ struct board_t *Initialize_board(){
 	}
 	return board;
 }
- 
+void change_neighbours(struct board_t* board,struct case_t coord){
+  int d[][] ={{-1,0},{1,0},{0,-1},{0,1}};
+  int x = coord.x, y = coord.y;
+  for(int i=0;i<4;i++){
+    assert(x+d[i][0] >= 0 && x+d[i][0]<2*NUM_TILES &&
+	   y+d[i][1] >= 0 && y+d[i][1]<2*NUM_TILES);
+    struct case_t* case_ = get_case(board,x+d[i][0],y+d[i][1]);
+    if (case_->is_available_id == 0) {
+    case_->is_available_id = 1;
+    // AddList(empty,case_) when list is impleme
+    }
+    }
+  }
+}
 int add_tile(struct board_t *board,struct case_t coord ){
-	board->t[coord.y][corrd.x]=coord.id;
+	board->t[coord.y][corrd.x]=coord;
 	board->size+=1;
+	change_neighbours(board,coord);
+	// removeList(coord,get_empty(board))
 	return 1;
 }
 

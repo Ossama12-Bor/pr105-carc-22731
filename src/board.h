@@ -8,19 +8,32 @@ struct board_t;
 struct case_t{
   int x,y,id,is_available_id;
 };
-  
+
+
 struct deck_t*generate_deck(int seed);
 
 struct board_t *Initialize_board();
 
+//Get empty cases where we are allowed to add new cases
+
 struct case_t *get_empty_sides(struct board_t *board);
+
+//Same but only cases matching the tile : id
 
 struct case_t*get_possible_moves(struct board_t*board,int id);
 
+//Get the case of coordinates (x,y) in the board
 
 struct case_t *get_case(struct board_t* board,int x,int y);
 
+//Get how many tiles are there in the board
+
 int get_size_board(struct board_t *board);
+
+//adjust the field of the is_available_id of the empty adjacent cases to coord
+
+void change_neighbours(struct board_t* board,struct case_t coord);
+
 
 int add_tile(struct board_t *board, int id, struct case_t case_);
 
