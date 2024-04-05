@@ -11,9 +11,25 @@ const struct tile_t TILE_TYPES = {CARC_TILE_EMPTY,
 				  CARC_TILE_TINI};
 
 struct board_t{
-  struct case_t *t[2*NUM_TILES][2*NUM_TILES];
+  struct case_t t[2*NUM_TILES][2*NUM_TILES];
+  struct case_t *empty;
   int size;
 };
+struct case_t *get_empty(struct board_t *board){
+  return board->empty;
+  
+}
+struct case__t get_cord(struct board_t board, int id){
+  for (int i = 0; i< 2*NUM_TILES ; ++i){
+    for (int j = 0 ; j < 2*NUM_TILES; ++j){
+	if (t[i][j].id == id) return t[i][j];
+      }
+  }
+  struct case__t c = {.x=-1,.y=-1,.id=-1,id_is_available=-1};
+  return c;
+}
+
+
 struct deck_t* generate_deck(int n,int seed){
   struct deck_t* mydeck = deck_empty(NUM_TILES);
   srand(seed);
