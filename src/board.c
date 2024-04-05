@@ -14,82 +14,6 @@ struct board_t{
   struct case_t *t[2*NUM_TILES][2*NUM_TILES];
   int size;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 struct deck_t* generate_deck(int n,int seed){
   struct deck_t* mydeck = deck_empty(NUM_TILES);
   srand(seed);
@@ -120,5 +44,25 @@ void print_board(struct board_t* board, char* prefix){
     }
   }
 }
+struct board_t *Initialize_board(){
+	struct board_t *board=malloc(sizeof(*board));
+	board->size=0;
+	for(int i=0;i<NUM_TILES;i++){
+		for(int j=0;j<NUM_TILES;j++){
+			board->t[i][j].id=-1;
+			board->t[i][j].x=-1;
+			board->t[i][j].y=-1;	
+		}
+	}
+	return board;
+}
+ 
+int add_tile(struct board_t *board,struct case_t coord ){
+	board->t[coord.y][corrd.x]=coord.id;
+	board->size+=1;
+	return 1;
+}
+
+void free(struct board_t *board);
 
  
