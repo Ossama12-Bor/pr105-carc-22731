@@ -1,20 +1,9 @@
 #include "board.h"
 
+#define NUM_TILES 72
+struct board_t{
+  struct case_t *t[2*NUM_TILES][2*NUM_TILES];
+  int size;
+};
 
-Initialize_board(){
-}
-is_empty(x,y,board){
-}  
-get_available_sides(board){
-  struct tuile tableau;
-  get_available_side(tuile);
-  fill_table(tableau);
-  return tableau;
-}
-add_tile(board,deck,Tile){
-  tableau = get_available_sides();
-  x,y = pick_side(tableau);
-  remove_from_deck(deck,tile);
-  fill_board(board,x,y);
-}
-
+ 
