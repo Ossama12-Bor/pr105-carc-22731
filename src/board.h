@@ -6,14 +6,17 @@
 struct board_t;
 
 struct case_t{
-  int x,y,id;
+  int x,y,id,is_available_id;
 };
   
 struct deck_t*generate_deck(int seed);
 
 struct board_t *Initialize_board();
 
-struct case_t *get_available_sides(struct board_t *board);
+struct case_t *get_empty_sides(struct board_t *board);
+
+struct case_t*get_possible_moves(struct board_t*board,int id);
+
 
 struct case_t *get_case(struct board_t* board,int x,int y);
 
