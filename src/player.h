@@ -22,7 +22,7 @@ char const* get_player_name();
  * - `config` contains a `struct deck_t` that is heap-allocated and it
  *    is up to you (the player) to free it before the end of the program
  */
-void initialize(unsigned int player_id, const struct move_t first_move,
+void initialize(enum player_color_t player_id , const struct move_t first_move,
                 struct gameconfig_t config);
 
 /* Computes next move

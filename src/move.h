@@ -7,7 +7,7 @@
 
 // The player ids
 #define NUM_PLAYERS 2
-enum player_color_t { BLACK=0, WHITE=1 };
+enum player_color_t { BLACK=0, WHITE=1 ,server=-1};
 
 // The game modes
 enum gamemode_t {
