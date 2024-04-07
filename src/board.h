@@ -26,7 +26,7 @@ struct case_t*get_possible_moves(struct board_t*board,int id);
 
 //Get the case of coordinates (x,y) in the board
 
-struct case_t *get_case(struct board_t* board,int x,int y);
+struct case_t get_case(struct board_t* board,int x,int y);
 
 //Get how many tiles are there in the board
 

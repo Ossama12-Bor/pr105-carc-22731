@@ -1,6 +1,7 @@
 #include "board.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "liste.h"
 
 #define NUM_TILES 72
 #define NUM_TILE_TYPES 5
@@ -12,21 +13,21 @@ const struct tile_t TILE_TYPES[] = {CARC_TILE_EMPTY,
 
 struct board_t{
   struct case_t t[2*NUM_TILES][2*NUM_TILES];
-  struct case_t *empty;
+  struct set *empty;
   int size;
 };
 
 void case_print(struct case_t box){
     printf("{%d,%d,%d,%d}",box.x,box.y,box.id,box.is_available_id);
 }
-/*struct case_t *get_empty(struct board_t *board){
+struct set*get_empty(struct board_t *board){
   return board->empty;
   
 }
-struct case__t get_cord(struct board_t board, int id){
+struct case__t get_cord(struct board_t *board, int id){
   for (int i = 0; i< 2*NUM_TILES ; ++i){
     for (int j = 0 ; j < 2*NUM_TILES; ++j){
-	if (t[i][j].id == id) return t[i][j];
+	if (board->t[i][j].id == id) return t[i][j];
       }
   }
   struct case__t c = {.x=-1,.y=-1,.id=-1,is_available_id=-1};
@@ -47,11 +48,11 @@ int get_size_board(struct board_t *board){
   return board->size;
 }
 
-struct case_t* get_case(struct board_t* board,int x,int y){
-  return &(board->t[x][y]);
+struct case_t get_case(struct board_t* board,int x,int y){
+  return board->t[x][y];
 }
 
-void print_case(struct case_t* case_, char* prefix){
+void print_case(struct case_t case_, char* prefix){
   printf("(%d,%d) has id %d",case_.x,case_.y,case_.id); 
 }
 
@@ -100,5 +101,4 @@ int add_tile(struct board_t *board,struct case_t coord ){
 
 void free(struct board_t *board);
 
- */
 
