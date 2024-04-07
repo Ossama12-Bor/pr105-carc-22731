@@ -4,7 +4,7 @@
 
 #define NUM_TILES 72
 #define NUM_TILE_TYPES 5
-const struct tile_t TILE_TYPES = {CARC_TILE_EMPTY,
+const struct tile_t TILE_TYPES[] = {CARC_TILE_EMPTY,
 				  CARC_TILE_INIT,
 				  CARC_TILE_GREEN,
 				  CARC_TILE_XROAD,
@@ -15,7 +15,11 @@ struct board_t{
   struct case_t *empty;
   int size;
 };
-struct case_t *get_empty(struct board_t *board){
+
+void case_print(struct case_t box){
+    printf("{%d,%d,%d,%d}",box.x,box.y,box.id,box.is_available_id);
+}
+/*struct case_t *get_empty(struct board_t *board){
   return board->empty;
   
 }
@@ -25,7 +29,7 @@ struct case__t get_cord(struct board_t board, int id){
 	if (t[i][j].id == id) return t[i][j];
       }
   }
-  struct case__t c = {.x=-1,.y=-1,.id=-1,is_available_available=-1};
+  struct case__t c = {.x=-1,.y=-1,.id=-1,is_available_id=-1};
   return c;
 }
 
@@ -96,4 +100,5 @@ int add_tile(struct board_t *board,struct case_t coord ){
 
 void free(struct board_t *board);
 
- 
+ */
+

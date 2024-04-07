@@ -2,12 +2,14 @@
 #define _BOARD_H_
 
 #include "player.h"
-#include <igraph.h>
+//#include <igraph.h>
 struct board_t;
 
-struct case_t{
+struct case_t {
   int x,y,id,is_available_id;
 };
+
+void case_print(struct case_t box);
 
 
 struct deck_t*generate_deck(int seed);
