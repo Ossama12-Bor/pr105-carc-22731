@@ -9,7 +9,6 @@ struct case_t {
   int x,y,id,is_available_id;
 };
 
-void case_print(struct case_t box);
 
 
 struct deck_t*generate_deck(int seed);
@@ -18,11 +17,15 @@ struct board_t *Initialize_board();
 
 //Get empty cases where we are allowed to add new cases
 
-struct case_t *get_empty_sides(struct board_t *board);
+struct case_t get_empty_sides(struct board_t *board);
+
+int correct_pasting(struct board_t*board,const struct deck_t *deck,struct tile_t tile,struct case_t coord);
 
 //Same but only cases matching the tile : id
 
-struct case_t*get_possible_moves(struct board_t*board,int id);
+struct case_t *get_possible_moves(struct board_t*board,const struct deck_t *deck,struct tile_t tile);
+
+
 
 //Get the case of coordinates (x,y) in the board
 
@@ -34,18 +37,18 @@ int get_size_board(struct board_t *board);
 
 //adjust the field of the is_available_id of the empty adjacent cases to coord
 
-void change_neighbours(struct board_t* board,struct case_t coord);
+void change_neighbours(struct board_t* board,int id);
 
 
 int add_tile(struct board_t *board, int id, struct case_t case_);
 
-struct case_t get_cord(struct board_t board,int id );
+struct case_t get_cord(struct board_t *board,int id );
 
 int is_empty(struct case_t case_,struct board_t* board);
 
 void free_board(struct board_t* board);
 
-void print_case(struct case_t* case_,char* prefix);
+void print_case(struct case_t box);
 
 void print_board(struct board_t *board,char* prefix);
 

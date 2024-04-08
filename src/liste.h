@@ -4,14 +4,18 @@
 #include "board.h"
 struct set;
 
+struct case_t *get_case_array(struct set *se);
+
 // Return a struct set representing the empty set
 struct set * set__empty();
+
+int set_size(const struct set*se);
 
 // Returns non-zero if se is empty, 0 otherwise
 int set__is_empty(const struct set* se);
 
 // Returns non-zero if c belongs to se, 0 otherwise
-//int set__find(const struct set *se, void *c);
+int set__find(const struct set *se, struct case_t box);
 
 // Returns the number of elements in se
 int set__size(const struct set *se);

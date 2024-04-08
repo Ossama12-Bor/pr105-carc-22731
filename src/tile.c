@@ -8,15 +8,15 @@ int same_colors(enum color_t *t1,enum color_t *t2,int n){
 	return 1;
 }
 
-enum color_t *get_tile_colors(struct tile_t *t){
+enum color_t *get_tile_colors(struct tile_t t){
 	return t->c;
 }
-enum color_t *get_tile_side(struct tile_t *t,enum direction_t d ){
+enum color_t *get_tile_side(struct tile_t t,enum direction_t d ){
 	enum color_t*p;
 	for(int i=0;i<VER_NUMBER_PER_SIDE;i++)
 		*(p+i)=t->c[d*VER_NUMBER_PER_SIDE+i];
 	return p;
 }
-int check_compatible_colors(struct tile_t*t1,struct tile_t*t2,enum direction_t d1,enum direction_t d2){
+int check_compatible_colors(struct tile_t t1,struct tile_t t2,enum direction_t d1,enum direction_t d2){
 	return same_colors(get_tile_side(t1,d1),get_tile_side(t2,d2),VER_NUMBER_PER_SIDE);
 }
