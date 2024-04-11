@@ -98,13 +98,6 @@ int borders(struct case_t coord,int d[]){
   return 0;
 }
 
-struct lelement * get_lelement_from_empty(struct set *s, int id_in_empty){
-  struct lelement *e = s->l->head;
-  for (int i = 0; i < id_in_empty; ++i){
-    e = e->next;
-  }
-  return e;
-}
 void change_neighbours(struct board_t* board,int id_in_empty){
   int d[4][2] ={{-1,0},{1,0},{0,-1},{0,1}};
   struct lelement *current_lelement=get_lelement_from_empty(board->empty,id_in_empty);
@@ -148,9 +141,9 @@ struct case_t *get_possible_moves(struct board_t*board,const struct deck_t *deck
 
 }
 
-struct case_t get_optimal_case(struct case_t *case){
+/*struct case_t get_optimal_case(struct case_t *case){
   return case[0];
-}
+}*/
 
 /*int add_tile(struct board_t *board,struct case_t coord ){
 	board->size+=1;

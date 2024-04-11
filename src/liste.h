@@ -17,6 +17,7 @@ struct set{
   struct link *l;
   int size;
 };
+struct lelement * get_lelement_from_empty(struct set *s, int id_in_empty);
 struct link lnk__empty(void) ;
 struct set * set__empty();
 int set_size(struct set *s);

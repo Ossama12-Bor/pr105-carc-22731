@@ -15,6 +15,13 @@ struct set * set__empty(){
   s->size = 0;
   return s;
 }
+struct lelement * get_lelement_from_empty(struct set *s, int id_in_empty){
+  struct lelement *e = s->l->head;
+  for (int i = 0; i < id_in_empty; ++i){
+    e = e->next;
+  }
+  return e;
+}
 
 int set__add_head(struct set *s, struct case_t *add){
   if (add == NULL)
