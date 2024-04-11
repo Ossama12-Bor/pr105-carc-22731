@@ -47,7 +47,7 @@ struct board_t *Initialize_board(){
 	}
   board->t[NUM_TILES-1][NUM_TILES-1].is_available_id=1;
   board->empty=set__empty();
-  set__add(board->empty,board->t[NUM_TILES-1][NUM_TILES-1]);
+  set__add_head(board->empty,&board->t[NUM_TILES-1][NUM_TILES-1]);
 	return board;
 }
 
@@ -98,21 +98,27 @@ int borders(struct case_t coord,int d[]){
   return 0;
 }
 
-
-void change_neighbours(struct board_t* board,int id){
+struct lelement * get_lelement_from_empty(struct set *s, int id_in_empty){
+  struct lelement *e = s->l->head;
+  for (int i = 0; i < id_in_empty; ++i){
+    e = e->next;
+  }
+  return e;
+}
+void change_neighbours(struct board_t* board,int id_in_empty){
   int d[4][2] ={{-1,0},{1,0},{0,-1},{0,1}};
-  struct case_t current_case=get_case_array(board->empty)[id];
+  struct lelement *current_lelement=get_lelement_from_empty(board->empty,id_in_empty);
   for(int i=0;i<4;i++){
-    if(borders(current_case,d[i])){
-      struct case_t box = get_case(board,current_case.x+d[i][0],current_case.y+d[i][1]);
+    if(borders(*current_lelement->data,d[i])){
+      struct case_t box = get_case(board,current_lelement->data->x+d[i][0],current_lelement->data->y+d[i][1]);
       if (box.is_available_id == 0) {
         box.is_available_id = 1;
-        set__add(board->empty,box);
+        set__add_head(board->empty,&box);
       }
     }
   }
-  board->t[current_case.y][current_case.x].is_available_id=0;
-  set__remove(board->empty,id);
+  board->t[current_lelement->data->y][current_lelement->data->x].is_available_id=0;
+  set__remove(board->empty,current_lelement);
 }
 
 int correct_pasting(struct board_t* board, const struct deck_t* deck, struct tile_t tile, struct case_t coord) {
@@ -132,9 +138,9 @@ struct case_t *get_possible_moves(struct board_t*board,const struct deck_t *deck
   struct case_t *new_empty;
   int count=0;
   for(int i=0;i<set_size(board->empty);i++){
-    struct case_t box=get_case_array(board->empty)[i];
-    if(correct_pasting(board,deck,tile,box)){
-      *(new_empty+count)=box;
+    struct lelement *box=get_lelement_from_empty(board->empty,i);
+    if(correct_pasting(board,deck,tile,*box->data)){
+      *(new_empty+count)=*box->data;
       count++;
     }
   }
@@ -142,22 +148,23 @@ struct case_t *get_possible_moves(struct board_t*board,const struct deck_t *deck
 
 }
 
-
+struct case_t get_optimal_case(struct case_t *case){
+  return case[0];
+}
 
 /*int add_tile(struct board_t *board,struct case_t coord ){
-	board->t[coord.y][coord.x]=coord;
 	board->size+=1;
 	change_neighbours(board,coord);
-	// removeList(coord,get_empty(board))
 	return 1;
 }
 
 
 
 
-void free_board(struct board_t *board);
+/*void free_board(struct board_t *board);
 
 
 void print_case(struct case_t box){
   printf("{%d,%d,%d,%d}",box.x,box.y,box.id,box.is_available_id); 
 }*/
+

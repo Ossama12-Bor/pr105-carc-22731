@@ -2,6 +2,7 @@
 #define _BOARD_H_
 
 #include "player.h"
+#include "liste.h"
 //#include <igraph.h>
 struct board_t;
 
@@ -35,14 +36,15 @@ struct case_t get_case(struct board_t* board,int x,int y);
 
 int get_size_board(struct board_t *board);
 
+struct lelement * get_lelement_from_empty(struct set *s, int id_in_empty){
+
 //adjust the field of the is_available_id of the empty adjacent cases to coord
 
-void change_neighbours(struct board_t* board,int id);
+void change_neighbours(struct board_t* board,int id_in_empty);
 
 
 int add_tile(struct board_t *board, int id, struct case_t case_);
-
-struct case_t get_cord(struct board_t *board,int id );
+struct case_t get_cord(struct board_t *board, int id);
 
 int is_empty(struct case_t case_,struct board_t* board);
 
