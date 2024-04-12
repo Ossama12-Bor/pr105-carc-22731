@@ -133,21 +133,25 @@ struct case_t *get_possible_moves(struct board_t*board,struct tile_t tile){
   for(int i=0;i<set_size(board->empty);i++){
     struct lelement *box=get_lelement_from_empty(board->empty,i);
     if(correct_pasting(board,tile,*(box->data))){
-      *(new_empty+count)=*box->data;
-      count++;
+		box->data->id-=i-NUM_TILES;
+      	*(new_empty+count)=*box->data;
+      	count++;
     }
   }
   return new_empty;
 
 }
 
-struct case_t get_optimal_case(struct case_t *case){
-  return case[0];
+struct case_t get_optimal_case(struct board_t *board,struct tile_t tile){
+	struct case_t first_case = get_possible_moves(board,tile)[0];
+	change_neighbours(board,first_case.id+NUM_TILES);
+	return first_case;  
 }
 
-void add_tile(struct board_t *board,int id_in_empty,struct case_t coord){
+void add_tile(struct board_t *board,int id_tile){
 	board->size+=1;
-	change_neighbours(board,)
+	struct case_t box= get_optimal_case(board,TILE_TYPES[id_tile]);
+	board->t[box.y][box.x].id=id_tile;
 }
 
 
