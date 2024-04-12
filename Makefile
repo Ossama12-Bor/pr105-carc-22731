@@ -21,9 +21,10 @@ client:
 	gcc -fPIC -shared -o install/libplayer1.so src/players/player1.c -L install
 #	gcc -fPIC -shared -o libplayer2.so src/players/player2.c -L install
 
-alltests: $(OBJS) test_list.o test_tile.o
+alltests: $(OBJS) test_list.o test_tile.o test_board.o
 	gcc $(OBJS) test_list.o -o test -I src -I tst 
-	gcc $(OBJS) test_tile.o -o testtile -I src -I tst 
+	gcc $(OBJS) test_tile.o -o testtile -I src -I tst
+	gcc $(OBJS) test_board.o -o testboard -I src -I tst 
 
 %.o: src/%.c
 	$(CC) -c $< $(CFLAGS) 
