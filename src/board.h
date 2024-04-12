@@ -20,11 +20,11 @@ struct board_t *Initialize_board();
 
 struct case_t get_empty_sides(struct board_t *board);
 
-int correct_pasting(struct board_t*board,const struct deck_t *deck,struct tile_t tile,struct case_t coord);
+int correct_pasting(struct board_t*board,struct tile_t tile,struct case_t coord);
 
 //Same but only cases matching the tile : id
 
-struct case_t *get_possible_moves(struct board_t*board,const struct deck_t *deck,struct tile_t tile);
+struct case_t *get_possible_moves(struct board_t*board,struct tile_t tile);
 
 
 
@@ -42,7 +42,7 @@ int get_size_board(struct board_t *board);
 void change_neighbours(struct board_t* board,int id_in_empty);
 
 
-int add_tile(struct board_t *board, int id_empty, struct case_t case_);
+void add_tile(struct board_t *board, int id_tile);
 
 struct case_t get_cord(struct board_t *board, int id);
 

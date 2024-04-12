@@ -2,6 +2,7 @@
 #define _CARCASSONNE_DECK_H_
 
 #include <stdlib.h>
+#include "move.h"
 
 #define CARC_TILE_EMPTY ((struct tile_t) { .t={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}, \
                               .c={ }})

@@ -7,6 +7,7 @@ LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_PATH)/lib -Wl,--rpath=${IGRAPH_PATH}/lib
 BASE_FILES = \
         deck.c
 
+OBJS=liste.o board.o deck.o tile.o
 all: build
 
 build: server client deck.o
@@ -20,8 +21,14 @@ client:
 	gcc -fPIC -shared -o install/libplayer1.so src/players/player1.c -L install
 #	gcc -fPIC -shared -o libplayer2.so src/players/player2.c -L install
 
-alltests:
+alltests: $(OBJS) test_list.o test_tile.o
+	gcc $(OBJS) test_list.o -o test -I src -I tst 
+	gcc $(OBJS) test_tile.o -o test -I src -I tst 
 
+%.o: src/%.c
+	$(CC) -c $< $(CFLAGS) 
+%.o: tst/%.c 
+	$(CC) -c $< $(CFLAGS) -I src
 test: alltests
 
 install: server client test

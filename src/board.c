@@ -128,7 +128,7 @@ int correct_pasting(struct board_t* board,struct tile_t tile, struct case_t coor
   return 1;
 }
 struct case_t *get_possible_moves(struct board_t*board,struct tile_t tile){
-  struct case_t *new_empty;
+  struct case_t *new_empty=NULL;
   int count=0;
   for(int i=0;i<set_size(board->empty);i++){
     struct lelement *box=get_lelement_from_empty(board->empty,i);

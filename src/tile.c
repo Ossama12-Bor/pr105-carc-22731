@@ -12,7 +12,7 @@ enum color_t *get_tile_colors(struct tile_t *t){
 	return t->c;
 }
 enum color_t *get_tile_side(struct tile_t *t,enum direction_t d ){
-	enum color_t*p;
+	enum color_t*p=NULL;
 	for(int i=0;i<VER_NUMBER_PER_SIDE;i++)
 		*(p+i)=t->c[d*VER_NUMBER_PER_SIDE+i];
 	return p;
