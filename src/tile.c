@@ -1,4 +1,5 @@
 #include "tile.h"
+#include <stdlib.h>
 #define VER_NUMBER_PER_SIDE 3
 int same_colors(enum color_t *t1,enum color_t *t2,int n){
 	for(int i=0;i<n;i++){
@@ -12,7 +13,7 @@ enum color_t *get_tile_colors(struct tile_t *t){
 	return t->c;
 }
 enum color_t *get_tile_side(struct tile_t *t,enum direction_t d ){
-	enum color_t*p=NULL;
+	enum color_t*p=malloc(sizeof(enum color_t)*VER_NUMBER_PER_SIDE);
 	for(int i=0;i<VER_NUMBER_PER_SIDE;i++)
 		*(p+i)=t->c[d*VER_NUMBER_PER_SIDE+i];
 	return p;

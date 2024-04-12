@@ -3,14 +3,15 @@
 #include <stdio.h>
 #include "liste.h"
 #include "tile.h"
-#include "deck.h"
+#include "move.h"
 #define NUM_TILES 72
-#define NUM_TILE_TYPES 5
-const struct tile_t TILE_TYPES[] = {CARC_TILE_EMPTY,
-				  CARC_TILE_INIT,
+#define NUM_TILE_TYPES 4
+
+struct tile_t TILE_TYPES[] = {CARC_TILE_INIT,
 				  CARC_TILE_GREEN,
 				  CARC_TILE_XROAD,
 				  CARC_TILE_TINI};
+
 
 
 struct board_t{
@@ -26,11 +27,10 @@ struct deck_t* generate_deck(int seed){
   struct deck_t* mydeck = deck_empty(NUM_TILES);
   srand(seed);
   for(int i=0;i<NUM_TILES;i++){
-    deck_add(mydeck,TILE_TYPES[rand()%NUM_TILES]);
+    deck_add(mydeck,TILE_TYPES[rand()%NUM_TILE_TYPES]);
   }
   return mydeck;
 }
-
 
 
 

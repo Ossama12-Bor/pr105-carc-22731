@@ -33,7 +33,7 @@ size_t deck_size(const struct deck_t* d);
 //struct tile_t deck_get(const struct deck_t* d, unsigned int idx);
 
 // Adds the tile `t` into `d`
-void deck_add(struct deck_t* d, struct tile_t t);
+void deck_add(struct deck_t* d,struct tile_t t);
 
 // Creates an independent/deep copy of `d`
 struct deck_t* deck_copy(const struct deck_t* d);

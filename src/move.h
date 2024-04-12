@@ -3,8 +3,6 @@
 
 #include <stddef.h>
 
-#include "deck.h"
-
 // The player ids
 #define NUM_PLAYERS 2
 enum player_color_t { BLACK=0, WHITE=1 ,server=-1};

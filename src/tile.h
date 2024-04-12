@@ -2,6 +2,7 @@
 #define _TILE_H_
 
 #include "move.h"
+#include "deck.h"
 
 enum direction_t {
   N=0,
@@ -14,7 +15,7 @@ enum direction_t {
 /* Returns a tile's colors */
 int same_colors(enum color_t *t1,enum color_t *t2,int n);
 
-enum color_t* get_tile_colors(struct tile_t * t);
+enum color_t* get_tile_colors(struct tile_t *t);
 
 enum color_t* get_tile_side(struct tile_t *t,enum direction_t d);
 

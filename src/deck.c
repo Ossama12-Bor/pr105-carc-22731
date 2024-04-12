@@ -1,7 +1,7 @@
 #include <assert.h>
 
-#include "deck.h"
 #include "move.h"
+#include "deck.h"
 
 struct deck_t {
   struct tile_t* deck;   // The deck we are playing with

@@ -23,7 +23,7 @@ client:
 
 alltests: $(OBJS) test_list.o test_tile.o
 	gcc $(OBJS) test_list.o -o test -I src -I tst 
-	gcc $(OBJS) test_tile.o -o test -I src -I tst 
+	gcc $(OBJS) test_tile.o -o testtile -I src -I tst 
 
 %.o: src/%.c
 	$(CC) -c $< $(CFLAGS) 
