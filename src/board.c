@@ -55,7 +55,7 @@ struct board_t *Initialize_board(){
 
 
 
-struct case_t get_cord(struct board_t *board, int id){
+/*struct case_t get_cord(struct board_t *board, int id){
   for (int i = 0; i< 2*NUM_TILES ; ++i){
     for (int j = 0 ; j < 2*NUM_TILES; ++j){
 	    if (board->t[i][j].id == id) return board->t[i][j];
@@ -63,7 +63,7 @@ struct case_t get_cord(struct board_t *board, int id){
   }
   struct case_t c = {.x=-1,.y=-1,.id=-1,.is_available_id=-1};
   return c;
-}
+}*/
 
 
 
@@ -114,25 +114,25 @@ void change_neighbours(struct board_t* board,int id_in_empty){
   set__remove(board->empty,current_lelement);
 }
 
-int correct_pasting(struct board_t* board, const struct deck_t* deck, struct tile_t tile, struct case_t coord) {
+int correct_pasting(struct board_t* board,struct tile_t tile, struct case_t coord) {
   int d[4][2] = {{0, 1}, {0, 1}, {0, -1}, {-1, 0}};
   for (int i = 0; i < 4; i++) {
     if (borders(coord, d[i])) {
       int x = coord.x + d[i][0], y = coord.y + d[i][1];
       if (!is_empty_case(board->t[y][x]) &&
-          !check_compatible_colors(tile, deck_get(deck, get_case(board, x, y).id), i, (i + 2) % 4)) {
+          !check_compatible_colors(tile, TILE_TYPES[board->t[y][x].id], i, (i + 2) % 4)) {
         return 0;
       }
     }
   }
   return 1;
 }
-struct case_t *get_possible_moves(struct board_t*board,const struct deck_t *deck,struct tile_t tile){
+struct case_t *get_possible_moves(struct board_t*board,struct tile_t tile){
   struct case_t *new_empty;
   int count=0;
   for(int i=0;i<set_size(board->empty);i++){
     struct lelement *box=get_lelement_from_empty(board->empty,i);
-    if(correct_pasting(board,deck,tile,*box->data)){
+    if(correct_pasting(board,tile,*(box->data))){
       *(new_empty+count)=*box->data;
       count++;
     }
@@ -141,23 +141,25 @@ struct case_t *get_possible_moves(struct board_t*board,const struct deck_t *deck
 
 }
 
-/*struct case_t get_optimal_case(struct case_t *case){
+struct case_t get_optimal_case(struct case_t *case){
   return case[0];
-}*/
+}
 
-/*int add_tile(struct board_t *board,struct case_t coord ){
+void add_tile(struct board_t *board,int id_in_empty,struct case_t coord){
 	board->size+=1;
-	change_neighbours(board,coord);
-	return 1;
+	change_neighbours(board,)
 }
 
 
 
 
-/*void free_board(struct board_t *board);
+void free_board(struct board_t *board){
+	free_set(board->empty);
+	free(board);
+}
 
 
 void print_case(struct case_t box){
   printf("{%d,%d,%d,%d}",box.x,box.y,box.id,box.is_available_id); 
-}*/
+}
 

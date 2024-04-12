@@ -27,11 +27,11 @@ size_t deck_size(const struct deck_t* d) {
   return d->size;
 }
 
-struct tile_t deck_get(const struct deck_t* d, unsigned int idx) {
+/*struct tile_t deck_get(const struct deck_t* d, unsigned int idx) {
   if (idx >= d->size)
     return CARC_TILE_EMPTY;
   return d->deck[idx];
-}
+}*/
 
 struct deck_t* deck_copy(const struct deck_t* d) {
   struct deck_t* e = deck_empty(d->capacity);

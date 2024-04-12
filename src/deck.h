@@ -29,7 +29,7 @@ size_t deck_size(const struct deck_t* d);
 
 // Returns the `idx`-th tile in `d`
 // Returns CARC_TILE_EMPTY if the index is incorrect
-struct tile_t deck_get(const struct deck_t* d, unsigned int idx);
+//struct tile_t deck_get(const struct deck_t* d, unsigned int idx);
 
 // Adds the tile `t` into `d`
 void deck_add(struct deck_t* d, struct tile_t t);

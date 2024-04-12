@@ -42,7 +42,8 @@ int get_size_board(struct board_t *board);
 void change_neighbours(struct board_t* board,int id_in_empty);
 
 
-int add_tile(struct board_t *board, int id, struct case_t case_);
+int add_tile(struct board_t *board, int id_empty, struct case_t case_);
+
 struct case_t get_cord(struct board_t *board, int id);
 
 int is_empty(struct case_t case_,struct board_t* board);
