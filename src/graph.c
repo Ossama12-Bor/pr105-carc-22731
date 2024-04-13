@@ -46,15 +46,23 @@ struct components_t *get_connected_components(struct tile_t t) {
 
 igraph_t *create_graph_for_tile(struct tile_t t){
   struct components_t *components = get_connected_components(t);
+  printf("%d\n\n",components->size);
   igraph_t* graph = malloc(sizeof(igraph_t));
   igraph_empty(graph,13,IGRAPH_UNDIRECTED);
    for (int i = 0; i < components->size; ++i){
+        // Iterate over vertices in the current component
         for (int j = 0; j < components->components[i].number; ++j){
+            // Add edges between adjacent vertices in the component
             if (j < components->components[i].number - 1) {
                 igraph_add_edge(graph, components->components[i].vertices[j], 
                                 components->components[i].vertices[j+1]);
             }
+        }
+    }
+  for (int i = 0; i < components->size; ++i){
+//    free(components->components[i].vertices);
+  }
+//  free(components->components);
+//  free(components);
   return graph; 
 }
-   }
-
