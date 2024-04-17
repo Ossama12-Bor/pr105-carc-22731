@@ -66,17 +66,7 @@ igraph_t *create_graph_for_tile(struct tile_t t){
 //  free(components);
   return graph; 
 }
-void add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], int id_in_deck){
-  struct igraph_t *tile = create_graph_for_tile(t);
-  int id_in_graph = 12 * id_in_deck;
-  for (int i = 0 ; i < 4 ; i++){
-    if (neighbours_ids[i] != -1){
-      int new_id = neighbours_ids[i] * 12;
-      for (int j = 0; j < 3; ++j)
-      igraph_add_edge(graph, id_in_graph*i+2-j, new_id + (3*(i+2) + j) % 12);
-    }
-  }
-}
+
 igraph_t *add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], int id_in_deck) {
   int t_neighb[4]= { 6, 9, 0, 3};
   int t_[4]= { 0, 3, 6, 9};  
