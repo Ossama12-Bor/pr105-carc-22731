@@ -14,7 +14,7 @@ struct case_t {
 
 struct pos_t{
   int type_id;
-  struct case_t box;
+  struct case_t *box;
 }
 
 

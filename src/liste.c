@@ -1,7 +1,7 @@
 #include "liste.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include<stddef.h>
+#include <stddef.h>
 
 int get_ith_neighbor(struct lelement *elt,enum direction_t d){
   return elt->data->neighbors[d];
@@ -19,6 +19,13 @@ struct set * set__empty(){
   s->size = 0;
   return s;
 }
+struct lelement *get_head(struct set *s ){
+  return s->l->head;
+}
+struct case_t *get_data(struct lelement*elt){
+  return elt->data;
+}
+
 struct lelement * get_lelement_from_empty(struct set *s, int id_in_empty){
   struct lelement *e = s->l->head;
   for (int i = 0; i < id_in_empty; ++i){
@@ -77,7 +84,7 @@ int set__remove(struct set *s,struct lelement *c) {
 void free_set(struct set *s) {
     while (s->l->head != NULL) {
         struct lelement *c = s->l->head;
-	s->l->head = s->l->head->next;
+	      s->l->head = s->l->head->next;
         free(c);
     }
     free(s->l);
