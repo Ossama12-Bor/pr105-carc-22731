@@ -77,7 +77,7 @@ void change_neighbours(struct board_t* board,int id_in_empty){
     set__add_head(board->empty,box,(i+2)%4,board->size);
     }
     else{
-      board->tiles[current_lelement->data->neighbors[i]]=board->size;
+      board->tiles[current_lelement->data->neighbors[i]].box->neighbors[(i+2)%4]=board->size;
     }
   }
   set__remove(board->empty,current_lelement);
