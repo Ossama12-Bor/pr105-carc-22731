@@ -8,12 +8,17 @@ struct board_t;
 
 
 struct case_t {
-  int x,y,id,is_available_id;
+  int x,y;
+  int *neighbors;
 };
 
+struct pos_t{
+  int type_id;
+  struct case_t box;
+}
 
 
-struct deck_t*generate_deck(int seed);
+/*struct deck_t*generate_deck(int seed);
 
 struct board_t *Initialize_board();
 
@@ -53,6 +58,6 @@ void free_board(struct board_t* board);
 
 void print_case(struct case_t box);
 
-void print_board(struct board_t *board,char* prefix);
+void print_board(struct board_t *board,char* prefix);*/
 
 #endif // _BOARD_H_

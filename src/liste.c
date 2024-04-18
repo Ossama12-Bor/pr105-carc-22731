@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include<stddef.h>
 
+int get_ith_neighbor(struct lelement *elt,enum direction_t d){
+  return elt->data->neighbors[d];
+}
+
 struct link lnk__empty(void) {
   struct link l;
   l.head = NULL;
@@ -22,12 +26,28 @@ struct lelement * get_lelement_from_empty(struct set *s, int id_in_empty){
   }
   return e;
 }
+struct lelement *set__find(struct set *s,struct case_t *add){
+  struct lelement *e=s->l->head;
+  for(int i=0;i<s->size;i++){
+    if(e->data->x==add->x && e->data->y==add->y){
+      return e;
+    }
+    e=e->next;
+  }
+  return NULL;
+}
 
-int set__add_head(struct set *s, struct case_t *add){
+int set__add_head(struct set *s, struct case_t *add,enum direction_t d,int tile_id){
   if (add == NULL)
     return -1;
+  struct lelement *potential_element=set__find(s,add);
+  if(potential_element!=NULL){
+    potential_element->data->neighbors[d]=tile_id;
+    return 1;
+  }
   struct lelement *e = malloc(sizeof(struct lelement));
   e->data = add;
+  e->data->neighbors[d]=tile_id;
   e->next = s->l->head;
   e->prev = NULL;
   if (s->l->head != NULL)
