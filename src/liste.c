@@ -63,7 +63,6 @@ int set__add_head(struct set *s, struct case_t *add,enum direction_t d,int tile_
   s->size++;
   return 0;
 }
-
 int set__remove(struct set *s,struct lelement *c) {
   if (c == NULL)
     return -1;

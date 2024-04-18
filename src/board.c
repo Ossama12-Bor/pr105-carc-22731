@@ -67,6 +67,7 @@ void change_neighbours(struct board_t* board,int id_in_empty){
   int d[4][2] ={{0,1},{1,0},{0,-1},{-1,0}};
   struct lelement *current_lelement=get_lelement_from_empty(board->empty,id_in_empty);
   for(int i=0;i<4;i++){
+    if(current_lelement->data->neighbors[i]==-1){
     struct case_t *box=malloc(sizeof(struct case_t));
     box->x=current_lelement->data->x+d[i][0];
     box->y=current_lelement->data->y+d[i][1];
@@ -75,6 +76,10 @@ void change_neighbours(struct board_t* board,int id_in_empty){
     }
     set__add_head(board->empty,box,(i+2)%4,board->size);
     }
+    else{
+      board->tiles[current_lelement->data->neighbors[i]]=board->size;
+    }
+  }
   set__remove(board->empty,current_lelement);
 }
 
