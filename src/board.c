@@ -24,11 +24,12 @@ struct board_t{
 };
 
 /* Deck generator */
-void generate_deck(int seed){
+struct deck_t* generate_deck(int seed){
   srand(seed);
   struct deck_t* mydeck = deck_empty(NUM_TILES);
   for(int i=0; i<NUM_TILES; i++)
     deck_add(mydeck, TILE_TYPES[rand() % NUM_TILE_TYPES]);
+  return mydeck;
 }
 
 /* Board allocator */
@@ -83,14 +84,6 @@ void change_neighbours(struct board_t* board,int id_in_empty){
   set__remove(board->empty,current_lelement);
 }
 
-int is_empty_case(struct board_t*board,int x,int y){
-  for(int i=0;i<board->size;i++){
-    if(board->tiles[i].box->x==x && board->tiles[i].box->y){
-      return 0;
-    }
-  }
-  return 1;
-}
 int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty) {
   struct lelement*elt=get_lelement_from_empty(board->empty, id_in_empty);
   for (int i = 0; i < 4; i++) {
@@ -138,5 +131,31 @@ void add_tile(struct board_t *board,int id_tile){
 /* Frees the allocated memory for a board */
 void free_board(struct board_t* game_board){
   igraph_destroy(game_board->g);
+  free(game_board->tiles);
+  free_set(game_board->empty);
   free(game_board);
+}
+int get_size_board(struct board_t*board){
+  return board->size;
+}
+
+void print_case(struct case_t *box){
+  printf("{(%d,%d),{",box->x,box->y);
+  for(int i=0;i<3;i++)
+    printf("%d,",box->neighbors[i]);
+  printf("%d}}",box->neighbors[3]);
+}
+
+void print_board(struct board_t *board,char* prefix){
+  printf("%s :\n size:%d,tiles:[",prefix,board->size);
+  for(int i=0;i<board->size;i++){
+    printf("{%d",board->tiles[i].type_id);
+    print_case(board->tiles[i].box);
+    printf("}");
+  }
+  printf("]");
+  set_print(board->empty,"empty:");
+  
+
+
 }

@@ -5,7 +5,8 @@
 void test_board(void){
   struct deck_t *deck = generate_deck(42);
   assert(deck_size(deck) == NUM_TILES);
-  struct board_t *board = Initialize_board();
+  struct board_t *board = allocate_board();
+  initialize_board(board);
   for (int i = 0; i < 2*NUM_TILES-1; ++i){
     for (int j = 0 ; j < 2*NUM_TILES-1; ++j){
       assert(is_empty_case(board->t[i][j]));

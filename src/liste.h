@@ -29,4 +29,5 @@ int set_size(struct set *s);
 int set__add_head(struct set *s, struct case_t *add,enum direction_t d,int tile_id) ;
 int set__remove(struct set *s,struct lelement *c) ;
 void free_set(struct set *s) ;
+void set_print(struct set *s,char*prefix);
 #endif

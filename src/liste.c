@@ -43,7 +43,7 @@ struct lelement *set__find(struct set *s,struct case_t *add){
   }
   return NULL;
 }
-
+//la direction de add par rapport à la tile 
 int set__add_head(struct set *s, struct case_t *add,enum direction_t d,int tile_id){
   if (add == NULL)
     return -1;
@@ -91,4 +91,14 @@ void free_set(struct set *s) {
 }
 int set_size(struct set *s){
   return s->size;
+}
+
+void set_print(struct set *s,char*prefix){
+  printf("%s [",prefix);
+  struct lelement *elt=s->l->head;
+  for(int i=0;i<s->size;i++){
+    print_case(elt->data);
+    elt=elt->next;
+  }
+  printf("]\n");
 }

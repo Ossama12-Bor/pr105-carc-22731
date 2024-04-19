@@ -10,20 +10,31 @@ int main() {
     assert(set_size(test_set) == 0);
 
     // Create some data elements
-    struct case_t elem1_data = {1, 1, -1, 0};
-    struct case_t elem2_data = {2, 2, -1, 0};
+    int t[]={-1,-1,-1,-1};
+    int v[]={-1,-1,-1,-1};
+    int u[]={-1,-1,-1,-1};
+    struct case_t elem1_data = {0, 1,t};
+    struct case_t elem2_data = {1, 0,v};
+    struct case_t elem3_data = {0, 1,u};
 
     // Add an element to the set
-    assert(set__add_head(test_set, &elem1_data) == 0);
+    assert(set__add_head(test_set, &elem1_data,S,0) == 0);
     assert(set_size(test_set) == 1);
-    assert(test_set->l->head != NULL);
-    assert(test_set->l->head->data == &elem1_data);
+    set_print(test_set,"set:");
 
     // Add another element to the set
-    assert(set__add_head(test_set, &elem2_data) == 0);
+    assert(set__add_head(test_set, &elem2_data,W,0) == 0);
     assert(set_size(test_set) == 2);
-    assert(test_set->l->head != NULL);
-    assert(test_set->l->head->data == &elem2_data);
+    set_print(test_set,"set:");
+    
+
+
+    assert(set__add_head(test_set, &elem3_data,N,1) == 1);
+    assert(set_size(test_set) == 2);
+    set_print(test_set,"set:");
+    struct lelement*elt=get_lelement_from_empty(test_set,1);
+    print_case(elt->data);
+    printf("\n");
 
     // Remove an element from the set
     assert(set__remove(test_set, test_set->l->head) == 0);
