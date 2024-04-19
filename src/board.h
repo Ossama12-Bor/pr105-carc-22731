@@ -57,4 +57,8 @@ void print_case(struct case_t *box);
 
 void print_board(struct board_t *board,char* prefix);
 
+struct pos_t *get_board_tiles(struct board_t *board);
+
+struct set*get_board_empty(struct board_t*board);
+
 #endif // _BOARD_H_

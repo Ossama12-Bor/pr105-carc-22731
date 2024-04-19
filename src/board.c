@@ -2,9 +2,6 @@
 #include "board.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "liste.h"
-#include "tile.h"
-#include "move.h"
 #include <igraph.h>
 
 #define NUM_TILE_TYPES 4
@@ -21,13 +18,13 @@ struct board_t{
   struct pos_t* tiles;
   int size;
   struct set *empty;
-};
+};)
 
 /* Deck generator */
 struct deck_t* generate_deck(int seed){
   srand(seed);
   struct deck_t* mydeck = deck_empty(NUM_TILES);
-  for(int i=0; i<NUM_TILES; i++)
+  for(int i=0;) i<NUM_TILES; i++)
     deck_add(mydeck, TILE_TYPES[rand() % NUM_TILE_TYPES]);
   return mydeck;
 }
@@ -38,14 +35,19 @@ struct board_t* allocate_board(){
   struct board_t* game_board = malloc(sizeof(struct board_t));
   game_board->g = board_graph;
   game_board->empty=set__empty();
-  game_board->tiles=malloc(NUM_TILES);
+  game_board->tiles=malloc(sizeof(struct pos_t)*NUM_TILES);
+  for(int i=0;i<NUM_TILES;i++){
+		game_board->tiles[i].box=malloc(sizeof(struct case_t));
+		game_board->tiles[i].box->neighbors=malloc(sizeof(int)*4);
+	}
+
   return game_board;
 }
 
 void initialize_neighbors(struct pos_t * tiles){
   for(int i=0;i<NUM_TILES;i++){
     for(int j=0;j<4;j++){
-      tiles[i].box->neighbors[j]=-1;
+      (tiles[i].box)->neighbors[j]=-1;
       tiles[i].type_id=-1;
     }
   }
@@ -53,12 +55,14 @@ void initialize_neighbors(struct pos_t * tiles){
 
 /* Board initializer (game_board must be alloc before)*/
 struct board_t *initialize_board(){
-	struct board_t *game_board=allocate_board();
-  int t[4]={-1,-1,-1,-1};
+  struct board_t *game_board=allocate_board();
   struct case_t *first_case=malloc(sizeof(*first_case));
   first_case->x=0;
   first_case->y=0;
-  first_case->neighbors=t;
+  first_case->neighbors=malloc(4);
+  for(int i=0;i<4;i++){
+	first_case->neighbors[i]=-1;
+  }
   set__add_head(game_board->empty,first_case,0,-1);
   game_board->size=0;
   igraph_empty(game_board->g,0,IGRAPH_UNDIRECTED);
@@ -74,7 +78,9 @@ void change_neighbours(struct board_t* board,int id_in_empty){
     struct case_t *box=malloc(sizeof(struct case_t));
     box->x=current_lelement->data->x+d[i][0];
     box->y=current_lelement->data->y+d[i][1];
+	box->neighbors=malloc(sizeof(int)*4);
     for(int k=0;k<4;k++){
+	  
       box->neighbors[k]=-1;
     }
     set__add_head(board->empty,box,(i+2)%4,board->size);
@@ -99,7 +105,7 @@ int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty) {
 }
 
 struct pos_t*get_possible_moves(struct board_t*board,int id_in_Type){
-  struct pos_t *new_empty=NULL;
+  struct pos_t *new_empty=malloc(sizeof(struct pos_t)*set_size(board->empty));
   int count=0;
   struct lelement *first=get_head(board->empty);
   int size=set_size(board->empty);
@@ -111,6 +117,7 @@ struct pos_t*get_possible_moves(struct board_t*board,int id_in_Type){
     }
     first=first->next;
   }
+  new_empty=realloc(new_empty,sizeof(struct pos_t)*count);
   return new_empty;
 
 }
@@ -149,13 +156,13 @@ void print_case(struct case_t *box){
 }
 
 void print_board(struct board_t *board,char* prefix){
-  printf("%s :\n size:%d,tiles:[",prefix,board->size);
+  printf("%s :\n size:%d\n,tiles:[",prefix,board->size);
   for(int i=0;i<board->size;i++){
     printf("{%d",board->tiles[i].type_id);
     print_case(board->tiles[i].box);
     printf("}");
   }
-  printf("]");
+  printf("]\n");
   set_print(board->empty,"empty:");
   
 
@@ -163,4 +170,11 @@ void print_board(struct board_t *board,char* prefix){
 }
 int board_size(struct board_t*board){
 	return board->size;
+}
+
+struct set*get_board_empty(struct board_t*board){
+	return board->empty;
+}
+struct pos_t *get_board_tiles(struct board_t *board){
+	return board->tiles;
 }
