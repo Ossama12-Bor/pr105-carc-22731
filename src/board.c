@@ -6,7 +6,7 @@
 #include "tile.h"
 #include "move.h"
 #include <igraph.h>
-#define NUM_TILES 72
+
 #define NUM_TILE_TYPES 4
 
 struct tile_t TILE_TYPES[] = {CARC_TILE_INIT,
@@ -38,7 +38,7 @@ struct board_t* allocate_board(){
   struct board_t* game_board = malloc(sizeof(struct board_t));
   game_board->g = board_graph;
   game_board->empty=set__empty();
-  game_board->tiles=malloc(sizeof(struct pos_t )*NUM_TILES);
+  game_board->tiles=malloc(NUM_TILES);
   return game_board;
 }
 
@@ -52,7 +52,8 @@ void initialize_neighbors(struct pos_t * tiles){
 }
 
 /* Board initializer (game_board must be alloc before)*/
-void initialize_board(struct board_t* game_board){
+struct board_t *initialize_board(){
+	struct board_t *game_board=allocate_board();
   int t[4]={-1,-1,-1,-1};
   struct case_t *first_case=malloc(sizeof(*first_case));
   first_case->x=0;
@@ -62,6 +63,7 @@ void initialize_board(struct board_t* game_board){
   game_board->size=0;
   igraph_empty(game_board->g,0,IGRAPH_UNDIRECTED);
   initialize_neighbors(game_board->tiles);
+  return game_board;
 }
 
 void change_neighbours(struct board_t* board,int id_in_empty){
@@ -158,4 +160,7 @@ void print_board(struct board_t *board,char* prefix){
   
 
 
+}
+int board_size(struct board_t*board){
+	return board->size;
 }
