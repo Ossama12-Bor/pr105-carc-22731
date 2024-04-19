@@ -1,6 +1,6 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
-
+#define NUM_TILES 72
 #include "move.h"
 #include "liste.h"
 //#include <igraph.h>
@@ -17,14 +17,14 @@ struct pos_t{
   struct case_t *box;
 };
 
-
+int board_size(struct board_t*board);
 struct deck_t*generate_deck(int seed);
 
 struct board_t* allocate_board();
 
 void initialize_neighbors(struct pos_t * tiles);
 
-void initialize_board(struct board_t* game_board);
+struct board_t *initialize_board();
 
 void change_neighbours(struct board_t* board,int id_in_empty);
 
