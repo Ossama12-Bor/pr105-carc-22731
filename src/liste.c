@@ -55,12 +55,19 @@ int set__add_head(struct set *s, struct case_t *add,enum direction_t d,int tile_
   struct lelement *e = malloc(sizeof(struct lelement));
   e->data = add;
   e->data->neighbors[d]=tile_id;
+  if(s->size==0){
+	s->l->head=e;
+	e->next=NULL;
+	e->prev=NULL;
+	s->size++;
+  }
+  else{
   e->next = s->l->head;
   e->prev = NULL;
   if (s->l->head != NULL)
     s->l->head->prev = e;
   s->l->head = e;
-  s->size++;
+  s->size++;}
   return 0;
 }
 int set__remove(struct set *s,struct lelement *c) {
@@ -68,13 +75,16 @@ int set__remove(struct set *s,struct lelement *c) {
     return -1;
   struct lelement *g = c->prev;
   struct lelement *d = c->next;
-  if (g != NULL){
+  if (g != NULL && d!=NULL){
     g->next = d;
     d->prev = g;
     }
-  else {
+  else if(g==NULL){
     s->l->head = d;
     d->prev = NULL;
+  }
+  else if(d==NULL){
+	g->next=NULL;
   }
   s->size--;
   free(c);
