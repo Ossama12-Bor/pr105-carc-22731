@@ -46,6 +46,32 @@ struct components_t *get_connected_components(struct tile_t t) {
 }
 
 igraph_t *create_graph_for_tile(struct tile_t t){
+attributes[0].coord.x = -1;
+attributes[0].coord.y = 2;
+attributes[1].coord.x = 0;
+attributes[1].coord.y = 2;
+attributes[2].coord.x = 1;
+attributes[2].coord.y = 2;
+attributes[3].coord.x = 2;
+attributes[3].coord.y = 1;
+attributes[4].coord.x = 2;
+attributes[4].coord.y = 0;
+attributes[5].coord.x = 2;
+attributes[5].coord.y = -1;
+attributes[6].coord.x = 1;
+attributes[6].coord.y = -2;
+attributes[7].coord.x = 0;
+attributes[7].coord.y = -2;
+attributes[8].coord.x = -1;
+attributes[8].coord.y = -2;
+attributes[9].coord.x = -2;
+attributes[9].coord.y = -1;
+attributes[10].coord.x = -2;
+attributes[10].coord.y = 0;
+attributes[11].coord.x = -2;
+attributes[11].coord.y = 1;
+attributes[12].coord.x = 0;
+attributes[12].coord.y = 0;  
   struct components_t *components = get_connected_components(t);
   printf("%d\n\n",components->size);
   igraph_t* graph = malloc(sizeof(igraph_t));

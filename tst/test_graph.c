@@ -4,7 +4,7 @@
 #include "graph.h"
 #include <assert.h>
 int main() {
-  attributes[0].coord.x = -1;
+  /*  attributes[0].coord.x = -1;
 attributes[0].coord.y = 2;
 attributes[1].coord.x = 0;
 attributes[1].coord.y = 2;
@@ -29,7 +29,7 @@ attributes[10].coord.y = 0;
 attributes[11].coord.x = -2;
 attributes[11].coord.y = 1;
 attributes[12].coord.x = 0;
-attributes[12].coord.y = 0;
+attributes[12].coord.y = 0;*/
 
   igraph_bool_t are_adjacent;
     igraph_t *graph_1 = create_graph_for_tile(CARC_TILE_INIT);
@@ -51,7 +51,7 @@ attributes[12].coord.y = 0;
     graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,2);
     for (int i = 0 ; i < 25; ++i){
 //      attributes[i]
-      printf("%d\n",attributes[i].color);
+//      printf("%d\n",attributes[i].color);
     }
     neighbours_ids[3] = 0;
     neighbours_ids[2] = 2;        
