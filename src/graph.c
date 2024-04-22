@@ -72,7 +72,15 @@ void initialize_new_tile(struct tile_t t,int id_in_graph){
       attributes[i].does_vertex_exist_in_renault = 1;
       attributes[i].color = t.c[i];
       attributes[i].vertex_can_be_added = 1;
-      attributes[i].is_there_meeple = 0;    
+      attributes[i].is_there_meeple = 0;
+  }
+}
+
+void change__coord_attribute(int id_in_graph, int neighbour_id, int k){
+  int t[4][2] = {{0, -5}, {-5, 0}, {0, 5}, {5, 0}};
+  for (int i = 0; i < 13; ++i){
+    attributes[i + id_in_graph].coord.x = attributes[neighbour_id + i].coord.x+t[k][0];
+    attributes[i + id_in_graph].coord.y = attributes[neighbour_id + i].coord.y+t[k][1];    
   }
 }
 igraph_t *add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], int id_in_deck) {
@@ -82,7 +90,13 @@ igraph_t *add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids
     igraph_t *uniong = malloc(sizeof(igraph_t));
     igraph_t *tile = create_graph_for_tile(t);
     //    attributes = realloc(attributes,id_in_graph + 13);
-    initialize_new_tile(t,id_in_graph);
+//    initialize_new_tile(t,id_in_graph);
+  for(int i = id_in_graph ; i < id_in_graph + 13; ++i){
+      attributes[i].does_vertex_exist_in_renault = 1;
+      attributes[i].color = t.c[i-id_in_graph];
+      attributes[i].vertex_can_be_added = 1;
+      attributes[i].is_there_meeple = 0;
+}    
     igraph_disjoint_union(uniong, graph, tile);
     for (int i = 0; i < 4; i++) {
         if (neighbours_ids[i] != -1) {
@@ -92,10 +106,35 @@ igraph_t *add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids
 	      attributes[neighbour_id + t_neighb[i]+2-j].does_vertex_exist_in_renault = 0;
 	      attributes[neighbour_id + t_neighb[i]+2-j].vertex_can_be_added = 0;
 	      attributes[id_in_graph + t_[i] + j].vertex_can_be_added = 0;
+	      change__coord_attribute(id_in_graph, neighbour_id, i);
             }
         }
     }
     return uniong;
+}
+void display_graph(igraph_t *graph, const char *filename) {
+    FILE *outfile;
+    char *colors[] = {"greenyellow", "gray70", "blue", "saddlebrown", "webpurple"};
+    outfile = fopen(filename, "w");
+    fprintf(outfile, "graph {\n");
+    fprintf(outfile, "  graph [layout = neato, overlap = false, outputorder = edgesfirst, splines=true]\n");
+    fprintf(outfile, "  node [shape = circle]\n");
+    for (igraph_integer_t i = 0; i < igraph_vcount(graph); i++) {
+        double x = 0.0, y = 0.0;
+	x = attributes[i].coord.x;
+	y = attributes[i].coord.y;
+        fprintf(outfile, "  %ld [pos = \"%f, %f!\", label = \"%ld\", width = 0.6, style = filled, fillcolor=", 
+                (long)i, x, y, (long)i);
+	fprintf(outfile, "%s",colors[attributes[i].color]);
+        fprintf(outfile, "]\n");
+    }
+    for (igraph_integer_t i = 0; i < igraph_ecount(graph); i++) {
+        igraph_integer_t from, to;
+        igraph_edge(graph, i, &from, &to);
+        fprintf(outfile, "  %ld -- %ld ;\n", (long)from, (long)to);
+    }
+    fprintf(outfile, "}\n");
+    fclose(outfile);
 }
 
 struct connected_components * get_components(igraph_t *graph){

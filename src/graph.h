@@ -3,11 +3,15 @@
 #include "deck.h"
 #include "move.h"
 #include <igraph.h>
+struct coord{
+  int x,y;
+};
 struct attribute{
   int is_there_meeple;
   int does_vertex_exist_in_renault;
   enum color_t color;
   int vertex_can_be_added;
+  struct coord coord;  
   };
 
 
