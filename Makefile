@@ -5,12 +5,12 @@ CFLAGS = -std=gnu99 -Wall -Wextra -Wno-trampolines -fPIC -g3 \
 IGRAPH_LIBDIR = $(shell [ -e $(IGRAPH_PATH)/lib ] && \
         echo $(IGRAPH_PATH)/lib || \
         echo $(IGRAPH_PATH)/lib64)
-LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_PATH)/$(IGRAPH_LIBDIR) -Wl,--rpath=${IGRAPH_PATH}/$(IGRAPH_LIBDIR)
+LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_LIBDIR) -Wl,--rpath=$(IGRAPH_LIBDIR)
 
 BASE_FILES = \
         deck.c
 
-OBJS=liste.o board.o deck.o tile.o
+OBJS=liste.o board.o deck.o tile.o graph.o
 all: build
 
 build: server client deck.o
@@ -24,10 +24,11 @@ client:
 	gcc -fPIC -shared -o install/libplayer1.so src/players/player1.c -L install
 #	gcc -fPIC -shared -o libplayer2.so src/players/player2.c -L install
 
-alltests: $(OBJS) test_list.o test_tile.o test_board.o
-	gcc $(OBJS) test_list.o -o test -I src -I tst 
-	gcc $(OBJS) test_tile.o -o testtile -I src -I tst
-	gcc $(OBJS) test_board.o -o testboard -I src -I tst 
+alltests: $(OBJS) test_list.o test_tile.o test_board.o test_graph.o
+	gcc $(OBJS) test_list.o -o test -I src -I tst $(LDFLAGS)
+	gcc $(OBJS) test_tile.o -o testtile -I src -I tst $(LDFLAGS)
+	gcc $(OBJS) test_board.o -o testboard -I src -I tst $(LDFLAGS)
+	gcc $(OBJS) test_graph.o -o testgraph -I src -I tst $(LDFLAGS)
 
 %.o: src/%.c
 	$(CC) -c $< $(CFLAGS) 
