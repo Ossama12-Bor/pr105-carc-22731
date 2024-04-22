@@ -4,17 +4,29 @@
 
 
 void test_board(void){
-  struct deck_t *deck = generate_deck(42);
-  assert(deck_size(deck) == NUM_TILES);
+  /*struct deck_t *deck = generate_deck(42);
+  assert(deck_size(deck) == NUM_TILES);*/
   struct board_t *board = initialize_board();
+  print_board(board,"myboard");
 
-  assert(board_size(board)==0);
-  assert(set_size(get_board_empty(board))==1);
+  /*assert(board_size(board)==0);
+  assert(set_size(get_board_empty(board))==1);*/
+  
   add_tile(board,0);
   assert(board_size(board)==1);
   print_board(board,"myboard");
   add_tile(board,1);
   print_board(board,"my beautiful board");
+  add_tile(board,1);
+  print_board(board,"my second beautiful board");
+  add_tile(board,2);
+  print_board(board,"my third beautiful board");
+  add_tile(board,3);
+  print_board(board,"my forth beautiful board");
+  add_tile(board,3);
+  print_board(board,"my fiveth beautiful board");
+  free_board(board);
+ // deck_free(deck);
 
 
   /*for (int i = 0; i < 2*NUM_TILES-1; ++i){

@@ -19,5 +19,10 @@ enum color_t *get_tile_side(struct tile_t *t,enum direction_t d ){
 	return p;
 }
 int check_compatible_colors(struct tile_t t1,struct tile_t t2,enum direction_t d1,enum direction_t d2){
-	return same_colors(get_tile_side(&t1,d1),get_tile_side(&t2,d2),VER_NUMBER_PER_SIDE);
+	enum color_t *side1=get_tile_side(&t1,d1);
+	enum color_t *side2=get_tile_side(&t2,d2);
+	int is_compatible=same_colors(side1,side2,VER_NUMBER_PER_SIDE);
+	free(side1);
+	free(side2);
+	return is_compatible;
 }

@@ -50,6 +50,8 @@ int set__add_head(struct set *s, struct case_t *add,enum direction_t d,int tile_
   struct lelement *potential_element=set__find(s,add);
   if(potential_element!=NULL){
     potential_element->data->neighbors[d]=tile_id;
+    free(add->neighbors);
+    free(add);
     return 1;
   }
   struct lelement *e = malloc(sizeof(struct lelement));
@@ -75,10 +77,9 @@ int set__remove(struct set *s,struct lelement *c) {
     return -1;
   struct lelement *g = c->prev;
   struct lelement *d = c->next;
-  if (g != NULL && d!=NULL){
-    g->next = d;
-    d->prev = g;
-    }
+  if( g == NULL && d ==NULL){
+    *(s->l)=lnk__empty();
+  }
   else if(g==NULL){
     s->l->head = d;
     d->prev = NULL;
@@ -86,14 +87,21 @@ int set__remove(struct set *s,struct lelement *c) {
   else if(d==NULL){
 	g->next=NULL;
   }
-  s->size--;
+  else{
+    g->next = d;
+    d->prev = g;
+    }
+  
   free(c);
+  s->size--;
   return 0;
 }
 void free_set(struct set *s) {
     while (s->l->head != NULL) {
         struct lelement *c = s->l->head;
 	      s->l->head = s->l->head->next;
+        free(c->data->neighbors);
+        free(c->data);
         free(c);
     }
     free(s->l);
