@@ -3,80 +3,154 @@
 #include <stdlib.h>
 #include "graph.h"
 #include <assert.h>
-int main() {
-  /*  attributes[0].coord.x = -1;
-attributes[0].coord.y = 2;
-attributes[1].coord.x = 0;
-attributes[1].coord.y = 2;
-attributes[2].coord.x = 1;
-attributes[2].coord.y = 2;
-attributes[3].coord.x = 2;
-attributes[3].coord.y = 1;
-attributes[4].coord.x = 2;
-attributes[4].coord.y = 0;
-attributes[5].coord.x = 2;
-attributes[5].coord.y = -1;
-attributes[6].coord.x = 1;
-attributes[6].coord.y = -2;
-attributes[7].coord.x = 0;
-attributes[7].coord.y = -2;
-attributes[8].coord.x = -1;
-attributes[8].coord.y = -2;
-attributes[9].coord.x = -2;
-attributes[9].coord.y = -1;
-attributes[10].coord.x = -2;
-attributes[10].coord.y = 0;
-attributes[11].coord.x = -2;
-attributes[11].coord.y = 1;
-attributes[12].coord.x = 0;
-attributes[12].coord.y = 0;*/
-
-  igraph_bool_t are_adjacent;
-    igraph_t *graph_1 = create_graph_for_tile(CARC_TILE_INIT);
+void test_graph_add(void){
+  igraph_t *graph = malloc(sizeof(igraph_t));
+  igraph_empty(graph,0,IGRAPH_UNDIRECTED);
+    int neighbours_ids[4]={-1,-1,-1,-1};  
+    igraph_t *graph_1 = add_tile_to_graph(graph,CARC_TILE_INIT,neighbours_ids,0);
     assert(igraph_vcount(graph_1) == 13);
     assert(igraph_ecount(graph_1) == 9);
-    igraph_are_adjacent(graph_1, 0 , 1, &are_adjacent);
-    assert(are_adjacent);
-    igraph_are_adjacent(graph_1, 11 , 3, &are_adjacent);
-    assert(are_adjacent);
-    igraph_are_adjacent(graph_1, 12 , 4, &are_adjacent);
-//    assert( are_adjacent);            
-    igraph_are_adjacent(graph_1, 11 , 1, &are_adjacent);
-    assert( ! are_adjacent);        
-    igraph_t *graph_2 = create_graph_for_tile(CARC_TILE_GREEN);
-    int neighbours_ids[4]={0,-1,-1,-1};
-    igraph_t *graph = add_tile_to_graph(graph_1, CARC_TILE_XROAD, neighbours_ids,1);      
+    neighbours_ids[0] = 0;
+    graph = add_tile_to_graph(graph_1, CARC_TILE_XROAD, neighbours_ids,1);      
     neighbours_ids[0] = -1; 
     neighbours_ids[3] = 1;
     graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,2);
-    for (int i = 0 ; i < 25; ++i){
-//      attributes[i]
-//      printf("%d\n",attributes[i].color);
-    }
     neighbours_ids[3] = 0;
     neighbours_ids[2] = 2;        
-    graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,3);    
-    /* igraph_are_adjacent(graph, 13 , 8, &are_adjacent); */
-    /* assert(are_adjacent); */
-    /* igraph_are_adjacent(graph, 14 , 7, &are_adjacent); */
-    /*     assert(are_adjacent);     */
-    /* igraph_are_adjacent(graph, 15 , 6, &are_adjacent); */
-    /*     assert(are_adjacent);     */
-    /* igraph_are_adjacent(graph, 16 , 37, &are_adjacent); */
-    /*  assert(are_adjacent);     */
-    /* igraph_are_adjacent(graph, 17 , 36, &are_adjacent); */
-    /* assert(are_adjacent);     */
-    /* igraph_are_adjacent(graph, 18 , 35, &are_adjacent); */
-    /*  assert(are_adjacent); */
-    /* igraph_are_adjacent(graph, 19 , 34, &are_adjacent); */
-    /* assert(! are_adjacent);     */
-
+    graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,3);
+    neighbours_ids[2] = 3;
+    neighbours_ids[3] = -1;                
+    graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,4);
+    neighbours_ids[2] = 0;
+    graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,5);
     display_graph(graph,"graph.dot");
+  igraph_destroy(graph);
+}
+void test_components(void){
 
-    igraph_destroy(graph);
+   igraph_t *test = malloc(sizeof(igraph_t));
+    igraph_empty(test, 0, IGRAPH_UNDIRECTED);
+    int tests[4] ={-1, -1, -1, -1};
+    igraph_t *test_1 = add_tile_to_graph(test, CARC_TILE_INIT, tests, 0);
 
+    //tests for the first function
+    for (int i = 0; i < 3; ++i){
+    assert(does_adding_ends_a_certain_component(test, 0,0,i) == NULL);
+    assert(does_adding_ends_a_certain_component(test, 0,1,i) == NULL);
+    assert(does_adding_ends_a_certain_component(test, 0,2,i) == NULL);
+    assert(does_adding_ends_a_certain_component(test, 0,3,i) == NULL);
+    }
+    tests[2] = 0;
+    test = add_tile_to_graph(test , CARC_TILE_TINI, tests, 1);
+    for (int i =0; i < 3; ++i){
+    assert(does_adding_ends_a_certain_component(test, 13, 2, i) != NULL);
+    }
+    printf("\n\n");
+      igraph_vector_int_print(does_adding_ends_a_certain_component(test, 13, 2, 0));
+      printf("\n\n");
+    for (int i =0; i < 3; ++i){
+    assert(does_adding_ends_a_certain_component(test, 13, 3, i) == NULL);
+    assert(does_adding_ends_a_certain_component(test, 13, 1, i) == NULL);
+    assert(does_adding_ends_a_certain_component(test, 13, 0, i) == NULL);      
 
-    igraph_destroy(graph);
+    }
+    
+    tests[2] = 1;
+    test = add_tile_to_graph(test , CARC_TILE_INIT, tests, 2);
+    assert(does_adding_ends_a_certain_component(test, 26, 2, 0) == NULL);
+    tests[2] = -1;
+    tests[3] = 2;
+    test = add_tile_to_graph(test, CARC_TILE_XROAD, tests, 3);
+    tests[3] = -1;
+    tests[1] = 2;
+    test = add_tile_to_graph(test, CARC_TILE_XROAD, tests, 4);    
+    assert(does_adding_ends_a_certain_component(test, 39, 3, 0) == NULL);
+    assert(does_adding_ends_a_certain_component(test, 39, 3, 1) != NULL);
+      igraph_vector_int_print(does_adding_ends_a_certain_component(test, 39, 3, 1));    
+    
+    //tests for the second function
+    tests[0] = 3;
+    tests[1] = -1;
+    tests[2] = -1;
+    tests[3] = 1;
+   igraph_vector_ptr_t *components = does_adding_ends_at_least_a_component(test, CARC_TILE_XROAD, tests, 5);
+//    test = add_tile_to_graph(test,CARC_TILE_XROAD, tests, 5);
+    assert(igraph_vector_ptr_size(components) != 0);
+      for (int i = 0; i < igraph_vector_ptr_size(components); i++) {
+        igraph_vector_int_t *vec = (igraph_vector_int_t *)igraph_vector_ptr_e(components, i);
+        printf("Vector %d: ", i);
+        igraph_vector_int_print(vec);
+    }
+      printf("\n%ld\n",igraph_vector_ptr_size(components));
 
+//    assert(compo->size != 0);
+      tests[0] = 4;
+      tests[1] = 1;
+      tests[3] = -1;
+      igraph_vector_ptr_t *components_2 = does_adding_ends_at_least_a_component(test, CARC_TILE_XROAD, tests, 5);
+      for (int i = 0; i < igraph_vector_ptr_size(components_2); i++) {
+        igraph_vector_int_t *vec = (igraph_vector_int_t *)igraph_vector_ptr_e(components_2, i);
+        printf("Vector %d: ", i);
+        igraph_vector_int_print(vec);
+      }
+
+    test = add_tile_to_graph(test, CARC_TILE_XROAD, tests, 5);
+
+    tests[0] = 3;
+    tests[1] = -1;
+    tests[2] = -1;
+    tests[3] = 1;    
+    components = does_adding_ends_at_least_a_component(test, CARC_TILE_XROAD, tests, 6);
+
+      for (int i = 0; i < igraph_vector_ptr_size(components); i++) {
+        igraph_vector_int_t *vec = (igraph_vector_int_t *)igraph_vector_ptr_e(components, i);
+        printf("Vector %d: ", i);
+        igraph_vector_int_print(vec);
+    }
+      printf("\n%ld\n",igraph_vector_ptr_size(components));
+    
+
+    display_graph(test,"test.dot");
+
+}
+
+void test_score(void){
+  igraph_t *graph = malloc(sizeof(igraph_t));
+  igraph_empty(graph,0,IGRAPH_UNDIRECTED);
+    int tests[4]={-1,-1,-1,-1};  
+    igraph_t *graph_1 = add_tile_to_graph(graph,CARC_TILE_INIT,tests,0);
+  tests[0] = 0;
+    int s = added_score(graph_1, CARC_TILE_GREEN,tests ,1);
+    assert(s == 0);
+    graph = add_tile_to_graph(graph, CARC_TILE_GREEN,tests ,1);
+    tests[0] = -1;
+    tests[3] = 1;
+    s += added_score(graph, CARC_TILE_GREEN,tests ,2);
+    assert(s == 0);
+    graph = add_tile_to_graph(graph, CARC_TILE_GREEN,tests ,2);
+    tests[3] = -1;
+    tests[1] = 0;
+    s += added_score(graph, CARC_TILE_XROAD,tests ,3);
+    assert(s == 8);
+    graph = add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,3);
+    tests[1] = -1;
+    tests[2] = 3;    
+    s += added_score(graph, CARC_TILE_XROAD,tests ,4);
+    assert(s == 20);
+    graph = add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,4);
+    tests[2] = -1;
+    tests[1] = 3;
+    s += added_score(graph, CARC_TILE_TINI,tests ,5);
+    assert(s == 20);
+    graph = add_tile_to_graph(graph, CARC_TILE_TINI,tests ,5);
+    
+    
+    
+    display_graph(graph,"test.dot");    
+    }
+int main() {    
+//  test_graph_add();
+//  test_components();  
+  test_score();
     return 0;
 }

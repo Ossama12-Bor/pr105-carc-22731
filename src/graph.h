@@ -10,8 +10,9 @@ struct attribute{
   int is_there_meeple;
   int does_vertex_exist_in_renault;
   enum color_t color;
-  int vertex_can_be_added;
-  struct coord coord;  
+  int vertex_is_open;
+  struct coord coord;
+  int already_added_to_a_component;
   };
 
 
@@ -25,13 +26,31 @@ struct components_t {
   struct component_t *components;
   int size;
 };
+struct connected_components{
+  igraph_vector_int_t *csize, *membership;
+  igraph_integer_t *no;
+  int **extrimities;
+};
+
 struct attribute *empty_attributes();
 struct components_t *get_connected_components(struct tile_t t);
 
-igraph_t *create_graph_for_tile(struct tile_t t);
+igraph_t *create_graph_for_tile(igraph_t *graph, int id_in_graph, struct tile_t t);
 
 void initialize_new_tile(struct tile_t t,int id_in_graph);
 
 igraph_t *add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], int id_in_deck) ;
+
+struct connected_components * get_components(igraph_t *graph);
+
+igraph_vector_int_t * does_adding_ends_a_certain_component(igraph_t *g, int id_in_graph, int direction, int vertex);
+
+
+igraph_vector_ptr_t * does_adding_ends_at_least_a_component(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck);
+
+int calculate_score_in_a_component(igraph_vector_int_t *component);
+
+int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck);
+
 
 #endif

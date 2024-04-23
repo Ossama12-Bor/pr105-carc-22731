@@ -1,16 +1,12 @@
 #include <igraph.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #define NUM_TILES 72
 #include "graph.h"
-struct connected_components{
-  int *csize;
-  int *membership;
-  int *no;
-};
-  
-struct attribute attributes[NUM_TILES];
 
+  
+struct attribute attributes[NUM_TILES*13];
 
   
 struct components_t *get_connected_components(struct tile_t t) {
@@ -45,7 +41,7 @@ struct components_t *get_connected_components(struct tile_t t) {
   return components;
 }
 
-igraph_t *create_graph_for_tile(struct tile_t t){
+igraph_t *create_graph_for_tile(igraph_t *graph, int id_in_graph, struct tile_t t){
 attributes[0].coord.x = -1;
 attributes[0].coord.y = 2;
 attributes[1].coord.x = 0;
@@ -73,31 +69,31 @@ attributes[11].coord.y = 1;
 attributes[12].coord.x = 0;
 attributes[12].coord.y = 0;  
   struct components_t *components = get_connected_components(t);
-  printf("%d\n\n",components->size);
-  igraph_t* graph = malloc(sizeof(igraph_t));
-  igraph_empty(graph,13,IGRAPH_UNDIRECTED);
+//  printf("%d\n\n",components->size);
+//  igraph_t* graph = malloc(sizeof(igraph_t));
+//  igraph_empty(graph,13,IGRAPH_UNDIRECTED);
    for (int i = 0; i < components->size; ++i){
         // Iterate over vertices in the current component
         for (int j = 0; j < components->components[i].number; ++j){
             // Add edges between adjacent vertices in the component
             if (j < components->components[i].number - 1) {
-                igraph_add_edge(graph, components->components[i].vertices[j], 
-                                components->components[i].vertices[j+1]);
+                igraph_add_edge(graph,id_in_graph +  components->components[i].vertices[j], 
+                                id_in_graph + components->components[i].vertices[j+1]);
             }
         }
     }
   for (int i = 0; i < components->size; ++i){
-//    free(components->components[i].vertices);
+    free(components->components[i].vertices);
   }
-//  free(components->components);
-//  free(components);
+  free(components->components);
+  free(components);
   return graph; 
 }
 void initialize_new_tile(struct tile_t t,int id_in_graph){
   for(int i = id_in_graph ; i < id_in_graph + 13; ++i){
       attributes[i].does_vertex_exist_in_renault = 1;
       attributes[i].color = t.c[i];
-      attributes[i].vertex_can_be_added = 1;
+      attributes[i].vertex_is_open = 1;
       attributes[i].is_there_meeple = 0;
   }
 }
@@ -113,38 +109,39 @@ igraph_t *add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids
   int t_neighb[4]= { 6, 9, 0, 3};
   int t_[4]= { 0, 3, 6, 9};
     int id_in_graph = 13 * id_in_deck;  
-    igraph_t *uniong = malloc(sizeof(igraph_t));
-    igraph_t *tile = create_graph_for_tile(t);
-    //    attributes = realloc(attributes,id_in_graph + 13);
-//    initialize_new_tile(t,id_in_graph);
   for(int i = id_in_graph ; i < id_in_graph + 13; ++i){
       attributes[i].does_vertex_exist_in_renault = 1;
       attributes[i].color = t.c[i-id_in_graph];
-      attributes[i].vertex_can_be_added = 1;
+      attributes[i].vertex_is_open = 1;
       attributes[i].is_there_meeple = 0;
-}    
-    igraph_disjoint_union(uniong, graph, tile);
+}
+  attributes[id_in_graph + 12].vertex_is_open = 0;
+  igraph_add_vertices(graph, 13, NULL);
+  graph = create_graph_for_tile(graph, id_in_graph, t);
     for (int i = 0; i < 4; i++) {
         if (neighbours_ids[i] != -1) {
             int neighbour_id = 13 * neighbours_ids[i];
             for (int j = 0; j < 3; j++) {
-	      igraph_add_edge(uniong, id_in_graph + t_[i] + j, neighbour_id + t_neighb[i]+2-j);
+	      igraph_add_edge(graph, id_in_graph + t_[i] + j, neighbour_id + t_neighb[i]+2-j);
 	      attributes[neighbour_id + t_neighb[i]+2-j].does_vertex_exist_in_renault = 0;
-	      attributes[neighbour_id + t_neighb[i]+2-j].vertex_can_be_added = 0;
-	      attributes[id_in_graph + t_[i] + j].vertex_can_be_added = 0;
+	      attributes[neighbour_id + t_neighb[i]+2-j].vertex_is_open = 0;
+	      attributes[id_in_graph + t_[i] + j].vertex_is_open = 0;
 	      change__coord_attribute(id_in_graph, neighbour_id, i);
             }
         }
     }
-    return uniong;
+    return graph;
 }
 void display_graph(igraph_t *graph, const char *filename) {
     FILE *outfile;
     char *colors[] = {"greenyellow", "gray70", "blue", "saddlebrown", "webpurple"};
     outfile = fopen(filename, "w");
     fprintf(outfile, "graph {\n");
-    fprintf(outfile, "  graph [layout = neato, overlap = false, outputorder = edgesfirst, splines=true]\n");
-    fprintf(outfile, "  node [shape = circle]\n");
+//    fprintf(outfile, "  graph [layout = fdp , overlap = false, outputorder = edgesfirst, splines=true]\n");
+    fprintf(outfile, "graph [pad=\"0.212,0.055\" bgcolor=lightgray ]\n");   
+    fprintf(outfile, "  node [shape = circle, width=0.6]\n");
+//    fprintf(outfile, "edge [fontsize=40] ");
+
     for (igraph_integer_t i = 0; i < igraph_vcount(graph); i++) {
         double x = 0.0, y = 0.0;
 	x = attributes[i].coord.x;
@@ -157,19 +154,27 @@ void display_graph(igraph_t *graph, const char *filename) {
     for (igraph_integer_t i = 0; i < igraph_ecount(graph); i++) {
         igraph_integer_t from, to;
         igraph_edge(graph, i, &from, &to);
-        fprintf(outfile, "  %ld -- %ld ;\n", (long)from, (long)to);
-    }
+        // Calculate the Euclidean distance between the two nodes
+        double x1 = attributes[from].coord.x;
+        double y1 = attributes[from].coord.y;
+        double x2 = attributes[to].coord.x;
+        double y2 = attributes[to].coord.y;
+        double len = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+        fprintf(outfile, "  %ld -- %ld [len=%.2f];\n", (long)from, (long)to, len);    }
     fprintf(outfile, "}\n");
     fclose(outfile);
 }
 
 struct connected_components * get_components(igraph_t *graph){
   struct connected_components *con = malloc(sizeof(struct connected_components));
-  igraph_vector_int_t *csize;
-  igraph_vector_int_t *membership;  
-  igraph_integer_t *no = 0;
+  igraph_vector_int_t *csize = malloc(sizeof(igraph_vector_int_t));
+  igraph_vector_int_t *membership = malloc(sizeof(igraph_vector_int_t));  
+  igraph_integer_t *no = malloc(sizeof(igraph_integer_t));
+//  igraph_int_init(no, 0);  
   igraph_vector_int_init(csize, 0);
   igraph_vector_int_init(membership, 0);
+  VECTOR(*csize)[0] = 0;
+  VECTOR(*membership)[0] = 0;
   igraph_connected_components(graph, membership, csize, no,  IGRAPH_WEAK);
   con->csize = csize;
   con->membership = membership;
@@ -178,4 +183,95 @@ struct connected_components * get_components(igraph_t *graph){
 }
 
 
+igraph_vector_int_t * does_adding_ends_a_certain_component(igraph_t *graph, int id_in_graph, int direction, int vertex){
+  int _t[4] = { 0, 3 , 6, 9};
+  igraph_vector_int_t *result = malloc(sizeof(igraph_t));
+  igraph_vector_int_init(result, 0);
+  igraph_subcomponent(graph, result, id_in_graph + _t[direction] + vertex, IGRAPH_ALL);
+  int k = igraph_vector_int_size(result);
+  for (int i = 0 ; i < k; i++){
+    if (attributes[VECTOR(*result)[i]].vertex_is_open == 1) return NULL;    
+  }
+  return result;
+}
+
+
+igraph_vector_ptr_t * does_adding_ends_at_least_a_component(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck){
+  int d[4] ={0, 3, 6, 9,};
+  igraph_t *graph = malloc(sizeof(igraph_t));
+  igraph_copy(graph,g);
+  igraph_vector_ptr_t * components = malloc(sizeof(igraph_vector_ptr_t));
+  igraph_vector_ptr_init(components, 0);  // size = 0
+  graph = add_tile_to_graph(graph, t, neighbours_ids, id_in_deck);
+  int id_in_graph = 13 * id_in_deck;
+  for (int i = 0; i < 4; ++i){
+    for (int j = 0; j < 3; ++j){
+      if (attributes[id_in_graph + d[i] + j].already_added_to_a_component == 0){
+	igraph_vector_int_t *component = does_adding_ends_a_certain_component(graph,id_in_graph, i, j);
+	if (component != NULL){
+	  int k = igraph_vector_int_size(component);
+	  for (int l = 0 ; l < k; l++){
+	    if (VECTOR(*component)[l] >= id_in_graph)
+	    attributes[VECTOR(*component)[l]].already_added_to_a_component = 1;
+	  }
+	  igraph_vector_ptr_push_back(components, component);
+	}
+      }
+    }
+  }
+  igraph_integer_t degree;
+  igraph_degree_1(graph, &degree, id_in_graph + 12, IGRAPH_ALL, 0);
   
+  if (attributes[id_in_graph + 12].already_added_to_a_component == 0 && degree == 0){
+attributes[id_in_graph + 12].already_added_to_a_component = 1;    
+    igraph_vector_int_t *middle = malloc(sizeof(igraph_t));
+    igraph_vector_int_init(middle, 0);
+    igraph_vector_int_push_back(middle, id_in_graph + 12);
+    igraph_vector_ptr_push_back(components, middle);        
+  }
+  for (int i = id_in_graph; i < id_in_graph + 13; ++i){
+    attributes[i].already_added_to_a_component = 0;
+  }
+  int t_neighb[4]= { 6, 9, 0, 3};
+  int t_[4]= { 0, 3, 6, 9};
+  for (int i = 0; i < 4; i++) {
+    if (neighbours_ids[i] != -1) {
+      int neighbour_id = 13 * neighbours_ids[i];
+      for (int j = 0; j < 3; j++) {
+	
+	attributes[neighbour_id + t_neighb[i]+2-j].vertex_is_open = 1;
+	attributes[id_in_graph + t_[i] + j].vertex_is_open = 0;
+      }
+    }
+  }
+    
+  igraph_destroy(graph);
+  return components;
+}
+
+int calculate_score_in_a_component(igraph_vector_int_t *component) {
+    int s = 0;
+    for (int i = 0; i < igraph_vector_int_size(component); ++i) {
+        enum color_t color = attributes[VECTOR(*component)[i]].color;
+        if (color == PURPLE && attributes[VECTOR(*component)[i]].does_vertex_exist_in_renault == 1)
+            s += 8;
+
+        if (color == GRAY && attributes[VECTOR(*component)[i]].does_vertex_exist_in_renault == 1)
+            s += 4;
+
+        if (color == GREEN && attributes[VECTOR(*component)[i]].does_vertex_exist_in_renault == 1)
+            s += 1;
+    }
+    return s;
+}
+
+int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck){
+  int s = 0;
+  igraph_vector_int_t *components = does_adding_ends_at_least_a_component(g, t, neighbours_ids, id_in_deck);
+  
+  for (int i = 0; i < igraph_vector_ptr_size(components); i++) {
+    igraph_vector_int_t *component = (igraph_vector_int_t *)igraph_vector_ptr_e(components, i);
+    s += calculate_score_in_a_component(component);  
+  }
+  return s;
+}
