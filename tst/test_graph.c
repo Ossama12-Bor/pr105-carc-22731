@@ -6,8 +6,8 @@
 void test_graph_add(void){
   igraph_t *graph = malloc(sizeof(igraph_t));
   igraph_empty(graph,0,IGRAPH_UNDIRECTED);
-    int neighbours_ids[4]={-1,-1,-1,-1};  
-    igraph_t *graph_1 = add_tile_to_graph(graph,CARC_TILE_INIT,neighbours_ids,0);
+  int neighbours_ids[4]={-1,-1,-1,-1};  
+  igraph_t *graph_1 = add_tile_to_graph(graph,CARC_TILE_INIT,neighbours_ids,0);
     assert(igraph_vcount(graph_1) == 13);
     assert(igraph_ecount(graph_1) == 9);
     neighbours_ids[0] = 0;
@@ -131,18 +131,29 @@ void test_score(void){
     tests[3] = -1;
     tests[1] = 0;
     s += added_score(graph, CARC_TILE_XROAD,tests ,3);
-    assert(s == 8);
+    assert(s == 0);
     graph = add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,3);
     tests[1] = -1;
     tests[2] = 3;    
     s += added_score(graph, CARC_TILE_XROAD,tests ,4);
-    assert(s == 20);
+    assert(s == 4);
     graph = add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,4);
     tests[2] = -1;
     tests[1] = 3;
     s += added_score(graph, CARC_TILE_TINI,tests ,5);
-    assert(s == 20);
+    assert(s == 4);
     graph = add_tile_to_graph(graph, CARC_TILE_TINI,tests ,5);
+    tests[0] = 5;
+    tests[1] = -1;
+    s += added_score(graph, CARC_TILE_INIT,tests ,6);
+    assert(s == 28);
+    graph = add_tile_to_graph(graph, CARC_TILE_INIT,tests ,6);
+    tests[0] = -1;    
+    tests[2] = 0;
+    tests[3] = 4;
+    s += added_score(graph, CARC_TILE_TINI,tests ,7);
+    assert(s == 52);
+    graph = add_tile_to_graph(graph, CARC_TILE_TINI,tests ,7);
     
     
     

@@ -253,7 +253,7 @@ int calculate_score_in_a_component(igraph_vector_int_t *component) {
     int s = 0;
     for (int i = 0; i < igraph_vector_int_size(component); ++i) {
         enum color_t color = attributes[VECTOR(*component)[i]].color;
-        if (color == PURPLE && attributes[VECTOR(*component)[i]].does_vertex_exist_in_renault == 1)
+        if (color == BROWN && attributes[VECTOR(*component)[i]].does_vertex_exist_in_renault == 1)
             s += 8;
 
         if (color == GRAY && attributes[VECTOR(*component)[i]].does_vertex_exist_in_renault == 1)
@@ -275,3 +275,58 @@ int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_d
   }
   return s;
 }
+
+/*/players strategies
+
+
+struct connected_components * find_least_component_from_one_side(igraph_t *g, struct tile_t t, int direction, int vertex){
+  int _t[4] = {0, 3, 6, 9};
+  enum color_t color = t.c[_t[direction] + vertex];
+  igraph_graph_list_t *complist = malloc(sizeof(igraph_graph_list_t));
+  igraph_t *component = malloc(sizeof(igraph_t));
+  igraph_graph_list_init(&complist, 0);  
+  igraph_decompose(g, complist, IGRAPH_WEAK, -1, 0);
+  igraph_t * m = NULL;
+  int i;
+  int n = igraph_graph_list_size(complist);
+  for (i = 0 ; i < n; ++i){
+    component = igraph_graph_list_get_ptr(complist, i);
+    if (attributes[VECTOR(*component)[i]].color == color){
+      m = component;
+      break;
+    }
+  }
+  if (m == NULL) return NULL;
+  for (int j = i; j < n; ++i){
+    component = igraph_graph_list_get_ptr(complist, j);
+    if ((attributes[VECTOR(*component)[j]].color == color) && (igraph_vcount(component) > igraph_vcounn(m))){
+      m = component;
+      break;
+    }
+  }
+  return m;
+}
+
+
+
+//meeple functions
+
+
+//int meeple_can_be_added(igraph_t *g, int vertex_in_graph)
+void add_meeple(igraph_t *g, int vertex_in_graph){
+  if (attributes[vertex_in_graph].is_there_meeple == 0) {
+  igraph_vector_int_t *result = malloc(sizeof(igraph_t));
+  igraph_vector_int_init(result, 0);
+  igraph_subcomponent(g, result, vertex_in_graph, IGRAPH_ALL);      
+  int k = igraph_vector_int_size(result);
+  for (int i = 0 ; i < k; i++){
+  attributes[VECTOR(*result)[i]].is_there_meeple = 1;      
+  }
+  int id_in_graph = 13 * vertex_in_graph;
+  for (int i =id_in_graph; i < 13; ++i){
+    attributes[i].is_there_meeple = 1;
+  }
+  }
+}
+
+*/
