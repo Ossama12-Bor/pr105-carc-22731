@@ -1,5 +1,5 @@
 IGRAPH_PATH ?= /net/npers/renault/save/igraph-0.10.10/install
-#IGRAPH_PATH_IHATTI = /usr/local/lib/
+
 CFLAGS = -std=gnu99 -Wall -Wextra -Wno-trampolines -fPIC -g3 \
 	-I$(IGRAPH_PATH)/include/igraph
 IGRAPH_LIBDIR = $(shell [ -e $(IGRAPH_PATH)/lib ] && \
@@ -10,35 +10,35 @@ LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_LIBDIR) -Wl,--rpath=$(IGRAPH_LIBDIR)
 BASE_FILES = \
         deck.c
 
-OBJS=liste.o board.o deck.o tile.o graph.o
+OBJS = build/liste.o build/board.o build/deck.o build/tile.o build/graph.o
 all: build
 
-build: server client deck.o
+build: server client build/deck.o
 
-%.o: src/%.c
-	$(CC) $< $(CFLAGS) -c
+build/%.o: src/%.c
+	$(CC) $< $(CFLAGS) -c -o $@
 
-server:
+server: 
 
 client:
 	gcc -fPIC -shared -o install/libplayer1.so src/players/player1.c -L install
 #	gcc -fPIC -shared -o libplayer2.so src/players/player2.c -L install
 
-alltests: $(OBJS) test_list.o test_tile.o test_board.o test_graph.o
-	gcc $(OBJS) test_list.o -o test -I src -I tst $(LDFLAGS)
-	gcc $(OBJS) test_tile.o -o testtile -I src -I tst $(LDFLAGS)
-	gcc $(OBJS) test_board.o -o testboard -I src -I tst $(LDFLAGS)
-	gcc $(OBJS) test_graph.o -o testgraph -I src -I tst $(LDFLAGS)
+alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/test_graph.o
+	mkdir install/tests
+	gcc $(OBJS) build/test_list.o -o install/tests/test_list -I src -I tst $(LDFLAGS)
+	gcc $(OBJS) build/test_tile.o -o install/tests/test_tile -I src -I tst $(LDFLAGS)
+	gcc $(OBJS) build/test_board.o -o install/tests/test_board -I src -I tst $(LDFLAGS)
+	gcc $(OBJS) build/test_graph.o -o install/tests/test_graph -I src -I tst $(LDFLAGS)
 
-%.o: src/%.c
-	$(CC) -c $< $(CFLAGS) 
-%.o: tst/%.c 
-	$(CC) -c $< $(CFLAGS) -I src
+build/%.o: tst/%.c 
+	$(CC) -c $< $(CFLAGS) -I src -o $@
+
 test: alltests
 
 install: server client test
 
 clean:
-	@rm -f *~ src/*~ *.o
+	@rm -f *~ src/*~ *.o build/*.o -r install/tests
 
 .PHONY: client install test clean
