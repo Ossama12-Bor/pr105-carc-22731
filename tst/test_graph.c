@@ -7,22 +7,22 @@ void test_graph_add(void){
   igraph_t *graph = malloc(sizeof(igraph_t));
   igraph_empty(graph,0,IGRAPH_UNDIRECTED);
   int neighbours_ids[4]={-1,-1,-1,-1};  
-  igraph_t *graph_1 = add_tile_to_graph(graph,CARC_TILE_INIT,neighbours_ids,0);
-    assert(igraph_vcount(graph_1) == 13);
-    assert(igraph_ecount(graph_1) == 9);
+  add_tile_to_graph(graph,CARC_TILE_INIT,neighbours_ids,0);
+    assert(igraph_vcount(graph) == 13);
+    assert(igraph_ecount(graph) == 9);
     neighbours_ids[0] = 0;
-    graph = add_tile_to_graph(graph_1, CARC_TILE_XROAD, neighbours_ids,1);      
+    add_tile_to_graph(graph, CARC_TILE_XROAD, neighbours_ids,1);      
     neighbours_ids[0] = -1; 
     neighbours_ids[3] = 1;
-    graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,2);
+    add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,2);
     neighbours_ids[3] = 0;
     neighbours_ids[2] = 2;        
-    graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,3);
+    add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,3);
     neighbours_ids[2] = 3;
     neighbours_ids[3] = -1;                
-    graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,4);
+    add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,4);
     neighbours_ids[2] = 0;
-    graph = add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,5);
+    add_tile_to_graph(graph, CARC_TILE_INIT, neighbours_ids,5);
     display_graph(graph,"graph.dot");
   igraph_destroy(graph);
 }
@@ -31,7 +31,7 @@ void test_components(void){
    igraph_t *test = malloc(sizeof(igraph_t));
     igraph_empty(test, 0, IGRAPH_UNDIRECTED);
     int tests[4] ={-1, -1, -1, -1};
-    igraph_t *test_1 = add_tile_to_graph(test, CARC_TILE_INIT, tests, 0);
+    add_tile_to_graph(test, CARC_TILE_INIT, tests, 0);
 
     //tests for the first function
     for (int i = 0; i < 3; ++i){
@@ -41,7 +41,7 @@ void test_components(void){
     assert(does_adding_ends_a_certain_component(test, 0,3,i) == NULL);
     }
     tests[2] = 0;
-    test = add_tile_to_graph(test , CARC_TILE_TINI, tests, 1);
+    add_tile_to_graph(test , CARC_TILE_TINI, tests, 1);
     for (int i =0; i < 3; ++i){
     assert(does_adding_ends_a_certain_component(test, 13, 2, i) != NULL);
     }
@@ -56,14 +56,14 @@ void test_components(void){
     }
     
     tests[2] = 1;
-    test = add_tile_to_graph(test , CARC_TILE_INIT, tests, 2);
+    add_tile_to_graph(test , CARC_TILE_INIT, tests, 2);
     assert(does_adding_ends_a_certain_component(test, 26, 2, 0) == NULL);
     tests[2] = -1;
     tests[3] = 2;
-    test = add_tile_to_graph(test, CARC_TILE_XROAD, tests, 3);
+    add_tile_to_graph(test, CARC_TILE_XROAD, tests, 3);
     tests[3] = -1;
     tests[1] = 2;
-    test = add_tile_to_graph(test, CARC_TILE_XROAD, tests, 4);    
+    add_tile_to_graph(test, CARC_TILE_XROAD, tests, 4);    
     assert(does_adding_ends_a_certain_component(test, 39, 3, 0) == NULL);
     assert(does_adding_ends_a_certain_component(test, 39, 3, 1) != NULL);
       igraph_vector_int_print(does_adding_ends_a_certain_component(test, 39, 3, 1));    
@@ -73,7 +73,7 @@ void test_components(void){
     tests[1] = -1;
     tests[2] = -1;
     tests[3] = 1;
-   igraph_vector_ptr_t *components = does_adding_ends_at_least_a_component(test, CARC_TILE_XROAD, tests, 5);
+   igraph_vector_ptr_t *components = set_of_new_finished(test, CARC_TILE_XROAD, tests, 5);
 //    test = add_tile_to_graph(test,CARC_TILE_XROAD, tests, 5);
     assert(igraph_vector_ptr_size(components) != 0);
       for (int i = 0; i < igraph_vector_ptr_size(components); i++) {
@@ -87,20 +87,20 @@ void test_components(void){
       tests[0] = 4;
       tests[1] = 1;
       tests[3] = -1;
-      igraph_vector_ptr_t *components_2 = does_adding_ends_at_least_a_component(test, CARC_TILE_XROAD, tests, 5);
+      igraph_vector_ptr_t *components_2 = set_of_new_finished(test, CARC_TILE_XROAD, tests, 5);
       for (int i = 0; i < igraph_vector_ptr_size(components_2); i++) {
         igraph_vector_int_t *vec = (igraph_vector_int_t *)igraph_vector_ptr_e(components_2, i);
         printf("Vector %d: ", i);
         igraph_vector_int_print(vec);
       }
 
-    test = add_tile_to_graph(test, CARC_TILE_XROAD, tests, 5);
+    add_tile_to_graph(test, CARC_TILE_XROAD, tests, 5);
 
     tests[0] = 3;
     tests[1] = -1;
     tests[2] = -1;
     tests[3] = 1;    
-    components = does_adding_ends_at_least_a_component(test, CARC_TILE_XROAD, tests, 6);
+    components = set_of_new_finished(test, CARC_TILE_XROAD, tests, 6);
 
       for (int i = 0; i < igraph_vector_ptr_size(components); i++) {
         igraph_vector_int_t *vec = (igraph_vector_int_t *)igraph_vector_ptr_e(components, i);
@@ -115,53 +115,54 @@ void test_components(void){
 }
 
 void test_score(void){
+
   igraph_t *graph = malloc(sizeof(igraph_t));
   igraph_empty(graph,0,IGRAPH_UNDIRECTED);
     int tests[4]={-1,-1,-1,-1};  
-    igraph_t *graph_1 = add_tile_to_graph(graph,CARC_TILE_INIT,tests,0);
+    add_tile_to_graph(graph,CARC_TILE_INIT,tests,0);
   tests[0] = 0;
-    int s = added_score(graph_1, CARC_TILE_GREEN,tests ,1);
+    int s = added_score(graph, CARC_TILE_GREEN,tests ,1);
     assert(s == 0);
-    graph = add_tile_to_graph(graph, CARC_TILE_GREEN,tests ,1);
+    add_tile_to_graph(graph, CARC_TILE_GREEN,tests ,1);
     tests[0] = -1;
     tests[3] = 1;
     s += added_score(graph, CARC_TILE_GREEN,tests ,2);
     assert(s == 0);
-    graph = add_tile_to_graph(graph, CARC_TILE_GREEN,tests ,2);
+    add_tile_to_graph(graph, CARC_TILE_GREEN,tests ,2);
     tests[3] = -1;
     tests[1] = 0;
     s += added_score(graph, CARC_TILE_XROAD,tests ,3);
     assert(s == 0);
-    graph = add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,3);
+    add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,3);
     tests[1] = -1;
     tests[2] = 3;    
     s += added_score(graph, CARC_TILE_XROAD,tests ,4);
     assert(s == 4);
-    graph = add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,4);
+    add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,4);
     tests[2] = -1;
     tests[1] = 3;
     s += added_score(graph, CARC_TILE_TINI,tests ,5);
     assert(s == 4);
-    graph = add_tile_to_graph(graph, CARC_TILE_TINI,tests ,5);
+    add_tile_to_graph(graph, CARC_TILE_TINI,tests ,5);
     tests[0] = 5;
     tests[1] = -1;
     s += added_score(graph, CARC_TILE_INIT,tests ,6);
     assert(s == 28);
-    graph = add_tile_to_graph(graph, CARC_TILE_INIT,tests ,6);
+    add_tile_to_graph(graph, CARC_TILE_INIT,tests ,6);
     tests[0] = -1;    
     tests[2] = 0;
     tests[3] = 4;
     s += added_score(graph, CARC_TILE_TINI,tests ,7);
     assert(s == 52);
-    graph = add_tile_to_graph(graph, CARC_TILE_TINI,tests ,7);
+    add_tile_to_graph(graph, CARC_TILE_TINI,tests ,7);
     
     
     
     display_graph(graph,"test.dot");    
     }
 int main() {    
-//  test_graph_add();
-//  test_components();  
+  test_graph_add();
+  test_components();  
   test_score();
     return 0;
 }
