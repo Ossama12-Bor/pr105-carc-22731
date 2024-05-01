@@ -93,13 +93,13 @@ int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty) {
   return 1;
 }
 
-struct pos_t*get_possible_moves(struct board_t*board,int id_in_Type){
+struct pos_t*get_possible_moves(struct board_t*board,struct tile_t tile){
   struct pos_t *new_empty=malloc(sizeof(struct pos_t)*set_size(board->empty));
   int count=0;
   struct lelement *first=get_head(board->empty);
   int size=set_size(board->empty);
   for(int i=0;i<size;i++){
-    if(correct_pasting(board,TILE_TYPES[id_in_Type],i)){
+    if(correct_pasting(board,tile,i)){
       	(new_empty+count)->type_id=i; //on stocke les indices des positions disponibles de empty dans new_empty
         (new_empty+count)->box=get_data(first);
       	count++;
@@ -111,8 +111,8 @@ struct pos_t*get_possible_moves(struct board_t*board,int id_in_Type){
 
 }
 
-struct case_t *get_optimal_case(struct board_t *board,int id_in_Type){
-	struct pos_t *avail_positions=get_possible_moves(board,id_in_Type);
+/*struct case_t *get_optimal_case(struct board_t *board,struct tile_t tile,enum player_color_t c){
+	struct pos_t *avail_positions=get_possible_moves(board,tile);
   struct pos_t avail_pos;
   if(avail_positions != NULL){
     avail_pos=avail_positions[0];
@@ -122,16 +122,34 @@ struct case_t *get_optimal_case(struct board_t *board,int id_in_Type){
     avail_pos.box= get_data(get_head(board->empty));
   }
     struct case_t *optimal_tile=avail_pos.box;
-    board->g=add_tile_to_graph(board->g,TILE_TYPES[id_in_Type],optimal_tile->neighbors,board->size);
+    board->g=add_tile_to_graph(board->g,tile,optimal_tile->neighbors,board->size);
 	  change_neighbours(board,avail_pos.type_id);
 	return optimal_tile;  
 }
 
-void add_tile(struct board_t *board,int id_tile){
+*/ 
+int equal(unsigned int *t1,unsigned int *t2){
+  for(int i=0;i<MAX_CONNECTIONS;i++){
+    if(t1[i]!=t2[i])
+      return 0; 
+  }
+  return 1;
+}
+
+int tile_type_id(struct tile_t tile){
+  for(int i=0;i<NUM_TILE_TYPES;i++){
+    if(equal(tile.t,TILE_TYPES[i].t) && equal(tile.c,TILE_TYPES[i].c))
+      return i;
+  }
+  return -1;
+}
+
+void add_tile(struct board_t *board,struct tile_t tile,struct pos_t optimal_pos){
 	
-	struct case_t *box= get_optimal_case(board,id_tile);
-	board->tiles[board->size].type_id=id_tile;
-  board->tiles[board->size].box=box;
+  board->g=add_tile_to_graph(board->g,tile,(optimal_pos.box)->neighbors,board->size);
+	change_neighbours(board,optimal_pos.type_id);
+	board->tiles[board->size].type_id=tile_type_id(tile);
+  board->tiles[board->size].box=optimal_pos.box;
   board->size+=1;
 }
 

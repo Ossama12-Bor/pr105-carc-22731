@@ -36,13 +36,13 @@ int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty);
 
 //Same but only cases matching the tile : id
 
-struct pos_t*get_possible_moves(struct board_t*board,int id_in_Type);
+struct pos_t*get_possible_moves(struct board_t*board,struct tile_t tile);
 
 
-struct case_t *get_optimal_case(struct board_t *board,int id_in_Type);
+//struct case_t *get_optimal_case(struct board_t *board,int id_in_Type);
 //Get the case of coordinates (x,y) in the board
 
-void add_tile(struct board_t *board,int id_tile);
+void add_tile(struct board_t *board,struct tile_t tile,struct pos_t optimal_pos);
 
 //Get how many tiles are there in the board
 
