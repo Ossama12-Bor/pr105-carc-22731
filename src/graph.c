@@ -6,93 +6,43 @@
 #include "graph.h"
 
   
-struct attribute attributes[NUM_TILES*13];
+struct attribute attributes[13*NUM_TILES];
 
+void initialize_coordinates_of_middle(){
+int coords[13][2] = {
+    {-1, 2}, {0, 2}, {1, 2}, {2, 1}, {2, 0}, {2, -1},
+    {1, -2}, {0, -2}, {-1, -2}, {-2, -1}, {-2, 0}, {-2, 1}, {0, 0}
+};
+
+for (int i = 0; i < 13; i++) {
+    attributes[i].coord.x = coords[i][0];
+    attributes[i].coord.y = coords[i][1];
+}  
   
-struct components_t *get_connected_components(struct tile_t t) {
-  unsigned int m = 0;
-  for (unsigned int i = 0; i < 13; ++i) {
-    if (t.t[i] > m) m=t.t[i];
-  }
-
-  struct components_t *components = malloc(sizeof(struct components_t));
-  components->components = malloc(sizeof(struct component_t) * (m + 1));
-  components->size = m + 1;
-  for (unsigned int i = 0; i <= m; i++) {
-    components->components[i].number = 0; 
-  }  
-
-  for (unsigned int i = 0; i < 13; ++i) {
-    components->components[t.t[i]].number++;
-  }
-
-  for (unsigned int i = 0; i <= m; i++) {  
-    components->components[i].vertices = malloc(sizeof(unsigned int) * components->components[i].number);
-    unsigned int compt = 0;
-    for (unsigned int j = 0; j < 13; j++) {
-      if (t.t[j] == i) {
-        components->components[i].vertices[compt] = j;
-        compt++;
-      }
-    }
-  }
-  
-
-  return components;
 }
 
 igraph_t *create_graph_for_tile(igraph_t *graph, int id_in_graph, struct tile_t t){
-attributes[0].coord.x = -1;
-attributes[0].coord.y = 2;
-attributes[1].coord.x = 0;
-attributes[1].coord.y = 2;
-attributes[2].coord.x = 1;
-attributes[2].coord.y = 2;
-attributes[3].coord.x = 2;
-attributes[3].coord.y = 1;
-attributes[4].coord.x = 2;
-attributes[4].coord.y = 0;
-attributes[5].coord.x = 2;
-attributes[5].coord.y = -1;
-attributes[6].coord.x = 1;
-attributes[6].coord.y = -2;
-attributes[7].coord.x = 0;
-attributes[7].coord.y = -2;
-attributes[8].coord.x = -1;
-attributes[8].coord.y = -2;
-attributes[9].coord.x = -2;
-attributes[9].coord.y = -1;
-attributes[10].coord.x = -2;
-attributes[10].coord.y = 0;
-attributes[11].coord.x = -2;
-attributes[11].coord.y = 1;
-attributes[12].coord.x = 0;
-attributes[12].coord.y = 0;  
-  struct components_t *components = get_connected_components(t);
-//  printf("%d\n\n",components->size);
-//  igraph_t* graph = malloc(sizeof(igraph_t));
-//  igraph_empty(graph,13,IGRAPH_UNDIRECTED);
-   for (int i = 0; i < components->size; ++i){
-        // Iterate over vertices in the current component
-        for (int j = 0; j < components->components[i].number; ++j){
-            // Add edges between adjacent vertices in the component
-            if (j < components->components[i].number - 1) {
-                igraph_add_edge(graph,id_in_graph +  components->components[i].vertices[j], 
-                                id_in_graph + components->components[i].vertices[j+1]);
+  if (id_in_graph == 0){
+    initialize_coordinates_of_middle();
+  }
+   for (int i = 0; i < 13; ++i){
+        for (int j = i-1; j >= 0; --j){
+            if (t.t[i] == t.t[j]) {
+                igraph_add_edge(graph,id_in_graph +  i, 
+                                id_in_graph + j);
+		break;
             }
         }
     }
-  for (int i = 0; i < components->size; ++i){
-    free(components->components[i].vertices);
-  }
-  free(components->components);
-  free(components);
   return graph; 
 }
+
+//adding a tile to a graph functions
+
 void initialize_new_tile(struct tile_t t,int id_in_graph){
   for(int i = id_in_graph ; i < id_in_graph + 13; ++i){
       attributes[i].does_vertex_exist_in_renault = 1;
-      attributes[i].color = t.c[i];
+      attributes[i].color = t.c[i-id_in_graph];
       attributes[i].vertex_is_open = 1;
       attributes[i].is_there_meeple = 0;
   }
@@ -105,42 +55,45 @@ void change__coord_attribute(int id_in_graph, int neighbour_id, int k){
     attributes[i + id_in_graph].coord.y = attributes[neighbour_id + i].coord.y+t[k][1];    
   }
 }
-igraph_t *add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], int id_in_deck) {
+
+void add_vertices_between_edges(igraph_t *graph, struct tile_t t, int id_in_graph, int neighbours_ids[4], int i){
   int t_neighb[4]= { 6, 9, 0, 3};
-  int t_[4]= { 0, 3, 6, 9};
-    int id_in_graph = 13 * id_in_deck;  
-  for(int i = id_in_graph ; i < id_in_graph + 13; ++i){
-      attributes[i].does_vertex_exist_in_renault = 1;
-      attributes[i].color = t.c[i-id_in_graph];
-      attributes[i].vertex_is_open = 1;
-      attributes[i].is_there_meeple = 0;
+  int t_[4]= { 0, 3, 6, 9};  
+  int neighbour_id = 13 * neighbours_ids[i];
+  for (int j = 0; j < 3; j++) {
+    igraph_add_edge(graph, id_in_graph + t_[i] + j, neighbour_id + t_neighb[i]+2-j);
+    attributes[neighbour_id + t_neighb[i]+2-j].does_vertex_exist_in_renault = 0;
+    attributes[neighbour_id + t_neighb[i]+2-j].vertex_is_open = 0;
+    attributes[id_in_graph + t_[i] + j].vertex_is_open = 0;
+    change__coord_attribute(id_in_graph, neighbour_id, i);
+  }
 }
+
+
+void add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], int id_in_deck) {
+  int id_in_graph = 13 * id_in_deck;  
+  initialize_new_tile(t,id_in_graph);
   attributes[id_in_graph + 12].vertex_is_open = 0;
   igraph_add_vertices(graph, 13, NULL);
-  graph = create_graph_for_tile(graph, id_in_graph, t);
+  igraph_t *g= create_graph_for_tile(graph, id_in_graph, t);
     for (int i = 0; i < 4; i++) {
         if (neighbours_ids[i] != -1) {
-            int neighbour_id = 13 * neighbours_ids[i];
-            for (int j = 0; j < 3; j++) {
-	      igraph_add_edge(graph, id_in_graph + t_[i] + j, neighbour_id + t_neighb[i]+2-j);
-	      attributes[neighbour_id + t_neighb[i]+2-j].does_vertex_exist_in_renault = 0;
-	      attributes[neighbour_id + t_neighb[i]+2-j].vertex_is_open = 0;
-	      attributes[id_in_graph + t_[i] + j].vertex_is_open = 0;
-	      change__coord_attribute(id_in_graph, neighbour_id, i);
-            }
-        }
+	  add_vertices_between_edges(graph, t, id_in_graph, neighbours_ids, i);
+	}
     }
-    return graph;
 }
+
+
+//displaying graph function
+
+
 void display_graph(igraph_t *graph, const char *filename) {
     FILE *outfile;
     char *colors[] = {"greenyellow", "gray70", "blue", "saddlebrown", "webpurple"};
     outfile = fopen(filename, "w");
     fprintf(outfile, "graph {\n");
-//    fprintf(outfile, "  graph [layout = fdp , overlap = false, outputorder = edgesfirst, splines=true]\n");
     fprintf(outfile, "graph [pad=\"0.212,0.055\" bgcolor=lightgray ]\n");   
     fprintf(outfile, "  node [shape = circle, width=0.6]\n");
-//    fprintf(outfile, "edge [fontsize=40] ");
 
     for (igraph_integer_t i = 0; i < igraph_vcount(graph); i++) {
         double x = 0.0, y = 0.0;
@@ -154,7 +107,6 @@ void display_graph(igraph_t *graph, const char *filename) {
     for (igraph_integer_t i = 0; i < igraph_ecount(graph); i++) {
         igraph_integer_t from, to;
         igraph_edge(graph, i, &from, &to);
-        // Calculate the Euclidean distance between the two nodes
         double x1 = attributes[from].coord.x;
         double y1 = attributes[from].coord.y;
         double x2 = attributes[to].coord.x;
@@ -165,22 +117,8 @@ void display_graph(igraph_t *graph, const char *filename) {
     fclose(outfile);
 }
 
-struct connected_components * get_components(igraph_t *graph){
-  struct connected_components *con = malloc(sizeof(struct connected_components));
-  igraph_vector_int_t *csize = malloc(sizeof(igraph_vector_int_t));
-  igraph_vector_int_t *membership = malloc(sizeof(igraph_vector_int_t));  
-  igraph_integer_t *no = malloc(sizeof(igraph_integer_t));
-//  igraph_int_init(no, 0);  
-  igraph_vector_int_init(csize, 0);
-  igraph_vector_int_init(membership, 0);
-  VECTOR(*csize)[0] = 0;
-  VECTOR(*membership)[0] = 0;
-  igraph_connected_components(graph, membership, csize, no,  IGRAPH_WEAK);
-  con->csize = csize;
-  con->membership = membership;
-  con->no = no;
-  return con;
-}
+//functions to calculate the new finished connected components after adding a tile to a graph
+
 
 
 igraph_vector_int_t * does_adding_ends_a_certain_component(igraph_t *graph, int id_in_graph, int direction, int vertex){
@@ -196,13 +134,13 @@ igraph_vector_int_t * does_adding_ends_a_certain_component(igraph_t *graph, int 
 }
 
 
-igraph_vector_ptr_t * does_adding_ends_at_least_a_component(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck){
+igraph_vector_ptr_t * set_of_new_finished(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck){
   int d[4] ={0, 3, 6, 9,};
   igraph_t *graph = malloc(sizeof(igraph_t));
   igraph_copy(graph,g);
   igraph_vector_ptr_t * components = malloc(sizeof(igraph_vector_ptr_t));
   igraph_vector_ptr_init(components, 0);  // size = 0
-  graph = add_tile_to_graph(graph, t, neighbours_ids, id_in_deck);
+  add_tile_to_graph(graph, t, neighbours_ids, id_in_deck);
   int id_in_graph = 13 * id_in_deck;
   for (int i = 0; i < 4; ++i){
     for (int j = 0; j < 3; ++j){
@@ -267,7 +205,7 @@ int calculate_score_in_a_component(igraph_vector_int_t *component) {
 
 int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck){
   int s = 0;
-  igraph_vector_int_t *components = does_adding_ends_at_least_a_component(g, t, neighbours_ids, id_in_deck);
+  igraph_vector_int_t *components = set_of_new_finished(g, t, neighbours_ids, id_in_deck);
   
   for (int i = 0; i < igraph_vector_ptr_size(components); i++) {
     igraph_vector_int_t *component = (igraph_vector_int_t *)igraph_vector_ptr_e(components, i);
@@ -276,10 +214,10 @@ int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_d
   return s;
 }
 
-/*/players strategies
+//players strategies
 
 
-struct connected_components * find_least_component_from_one_side(igraph_t *g, struct tile_t t, int direction, int vertex){
+/*struct connected_components * find_least_component_from_one_side(igraph_t *g, struct tile_t t, int direction, int vertex){
   int _t[4] = {0, 3, 6, 9};
   enum color_t color = t.c[_t[direction] + vertex];
   igraph_graph_list_t *complist = malloc(sizeof(igraph_graph_list_t));
@@ -299,7 +237,7 @@ struct connected_components * find_least_component_from_one_side(igraph_t *g, st
   if (m == NULL) return NULL;
   for (int j = i; j < n; ++i){
     component = igraph_graph_list_get_ptr(complist, j);
-    if ((attributes[VECTOR(*component)[j]].color == color) && (igraph_vcount(component) > igraph_vcounn(m))){
+    if ((attributes[VECTOR(*component)[j]].color == color) && (igraph_vcount(component) > igraph_vcount(m))){
       m = component;
       break;
     }
@@ -312,9 +250,15 @@ struct connected_components * find_least_component_from_one_side(igraph_t *g, st
 //meeple functions
 
 
-//int meeple_can_be_added(igraph_t *g, int vertex_in_graph)
+int meeple_can_be_added(igraph_t *g, int vertex_in_graph){
+  int id_in_graph = vertex_in_graph / 13;
+  for (int i = id_in_graph; i < id_in_graph + 13; ++i){
+    if (attributes[i].is_there_meeple == 1) return 0;
+  }
+  return 1;
+}
 void add_meeple(igraph_t *g, int vertex_in_graph){
-  if (attributes[vertex_in_graph].is_there_meeple == 0) {
+  if (meeple_can_be_added(g,vertex_in_graph)) {
   igraph_vector_int_t *result = malloc(sizeof(igraph_t));
   igraph_vector_int_init(result, 0);
   igraph_subcomponent(g, result, vertex_in_graph, IGRAPH_ALL);      
@@ -323,10 +267,11 @@ void add_meeple(igraph_t *g, int vertex_in_graph){
   attributes[VECTOR(*result)[i]].is_there_meeple = 1;      
   }
   int id_in_graph = 13 * vertex_in_graph;
-  for (int i =id_in_graph; i < 13; ++i){
+  for (int i =id_in_graph; i < 13 + id_in_graph; ++i){
     attributes[i].is_there_meeple = 1;
   }
   }
 }
+
 
 */
