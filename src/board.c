@@ -52,7 +52,6 @@ struct board_t *initialize_board(){
   set__add_head(game_board->empty,first_case,0,-1);
   game_board->size=0;
   igraph_empty(game_board->g,0,IGRAPH_UNDIRECTED);
-  //initialize_neighbors(game_board->tiles);
   return game_board;
 }
 

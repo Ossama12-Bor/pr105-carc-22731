@@ -11,19 +11,24 @@ void test_board(void){
 
   /*assert(board_size(board)==0);
   assert(set_size(get_board_empty(board))==1);*/
-  
-  add_tile(board,0);
+  struct pos_t pos1=get_possible_moves(board,TILE_TYPES[0])[0];
+  add_tile(board,TILE_TYPES[0],pos1);
   assert(board_size(board)==1);
   print_board(board,"myboard");
-  add_tile(board,1);
+  struct pos_t pos2=get_possible_moves(board,TILE_TYPES[1])[0];
+  add_tile(board,TILE_TYPES[1],pos2);
   print_board(board,"my beautiful board");
-  add_tile(board,1);
+  struct pos_t pos3=get_possible_moves(board,TILE_TYPES[1])[0];
+ add_tile(board,TILE_TYPES[1],pos3);
   print_board(board,"my second beautiful board");
-  add_tile(board,2);
+  struct pos_t pos4=get_possible_moves(board,TILE_TYPES[2])[0];
+  add_tile(board,TILE_TYPES[2],pos4);
   print_board(board,"my third beautiful board");
-  add_tile(board,3);
+  struct pos_t pos5=get_possible_moves(board,TILE_TYPES[3])[0];
+  add_tile(board,TILE_TYPES[3],pos5);
   print_board(board,"my forth beautiful board");
-  add_tile(board,3);
+  struct pos_t pos6=get_possible_moves(board,TILE_TYPES[3])[0];
+  add_tile(board,TILE_TYPES[3],pos6);
   print_board(board,"my fiveth beautiful board");
   free_board(board);
  // deck_free(deck);

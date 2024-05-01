@@ -6,6 +6,7 @@
 //#include <igraph.h>
 struct board_t;
 
+extern struct tile_t TILE_TYPES[];
 
 struct case_t {
   int x,y;
