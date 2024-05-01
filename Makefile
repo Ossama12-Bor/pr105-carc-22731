@@ -25,7 +25,7 @@ client:
 #	gcc -fPIC -shared -o libplayer2.so src/players/player2.c -L install
 
 alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/test_graph.o
-	mkdir install/tests
+	mkdir -p install/tests
 	gcc $(OBJS) build/test_list.o -o install/tests/test_list -I src -I tst $(LDFLAGS)
 	gcc $(OBJS) build/test_tile.o -o install/tests/test_tile -I src -I tst $(LDFLAGS)
 	gcc $(OBJS) build/test_board.o -o install/tests/test_board -I src -I tst $(LDFLAGS)
