@@ -145,7 +145,8 @@ int tile_type_id(struct tile_t tile){
 
 void add_tile(struct board_t *board,struct tile_t tile,struct pos_t optimal_pos){
 	
-  board->g=add_tile_to_graph(board->g,tile,(optimal_pos.box)->neighbors,board->size);
+  //  board->g=add_tile_to_graph(board->g,tile,(optimal_pos.box)->neighbors,board->size);
+  add_tile_to_graph(board->g,tile,(optimal_pos.box)->neighbors,board->size);  
 	change_neighbours(board,optimal_pos.type_id);
 	board->tiles[board->size].type_id=tile_type_id(tile);
   board->tiles[board->size].box=optimal_pos.box;

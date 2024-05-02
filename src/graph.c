@@ -128,7 +128,11 @@ igraph_vector_int_t * does_adding_ends_a_certain_component(igraph_t *graph, int 
   igraph_subcomponent(graph, result, id_in_graph + _t[direction] + vertex, IGRAPH_ALL);
   int k = igraph_vector_int_size(result);
   for (int i = 0 ; i < k; i++){
-    if (attributes[VECTOR(*result)[i]].vertex_is_open == 1) return NULL;    
+    if (attributes[VECTOR(*result)[i]].vertex_is_open == 1) {
+      igraph_vector_int_destroy(result) ;    
+      free(result);
+      return NULL;
+    }
   }
   return result;
 }
@@ -184,6 +188,7 @@ attributes[id_in_graph + 12].already_added_to_a_component = 1;
   }
     
   igraph_destroy(graph);
+  free(graph);
   return components;
 }
 
@@ -203,6 +208,17 @@ int calculate_score_in_a_component(igraph_vector_int_t *component) {
     return s;
 }
 
+void free_components(igraph_vector_ptr_t *components) {
+    for (int i = 0; i < igraph_vector_ptr_size(components); i++) {
+        igraph_vector_int_t *component = (igraph_vector_int_t *)igraph_vector_ptr_e(components, i);
+        igraph_vector_int_destroy(component); // Free the memory allocated for the component
+        free(component); // Free the pointer itself
+    }
+    igraph_vector_ptr_destroy(components); // Free the vector of component pointers
+    free(components); // Free the pointer itself
+}
+
+
 int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck){
   int s = 0;
   igraph_vector_int_t *components = set_of_new_finished(g, t, neighbours_ids, id_in_deck);
@@ -211,6 +227,7 @@ int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_d
     igraph_vector_int_t *component = (igraph_vector_int_t *)igraph_vector_ptr_e(components, i);
     s += calculate_score_in_a_component(component);  
   }
+    free_components(components);
   return s;
 }
 

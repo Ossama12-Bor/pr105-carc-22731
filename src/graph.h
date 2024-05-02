@@ -48,6 +48,8 @@ igraph_vector_int_t * does_adding_ends_a_certain_component(igraph_t *g, int id_i
 //igraph_vector_ptr_t * does_adding_ends_at_least_a_component(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck);
 igraph_vector_ptr_t * set_of_new_finished(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck);
 
+void free_components(igraph_vector_ptr_t *components) ;
+
 int calculate_score_in_a_component(igraph_vector_int_t *component);
 
 int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck);
