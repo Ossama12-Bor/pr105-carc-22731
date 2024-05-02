@@ -19,7 +19,7 @@ void display_player(struct player_t* p){
   printf("Meeples left : %d\n",get_player_meeples(p));
   //printf("Personal Board : \n");
   //display_player_board(p);
-  printf("--------------");/*fix number of - after*/
+  printf("--------------\n");/*fix number of - after*/
 }
 
 

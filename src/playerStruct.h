@@ -4,7 +4,7 @@
 #include "player.h"
 #include "board.h"
 
-/* Structure to manipulate a player */
+// Structure to manipulate a player
 struct player_t{
   int player_id;
   struct board_t* myboard;
