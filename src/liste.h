@@ -30,4 +30,5 @@ int set__add_head(struct set *s, struct case_t *add,enum direction_t d,int tile_
 int set__remove(struct set *s,struct lelement *c) ;
 void free_set(struct set *s) ;
 void set_print(struct set *s,char*prefix);
+int get_id_in_empty(struct set*s,int x,int y);
 #endif

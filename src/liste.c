@@ -7,6 +7,7 @@ int get_ith_neighbor(struct lelement *elt,enum direction_t d){
   return elt->data->neighbors[d];
 }
 
+
 struct link lnk__empty(void) {
   struct link l;
   l.head = NULL;
@@ -119,4 +120,15 @@ void set_print(struct set *s,char*prefix){
     elt=elt->next;
   }
   printf("]\n");
+}
+
+int get_id_in_empty(struct set*s,int x,int y){
+  struct lelement *curseur=s->l->head;
+  for(int i=0;s->size;i++){
+    if(curseur->data->x==x && curseur->data->y==y){
+      return i;
+    }
+    curseur=curseur->next;
+  }
+  return -1;
 }

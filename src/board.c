@@ -153,6 +153,15 @@ void add_tile(struct board_t *board,struct tile_t tile,struct pos_t optimal_pos)
   board->size+=1;
 }
 
+void make_move(struct board_t *board,struct move_t move){
+  struct tile_t tile=move.tile;
+  int id_in_empty=get_id_in_empty(board->empty,move.x,move.y);
+  struct case_t *box=get_data(get_lelement_from_empty(board->empty,id_in_empty));
+  struct pos_t pos={id_in_empty,box};
+  add_tile(board,tile,pos);
+
+}
+
 /* Frees the allocated memory for a board */
 void free_board(struct board_t* game_board){
   for(int i=0;i<game_board->size;i++){
