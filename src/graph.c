@@ -211,11 +211,11 @@ int calculate_score_in_a_component(igraph_vector_int_t *component) {
 void free_components(igraph_vector_ptr_t *components) {
     for (int i = 0; i < igraph_vector_ptr_size(components); i++) {
         igraph_vector_int_t *component = (igraph_vector_int_t *)igraph_vector_ptr_e(components, i);
-        igraph_vector_int_destroy(component); // Free the memory allocated for the component
-        free(component); // Free the pointer itself
+        igraph_vector_int_destroy(component); 
+        free(component); 
     }
-    igraph_vector_ptr_destroy(components); // Free the vector of component pointers
-    free(components); // Free the pointer itself
+    igraph_vector_ptr_destroy(components); 
+    free(components); 
 }
 
 
