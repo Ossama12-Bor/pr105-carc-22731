@@ -11,25 +11,31 @@ void test_board(void){
 
   /*assert(board_size(board)==0);
   assert(set_size(get_board_empty(board))==1);*/
-  struct pos_t pos1=get_possible_moves(board,TILE_TYPES[0])[0];
-  add_tile(board,TILE_TYPES[0],pos1);
+  struct pos_t *pos1=get_possible_moves(board,TILE_TYPES[0]);
+  add_tile(board,TILE_TYPES[0],pos1[0]);
   assert(board_size(board)==1);
   print_board(board,"myboard");
-  struct pos_t pos2=get_possible_moves(board,TILE_TYPES[1])[0];
-  add_tile(board,TILE_TYPES[1],pos2);
+  struct pos_t *pos2=get_possible_moves(board,TILE_TYPES[1]);
+  add_tile(board,TILE_TYPES[1],pos2[0]);
   print_board(board,"my beautiful board");
-  struct pos_t pos3=get_possible_moves(board,TILE_TYPES[1])[0];
- add_tile(board,TILE_TYPES[1],pos3);
+  struct pos_t *pos3=get_possible_moves(board,TILE_TYPES[1]);
+ add_tile(board,TILE_TYPES[1],pos3[0]);
   print_board(board,"my second beautiful board");
-  struct pos_t pos4=get_possible_moves(board,TILE_TYPES[2])[0];
-  add_tile(board,TILE_TYPES[2],pos4);
+  struct pos_t *pos4=get_possible_moves(board,TILE_TYPES[2]);
+  add_tile(board,TILE_TYPES[2],pos4[0]);
   print_board(board,"my third beautiful board");
-  struct pos_t pos5=get_possible_moves(board,TILE_TYPES[3])[0];
-  add_tile(board,TILE_TYPES[3],pos5);
+  struct pos_t *pos5=get_possible_moves(board,TILE_TYPES[3]);
+  add_tile(board,TILE_TYPES[3],pos5[0]);
   print_board(board,"my forth beautiful board");
-  struct pos_t pos6=get_possible_moves(board,TILE_TYPES[3])[0];
-  add_tile(board,TILE_TYPES[3],pos6);
+  struct pos_t *pos6=get_possible_moves(board,TILE_TYPES[3]);
+  add_tile(board,TILE_TYPES[3],pos6[0]);
   print_board(board,"my fiveth beautiful board");
+  free(pos1);
+  free(pos2);
+  free(pos3);
+  free(pos4);
+  free(pos5);
+  free(pos6);
   free_board(board);
  // deck_free(deck);
 
