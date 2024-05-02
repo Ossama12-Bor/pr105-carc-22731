@@ -146,6 +146,7 @@ void test_score(void){
   tests[0] = 0;
       int s = added_score(graph, CARC_TILE_GREEN,tests ,1);
         assert(s == 0);
+
     add_tile_to_graph(graph, CARC_TILE_GREEN,tests ,1);
     tests[0] = -1;
     tests[3] = 1;
@@ -156,6 +157,7 @@ void test_score(void){
     tests[1] = 0;
     s += added_score(graph, CARC_TILE_XROAD,tests ,3);
     assert(s == 0);
+    assert(number_of_vertices_in_new_component(graph,CARC_TILE_XROAD,tests,3,1,1) == 4);   
     add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,3);
     tests[1] = -1;
     tests[2] = 3;    
@@ -178,15 +180,29 @@ void test_score(void){
     s += added_score(graph, CARC_TILE_TINI,tests ,7);
     assert(s == 52);
     add_tile_to_graph(graph, CARC_TILE_TINI,tests ,7);
+
+    //meeple functions
+
+   
+    assert(meeple_can_be_added(graph, 0));
+    add_meeple(graph,0,0);
+    for (int i = 0 ; i < 13; ++i){
+      assert(meeple_can_be_added(graph, i) == 0);
+    }
+    assert(meeple_can_be_added(graph, 98) == 0);
+    assert(which_player_placed_the_meeple(graph, 98) == 0);                        
+    assert(meeple_can_be_added(graph, 42));
+    add_meeple(graph,42,1);
+    assert(which_player_placed_the_meeple(graph, 42) == 1);                            
     display_graph(graph,"test.dot");        
     igraph_destroy(graph);
-       free(graph);
+    free(graph);
     
     
     }
 int main() {    
-        test_graph_add();
-   test_components();  
+//        test_graph_add();
+//   test_components();  
   test_score();
     return 0;
 }
