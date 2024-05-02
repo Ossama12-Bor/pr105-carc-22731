@@ -162,6 +162,12 @@ void make_move(struct board_t *board,struct move_t move){
 
 }
 
+int is_correctly_played(struct board_t *board,struct move_t move){
+  struct tile_t tile=move.tile;
+  int id_in_empty=get_id_in_empty(board->empty,move.x,move.y);
+  return correct_pasting(board,tile,id_in_empty);
+}
+
 /* Frees the allocated memory for a board */
 void free_board(struct board_t* game_board){
   for(int i=0;i<game_board->size;i++){
@@ -208,3 +214,4 @@ struct set*get_board_empty(struct board_t*board){
 struct pos_t *get_board_tiles(struct board_t *board){
 	return board->tiles;
 }
+
