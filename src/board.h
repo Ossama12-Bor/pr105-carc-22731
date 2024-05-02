@@ -49,7 +49,7 @@ void add_tile(struct board_t *board,struct tile_t tile,struct pos_t optimal_pos)
 
 int get_size_board(struct board_t *board);
 
-
+void make_move(struct board_t *board, struct move_t move)
 //adjust the field of the is_available_id of the empty adjacent cases to coord
 
 void free_board(struct board_t* board);

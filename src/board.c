@@ -92,7 +92,7 @@ int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty) {
   return 1;
 }
 
-struct pos_t*get_possible_moves(struct board_t*board,struct tile_t tile){
+struct pos_t* get_possible_moves(struct board_t*board, struct tile_t tile){
   struct pos_t *new_empty=malloc(sizeof(struct pos_t)*set_size(board->empty));
   int count=0;
   struct lelement *first=get_head(board->empty);

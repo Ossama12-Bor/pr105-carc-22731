@@ -9,7 +9,7 @@ struct player_t{
   int player_id;
   struct board_t* myboard;
   unsigned int n_meeples;
-  char* name;
+  char const* name;
   int score;
 };
 

@@ -87,8 +87,7 @@ void finalize_server(){
   deck_free(game_deck);
 }
 
-int main(int argc, char** argv){
-  // here getopt code
+
   int opt;
   // a random seed 
   int seed = time(NULL);
