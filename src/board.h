@@ -45,6 +45,14 @@ struct pos_t*get_possible_moves(struct board_t*board,struct tile_t tile);
 
 void add_tile(struct board_t *board,struct tile_t tile,struct pos_t optimal_pos);
 
+//change board by making  a move
+
+void make_move(struct board_t *board,struct move_t move);
+
+//check if the move that was made is correct or not 
+ 
+int is_correctly_played(struct board_t *board,struct move_t move);
+
 //Get how many tiles are there in the board
 
 int get_size_board(struct board_t *board);
