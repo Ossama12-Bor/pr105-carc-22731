@@ -124,7 +124,7 @@ void set_print(struct set *s,char*prefix){
 
 int get_id_in_empty(struct set*s,int x,int y){
   struct lelement *curseur=s->l->head;
-  for(int i=0;s->size;i++){
+  for(int i=0;i < s->size;i++){
     if(curseur->data->x==x && curseur->data->y==y){
       return i;
     }

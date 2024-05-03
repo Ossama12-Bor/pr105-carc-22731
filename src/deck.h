@@ -13,7 +13,7 @@
                                   GREEN,GREEN,GREEN,GREEN,GREEN,GREEN,GREEN}})
 #define CARC_TILE_XROAD ((struct tile_t) { .t={0,1,2,2,3,4,4,5,6,6,7,0,8}, \
                               .c={GREEN,GRAY,GREEN,GREEN,GRAY,GREEN,   \
-                                  GREEN,GRAY,GREEN,GREEN,GRAY,GREEN,GRAY}})
+                                  GREEN,GRAY,GREEN,GREEN,GRAY,GREEN,PURPLE}})
 #define CARC_TILE_TINI ((struct tile_t) { .t={0,0,0,0,1,2,3,3,3,2,1,0,1}, \
                               .c={GREEN,GREEN,GREEN,GREEN,GRAY,GREEN,   \
                                   BROWN,BROWN,BROWN,GREEN,GRAY,GREEN,GRAY}})
