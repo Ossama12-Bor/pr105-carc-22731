@@ -72,7 +72,6 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
     struct tile_t curr_tile = deck_get(game_deck, turn_counter);
     if(empty_tile(curr_tile)){
       printf("Game Over ! no more tiles\n");
-	  break;
     }
     struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);
     /*
@@ -82,8 +81,8 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
     make_move(game_board, curr_move);
     last_move_played = curr_move;
     turn_counter++;
-    if(turn_counter == 37)
-      display_graph(game_board->g, "game.dot");
+    /* if(turn_counter == 37) */
+    /*   display_graph(get_graph(game_board), "game.dot"); */
   }
   // closing libraries
   dlclose(handle1);
