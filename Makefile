@@ -12,15 +12,16 @@ BASE_FILES = \
 
 OBJS = build/liste.o build/board.o build/deck.o build/tile.o build/graph.o build/playerStruct.o
 
-all: build
+all: build 
 
 build: server client build/deck.o
 
 build/%.o: src/%.c
-	$(CC) $< $(CFLAGS) -c -o $@
+	$(CC) $< $(CFLAGS) -c -o $@ 
+
 
 server: build/server.o $(OBJS)
-	gcc $(OBJS) build/server.o -o install/server
+	gcc $(OBJS) build/server.o -o install/server $(LDFLAGS)
 
 client:	build/playerStruct.o
 	gcc -fPIC -shared -o install/libplayer1.so src/players/player1.c -I src -L install
