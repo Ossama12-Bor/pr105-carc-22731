@@ -74,16 +74,19 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
       printf("Game Over ! no more tiles\n");
     }
     struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);
-    /*
-      checking here if move is valid
-     */
+   
     
     make_move(game_board, curr_move);
+	if(!is_correctly_played(game_board,curr_move)){
+		printf("player%d made invalid move",(first_player+turn_counter-1)%2);
+		break;
+	}
     last_move_played = curr_move;
     turn_counter++;
     /* if(turn_counter == 37) */
     /*   display_graph(get_graph(game_board), "game.dot"); */
   }
+  printf("game over !");
   // closing libraries
   dlclose(handle1);
   dlclose(handle2);
