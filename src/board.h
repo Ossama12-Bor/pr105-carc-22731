@@ -30,7 +30,7 @@ struct board_t *initialize_board();
 void change_neighbours(struct board_t* board,int id_in_empty);
 
 //Get empty cases where we are allowed to add new cases
-
+int empty_tile(struct tile_t t);
 
 
 int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty);

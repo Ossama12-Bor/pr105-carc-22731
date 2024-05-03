@@ -19,7 +19,8 @@ build: server client build/deck.o
 build/%.o: src/%.c
 	$(CC) $< $(CFLAGS) -c -o $@
 
-server: build/server.o
+server: build/server.o $(OBJS)
+	gcc $(OBJS) build/server.o -o install/server
 
 client:	build/playerStruct.o
 	gcc -fPIC -shared -o install/libplayer1.so src/players/player1.c -I src -L install

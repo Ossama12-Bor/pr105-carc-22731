@@ -55,6 +55,10 @@ struct board_t *initialize_board(){
   return game_board;
 }
 
+int empty_tile(struct tile_t t){
+  return (sizeof(get_tile_colors(&t)) == 0);
+}
+
 void change_neighbours(struct board_t* board,int id_in_empty){
   int d[4][2] ={{0,1},{1,0},{0,-1},{-1,0}};
   struct lelement *current_lelement=get_lelement_from_empty(board->empty,id_in_empty);

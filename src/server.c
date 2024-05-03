@@ -1,7 +1,8 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <unistd.h>
+#include <time.h>
 #include "server.h"
 
 void initialize_server(int seed){
@@ -11,13 +12,13 @@ void initialize_server(int seed){
 }
 
 struct move_t play_first_move(){
-  struct first_tile = deck_get(game_deck, 0);
-  add_tile(game_board, first_tile);
-  struct move_t first_move = {.player_id = -1, .x = 0, .y = 0, tile = first_tile, meeple = NO_CONNECTION};
+  struct tile_t first_tile = deck_get(game_deck, 0);
+  struct move_t first_move = {.player_id = -1, .x = 0, .y = 0, .tile = first_tile, .meeple = NO_CONNECTION};
+  make_move(game_board, first_move);
   return first_move;
 }
 
-void run_game(enum gamemode_t mode, char* lib1, char* lib2, int seed){
+void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   
   void *handle1;
   void *handle2;
@@ -46,7 +47,7 @@ void run_game(enum gamemode_t mode, char* lib1, char* lib2, int seed){
   get_player_name[1] = dlsym(handle2, "get_player_name");
 
   initialize[0] = dlsym(handle1, "initialize");
-  initiliaze[1] = dlsym(handle2, "initialize");
+  initialize[1] = dlsym(handle2, "initialize");
 
   play[0] = dlsym(handle1, "play");
   play[1] = dlsym(handle2, "play");
@@ -58,22 +59,23 @@ void run_game(enum gamemode_t mode, char* lib1, char* lib2, int seed){
  
   int first_player = rand() % 2;
 
-  *(initialize[first_player])(WHITE, first_move, config);
-  *(initialize[1-first_player])(BLACK, first_move, config);
+  initialize[first_player](WHITE, first_move, config);
+  initialize[1-first_player](BLACK, first_move, config);
+  
   int turn_counter = 1;
 
   struct move_t last_move_played = first_move;
-  while(true){
-    struct curr_tile = deck_get(game_deck, turn_counter);
-    if(curr_tile == CARC_TILE_EMPTY){
+  while( 1 ){
+    struct tile_t curr_tile = deck_get(game_deck, turn_counter);
+    if(empty_tile(curr_tile)){
       printf("Game Over ! no more tiles\n");
     }
-    struct move_t curr_move = (*play[turn_counter % 2])(last_move_played, curr_tile);
+    struct move_t curr_move = play[(first_player+turn_counter) % 2](last_move_played, curr_tile);
     /*
       checking here if move is valid
      */
     
-    make_move(game_board, current_move);
+    make_move(game_board, curr_move);
     last_move_played = curr_move;
     turn_counter++;
   }
@@ -87,10 +89,11 @@ void finalize_server(){
   deck_free(game_deck);
 }
 
-
+int main(int argc, char* argv[]){
   int opt;
   // a random seed 
   int seed = time(NULL);
+  int meeples = 0;
   // the game mode
   enum gamemode_t mode = NO_MEEPLE;
   while((opt = getopt(argc, argv, "s:m:")) != -1)
@@ -113,15 +116,17 @@ void finalize_server(){
                 break;  
         }  
     }
-  char** lib[2];
+  char* lib[2];
   // non option arguments ( the libs )
   for(int i = optind; i < argc; i++){
     printf("%s",argv[i]);
     lib[i-optind] = argv[i];
   }
-  
+
   initialize_server(seed);
-  run_game(mode, lib[0], lib[1]);
+  
+  struct gameconfig_t config = {.mode = mode, .meeples = meeples, .deck = game_deck};
+  run_game(config, lib[0], lib[1], seed);
   finalize_server();
   
   return 0;
