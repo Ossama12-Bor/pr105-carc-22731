@@ -69,4 +69,6 @@ struct pos_t *get_board_tiles(struct board_t *board);
 
 struct set*get_board_empty(struct board_t*board);
 
+igraph_t * get_graph(struct board_t *board);
+
 #endif // _BOARD_H_
