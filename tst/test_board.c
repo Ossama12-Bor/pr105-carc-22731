@@ -18,6 +18,7 @@ void test_board(void){
   struct pos_t *pos2=get_possible_moves(board,TILE_TYPES[1]);
   add_tile(board,TILE_TYPES[1],pos2[0]);
   print_board(board,"my beautiful board");
+  
   struct pos_t *pos3=get_possible_moves(board,TILE_TYPES[1]);
  add_tile(board,TILE_TYPES[1],pos3[0]);
   print_board(board,"my second beautiful board");
@@ -30,6 +31,7 @@ void test_board(void){
   struct pos_t *pos6=get_possible_moves(board,TILE_TYPES[3]);
   add_tile(board,TILE_TYPES[3],pos6[0]);
   print_board(board,"my fiveth beautiful board");
+  display_graph(get_graph(board),"test.dot");
   free(pos1);
   free(pos2);
   free(pos3);
@@ -37,7 +39,7 @@ void test_board(void){
   free(pos5);
   free(pos6);
   free_board(board);
- // deck_free(deck);
+ // deck_free(deck);*/
 
 
   /*for (int i = 0; i < 2*NUM_TILES-1; ++i){
