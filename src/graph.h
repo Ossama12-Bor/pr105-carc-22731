@@ -60,4 +60,5 @@ int meeple_can_be_added(igraph_t *g, int vertex_in_graph);
 int which_player_placed_the_meeple(igraph_t *g, int vertex_in_graph);
 
 void add_meeple(igraph_t *g, int vertex_in_graph, int player_id);
+void display_graph(igraph_t *graph, const char *filename);
 #endif

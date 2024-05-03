@@ -27,7 +27,7 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   void *handle2;
   char *error;
   // function pointers of each player s functions
-  char const* (*get_player_name[2])(void);
+ // char const* (*get_player_name[2])(void);
 
   void (*initialize[2]) (enum player_color_t, const struct move_t, struct gameconfig_t);
   
@@ -46,8 +46,8 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
     exit(1);
   }
 
-  get_player_name[0] = dlsym(handle1, "get_player_name");
-  get_player_name[1] = dlsym(handle2, "get_player_name");
+  /*get_player_name[0] = dlsym(handle1, "get_player_name");
+  get_player_name[1] = dlsym(handle2, "get_player_name");*/
 
   initialize[0] = dlsym(handle1, "initialize");
   initialize[1] = dlsym(handle2, "initialize");
@@ -62,26 +62,30 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
  
   int first_player = rand() % 2;
 
-  initialize[first_player](WHITE, first_move, config);
-  initialize[1-first_player](BLACK, first_move, config);
+  initialize[first_player](BLACK, first_move, config);
+  initialize[1-first_player](WHITE, first_move, config);
   
-  int turn_counter = 1;
+  size_t turn_counter = 1;
 
   struct move_t last_move_played = first_move;
   while( turn_counter < deck_size(game_deck) ){
     struct tile_t curr_tile = deck_get(game_deck, turn_counter);
     struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);
+    print_case(get_possible_moves(game_board,curr_tile)[0].box);
+    printf("%d,%d\n",curr_move.x,curr_move.y);
     
-    make_move(game_board, curr_move);
 	if(!is_correctly_played(game_board,curr_move)){
-		printf("player%d made invalid move",(first_player+turn_counter-1)%2);
+    make_move(game_board, curr_move);
+		printf("player %ld made invalid move in %ld turn \n",(first_player+turn_counter-1)%2,turn_counter);
 		break;
 	}
+    make_move(game_board, curr_move);
     last_move_played = curr_move;
-    if(turn_counter == 10)
-      display_graph(get_graph(game_board), "game.dot"); 
+    if(turn_counter == 20)
+      display_graph(get_graph(game_board), "test.dot"); 
     turn_counter++;
   }
+  display_graph(get_graph(game_board), "test.dot");
   printf("game over !\n");
   // closing libraries
   dlclose(handle1);

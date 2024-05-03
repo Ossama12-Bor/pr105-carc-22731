@@ -22,7 +22,10 @@ void initialize(enum player_color_t player_id, const struct move_t first_move,st
 }
 
 struct move_t play(const struct move_t previous_move, const struct tile_t tile){
-  update_player_board(&player, previous_move);
+ 
+  if(player.player_id==WHITE ||(player.player_id==BLACK && board_size(player.myboard)!=1)){
+    update_player_board(&player, previous_move);}
+  
   struct pos_t* possible_pos = get_possible_moves(player.myboard, tile);
   assert(possible_pos != NULL);
   struct move_t move_to_play = {.player_id = player.player_id, .tile = tile, .x = (possible_pos[0].box)->x, .y = (possible_pos[0].box)->y, .meeple = NO_CONNECTION};

@@ -57,7 +57,7 @@ void change__coord_attribute(int id_in_graph, int neighbour_id, int k){
   }
 }
 
-void add_vertices_between_edges(igraph_t *graph, struct tile_t t, int id_in_graph, int neighbours_ids[4], int i){
+void add_vertices_between_edges(igraph_t *graph, int id_in_graph, int neighbours_ids[4], int i){
   int t_neighb[4]= { 6, 9, 0, 3};
   int t_[4]= { 0, 3, 6, 9};  
   int neighbour_id = 13 * neighbours_ids[i];
@@ -79,7 +79,7 @@ void add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], 
   igraph_t *g= create_graph_for_tile(graph, id_in_graph, t);
     for (int i = 0; i < 4; i++) {
         if (neighbours_ids[i] != -1) {
-	  add_vertices_between_edges(graph, t, id_in_graph, neighbours_ids, i);
+	  add_vertices_between_edges(graph, id_in_graph, neighbours_ids, i);
 	}
     }
 }

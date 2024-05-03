@@ -1,7 +1,9 @@
 #ifndef _SERVER_H_
 #define _SERVER_H_
 
+#include "graph.h"
 #include "board.h"
+
 
 struct board_t* game_board;
 struct deck_t* game_deck;
