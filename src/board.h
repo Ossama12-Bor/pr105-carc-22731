@@ -3,7 +3,7 @@
 #define NUM_TILES 72
 #include "move.h"
 #include "liste.h"
-//#include <igraph.h>
+//#include "graph.h"
 
 struct board_t;
 

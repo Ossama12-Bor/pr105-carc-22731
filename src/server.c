@@ -5,6 +5,9 @@
 #include <time.h>
 #include "server.h"
 
+struct board_t* game_board;
+struct deck_t* game_deck;
+
 void initialize_server(int seed){
   srand(seed);
   game_deck = generate_deck(seed);
@@ -78,6 +81,8 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
     make_move(game_board, curr_move);
     last_move_played = curr_move;
     turn_counter++;
+    if(turn_counter == 37)
+      display_graph(game_board->g, "game.dot");
   }
   // closing libraries
   dlclose(handle1);
