@@ -110,6 +110,11 @@ struct pos_t* get_possible_moves(struct board_t*board, struct tile_t tile){
     first=first->next;
   }
   new_empty=realloc(new_empty,sizeof(struct pos_t)*count);
+  if(new_empty==NULL){
+	new_empty=malloc(sizeof(struct pos_t )*1);
+	new_empty->type_id=0;
+	new_empty->box=get_data(get_head(board->empty));
+  }
   return new_empty;
 
 }

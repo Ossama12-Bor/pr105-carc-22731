@@ -70,15 +70,14 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   struct move_t last_move_played = first_move;
   while( turn_counter < deck_size(game_deck) ){
     struct tile_t curr_tile = deck_get(game_deck, turn_counter);
-    if(empty_tile(curr_tile)){
-      printf("Game Over ! no more tiles\n");
-    }
+   
     struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);
    
     
     make_move(game_board, curr_move);
 	if(!is_correctly_played(game_board,curr_move)){
-		printf("player%d made invalid move",(first_player+turn_counter-1)%2);
+		printf("player%d made invalid move in turn %d \n",(first_player+turn_counter-1)%2,turn_counter);
+
 		break;
 	}
     last_move_played = curr_move;
@@ -86,7 +85,8 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
     /* if(turn_counter == 37) */
     /*   display_graph(get_graph(game_board), "game.dot"); */
   }
-  printf("game over !");
+  printf("game over \n!");
+  display_graph(get_graph(game_board),"game.dot");
   // closing libraries
   dlclose(handle1);
   dlclose(handle2);
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]){
   char* lib[2];
   // non option arguments ( the libs )
   for(int i = optind; i < argc; i++){
-    printf("%s",argv[i]);
+    //printf("%s",argv[i]);
     lib[i-optind] = argv[i];
   }
 
