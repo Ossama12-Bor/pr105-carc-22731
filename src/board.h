@@ -4,6 +4,7 @@
 #include "move.h"
 #include "liste.h"
 //#include <igraph.h>
+
 struct board_t;
 
 extern struct tile_t TILE_TYPES[];

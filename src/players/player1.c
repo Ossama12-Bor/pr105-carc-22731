@@ -9,6 +9,7 @@ char const* get_player_name(){
 void initialize(enum player_color_t player_id, const struct move_t first_move,struct gameconfig_t config){
   
   player.player_id = player_id;
+  player.myboard = allocate_board();
   update_player_board(&player, first_move);
   player.score = 0;
   if(config.mode == NO_MEEPLE)

@@ -20,8 +20,8 @@ int get_player_id(struct player_t* p);
 unsigned int get_player_meeples(struct player_t* p);
 
 /* updates players*/
-void update_player_board(struct player_t* p,struct move_t m);
 
+void update_player_board(struct player_t* p,struct move_t m);
 /* displays a player's info*/
 void display_player(struct player_t* p);
 

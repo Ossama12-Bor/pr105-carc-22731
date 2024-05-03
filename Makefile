@@ -20,10 +20,10 @@ build/%.o: src/%.c
 	$(CC) $< $(CFLAGS) -c -o $@
 
 server: build/server.o $(OBJS)
-	gcc $(OBJS) build/server.o -o install/server
+	gcc $(OBJS) build/server.o $(LDFLAGS) -o install/server
 
-client:	build/playerStruct.o
-	gcc -fPIC -shared -o install/libplayer1.so src/players/player1.c -I src -L install
+client:	$(OBJS)
+	gcc -fPIC -shared -o install/libplayer1.so $(OBJS) src/players/player1.c -I src -L install
 #	gcc -fPIC -shared -o libplayer2.so src/players/player2.c -L install
 
 alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/test_graph.o
