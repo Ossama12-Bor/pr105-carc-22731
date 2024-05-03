@@ -44,7 +44,8 @@ void initialize_new_tile(struct tile_t t,int id_in_graph){
       attributes[i].does_vertex_exist_in_renault = 1;
       attributes[i].color = t.c[i-id_in_graph];
       attributes[i].vertex_is_open = 1;
-      attributes[i].is_there_meeple = 0;
+      attributes[i].is_there_meeple[0] = 0;
+      attributes[i].is_there_meeple[1] = 0;      
   }
 }
 
@@ -233,62 +234,55 @@ int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_d
 
 //players strategies
 
-
-/*struct connected_components * find_least_component_from_one_side(igraph_t *g, struct tile_t t, int direction, int vertex){
-  int _t[4] = {0, 3, 6, 9};
-  enum color_t color = t.c[_t[direction] + vertex];
-  igraph_graph_list_t *complist = malloc(sizeof(igraph_graph_list_t));
-  igraph_t *component = malloc(sizeof(igraph_t));
-  igraph_graph_list_init(&complist, 0);  
-  igraph_decompose(g, complist, IGRAPH_WEAK, -1, 0);
-  igraph_t * m = NULL;
-  int i;
-  int n = igraph_graph_list_size(complist);
-  for (i = 0 ; i < n; ++i){
-    component = igraph_graph_list_get_ptr(complist, i);
-    if (attributes[VECTOR(*component)[i]].color == color){
-      m = component;
-      break;
-    }
-  }
-  if (m == NULL) return NULL;
-  for (int j = i; j < n; ++i){
-    component = igraph_graph_list_get_ptr(complist, j);
-    if ((attributes[VECTOR(*component)[j]].color == color) && (igraph_vcount(component) > igraph_vcount(m))){
-      m = component;
-      break;
-    }
-  }
-  return m;
+int number_of_vertices_in_new_component(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck, int direction, int vertex){
+  int _t[4] ={ 0, 3, 6, 9};
+  int id_in_graph = id_in_deck * 13 ;  
+  igraph_t *graph = malloc(sizeof(igraph_t));
+  igraph_copy(graph,g);
+  add_tile_to_graph(graph, t, neighbours_ids, id_in_deck);  
+  igraph_vector_int_t *result = malloc(sizeof(igraph_vector_int_t));
+  igraph_vector_int_init(result, 0);
+  igraph_subcomponent(graph, result, id_in_graph + _t[direction] + vertex, IGRAPH_ALL);
+  int k = igraph_vector_int_size(result);
+  igraph_vector_int_destroy(result) ;    	
+  free(result);
+  igraph_destroy(graph);
+  free(graph);  
+  return k;
 }
 
 
 
 //meeple functions
 
-
 int meeple_can_be_added(igraph_t *g, int vertex_in_graph){
-  int id_in_graph = vertex_in_graph / 13;
+  int id_in_graph = vertex_in_graph - vertex_in_graph%13;
   for (int i = id_in_graph; i < id_in_graph + 13; ++i){
-    if (attributes[i].is_there_meeple == 1) return 0;
+    if (attributes[i].is_there_meeple[0] == 1 || attributes[i].is_there_meeple[1] == 1) return 0;
   }
   return 1;
 }
-void add_meeple(igraph_t *g, int vertex_in_graph){
-  if (meeple_can_be_added(g,vertex_in_graph)) {
-  igraph_vector_int_t *result = malloc(sizeof(igraph_t));
-  igraph_vector_int_init(result, 0);
-  igraph_subcomponent(g, result, vertex_in_graph, IGRAPH_ALL);      
-  int k = igraph_vector_int_size(result);
-  for (int i = 0 ; i < k; i++){
-  attributes[VECTOR(*result)[i]].is_there_meeple = 1;      
-  }
-  int id_in_graph = 13 * vertex_in_graph;
-  for (int i =id_in_graph; i < 13 + id_in_graph; ++i){
-    attributes[i].is_there_meeple = 1;
-  }
-  }
+int which_player_placed_the_meeple(igraph_t *g, int vertex_in_graph){
+  if (attributes[vertex_in_graph].is_there_meeple[0]) return 0;
+  return 1;
 }
 
 
-*/
+void add_meeple(igraph_t *g, int vertex_in_graph, int player_id){
+  if (meeple_can_be_added(g,vertex_in_graph)) {
+    igraph_vector_int_t *result = malloc(sizeof(igraph_t));
+    igraph_vector_int_init(result, 0);
+    igraph_subcomponent(g, result, vertex_in_graph, IGRAPH_ALL);      
+    int k = igraph_vector_int_size(result);
+    for (int i = 0 ; i < k; i++){
+      attributes[VECTOR(*result)[i]].is_there_meeple[player_id] = 1;      
+    }
+    int id_in_graph =  vertex_in_graph - vertex_in_graph%13;
+    for (int i =id_in_graph; i < 13 + id_in_graph; ++i){
+      attributes[i].is_there_meeple[player_id] = 1;
+    }
+    igraph_vector_int_destroy(result) ;    	
+    free(result);
+  }
+}
+
