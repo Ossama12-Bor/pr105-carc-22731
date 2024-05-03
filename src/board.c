@@ -219,3 +219,6 @@ struct pos_t *get_board_tiles(struct board_t *board){
 	return board->tiles;
 }
 
+igraph_t * get_graph(struct board_t *board){
+	return board->g;
+}

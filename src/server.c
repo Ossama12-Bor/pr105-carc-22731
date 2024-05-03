@@ -72,8 +72,9 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
     struct tile_t curr_tile = deck_get(game_deck, turn_counter);
     if(empty_tile(curr_tile)){
       printf("Game Over ! no more tiles\n");
+	  break;
     }
-    struct move_t curr_move = play[(first_player+turn_counter) % 2](last_move_played, curr_tile);
+    struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);
     /*
       checking here if move is valid
      */
