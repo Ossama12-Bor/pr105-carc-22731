@@ -41,6 +41,10 @@ test: alltests
 
 install: server client test
 
+show:
+	dot -Kfdp -n -Tpng -o game.png test.dot
+	eog game.png
+
 clean:
 	@rm -f *~ src/*~ *.o build/*.o -r install/tests
 

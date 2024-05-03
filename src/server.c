@@ -69,6 +69,9 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
 
   struct move_t last_move_played = first_move;
   while( turn_counter < deck_size(game_deck) ){
+	if(turn_counter==10){
+		display_graph(get_graph(game_board),"game.dot");
+	}
     struct tile_t curr_tile = deck_get(game_deck, turn_counter);
    
     struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);

@@ -17,6 +17,7 @@ int main(){
 	assert(check_compatible_colors(tile1,tile3,N,S)==1);
 	assert(check_compatible_colors(tile1,tile3,S,N)==0);
 	assert(check_compatible_colors(tile1,tile4,W,E)==0);
+	assert(check_compatible_colors(CARC_TILE_GREEN,CARC_TILE_TINI,E,W)==0);
 	printf("OK!\n");
 	test_start("tests getting colors\n");
 	test_start("test entire tile");
