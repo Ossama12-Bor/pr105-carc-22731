@@ -25,7 +25,7 @@ server: build/server.o $(OBJS)
 
 client:	$(OBJS)
 	gcc -fPIC -shared -o install/libplayer1.so $(OBJS) src/players/player1.c -I src -L install
-#	gcc -fPIC -shared -o libplayer2.so src/players/player2.c -L install
+	gcc -fPIC -shared -o install/libplayer2.so $(OBJS) src/players/player2.c -I src -L install
 
 alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/test_graph.o
 	mkdir -p install/tests
