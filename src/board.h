@@ -6,7 +6,7 @@
 
 #include <igraph.h>
 
-#define CARC_V_CASTLE  ((struct tile_t) { .t={0,0,0,0,0,0,1,1,1,1,1,1,1}, \
+#define CARC_V_CASTLE  ((struct tile_t) { .t={0,0,0,1,1,1,2,2,2,2,2,2,2}, \
                               .c={BROWN,BROWN,BROWN,BROWN,BROWN,BROWN,   \
                                   GREEN,GREEN,GREEN,GREEN,GREEN,GREEN,GREEN}})
 
@@ -70,7 +70,7 @@ int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty);
 
 struct pos_t*get_possible_moves(struct board_t*board,struct tile_t tile);
 
-
+int get_size_possible_moves(struct pos_t * possible_moves);
 //struct case_t *get_optimal_case(struct board_t *board,int id_in_Type);
 //Get the case of coordinates (x,y) in the board
 
