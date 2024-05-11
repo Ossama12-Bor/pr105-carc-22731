@@ -6,6 +6,31 @@
 
 #include <igraph.h>
 
+#define CARC_V_CASTLE  ((struct tile_t) { .t={0,0,0,0,0,0,1,1,1,1,1,1,1}, \
+                              .c={BROWN,BROWN,BROWN,BROWN,BROWN,BROWN,   \
+                                  GREEN,GREEN,GREEN,GREEN,GREEN,GREEN,GREEN}})
+
+#define CARC_SOLO_ROAD  ((struct tile_t) { .t={0,0,0,0,1,2,2,2,2,2,1,0,1}, \
+                              .c={GREEN,GREEN,GREEN,GREEN,GRAY,GREEN,   \
+                                  GREEN,GREEN,GREEN,GREEN,GRAY,GREEN,GRAY}})
+
+#define CARC_TOWN_3ROAD  ((struct tile_t) { .t={0,0,0,0,1,2,2,3,4,4,5,0,6}, \
+                              .c={GREEN,GREEN,GREEN,GREEN,GRAY,GREEN,   \
+                                  GREEN,GRAY,GREEN,GREEN,GRAY,GREEN,PURPLE}})
+                          
+#define CARC_CURVED_ROAD  ((struct tile_t) { .t={0,0,0,0,1,2,2,1,0,0,0,0,1}, \
+                              .c={GREEN,GREEN,GREEN,GREEN,GRAY,GREEN,   \
+                                  GREEN,GRAY,GREEN,GREEN,GREEN,GREEN,GRAY}})
+
+#define CARC_PIZZA  ((struct tile_t) { .t={0,0,0,1,2,3,3,3,3,3,2,1,2}, \
+                              .c={BROWN,BROWN,BROWN,BROWN,BROWN,BROWN,   \
+                                  GREEN,GREEN,GREEN,GREEN,GREEN,GREEN,BROWN}})
+                        
+#define CARC_SOLO_CASTLE  ((struct tile_t) { .t={0,0,0,1,1,1,1,1,1,1,1,1,1}, \
+                              .c={BROWN,BROWN,BROWN,GREEN,GREEN,GREEN,   \
+                                  GREEN,GREEN,GREEN,GREEN,GREEN,GREEN,GREEN}})
+
+
 struct board_t;
 
 extern struct tile_t TILE_TYPES[];
@@ -15,8 +40,12 @@ struct case_t {
   int *neighbors;
 };
 
-struct pos_t{
+struct status {
   int type_id;
+  int rotation;
+};
+struct pos_t{
+  struct status status;
   struct case_t *box;
 };
 

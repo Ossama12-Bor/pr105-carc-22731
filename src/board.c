@@ -5,12 +5,18 @@
 
 
 
-#define NUM_TILE_TYPES 4
+#define NUM_TILE_TYPES 10
 
 struct tile_t TILE_TYPES[] = {CARC_TILE_INIT,
 				  CARC_TILE_GREEN,
 				  CARC_TILE_XROAD,
-				  CARC_TILE_TINI};
+				  CARC_TILE_TINI,
+          CARC_V_CASTLE,
+          CARC_SOLO_ROAD,
+          CARC_TOWN_3ROAD,
+          CARC_CURVED_ROAD,
+          CARC_PIZZA,
+          CARC_SOLO_CASTLE};
 
 
 
@@ -21,12 +27,13 @@ struct board_t{
   struct set *empty;
 };
 
+
 /* Deck generator */
 struct deck_t* generate_deck(int seed){
   srand(seed);
   struct deck_t* mydeck = deck_empty(NUM_TILES);
   for(int i=0;i<NUM_TILES; i++)
-    deck_add(mydeck, TILE_TYPES[rand() % NUM_TILE_TYPES]);
+    deck_add(mydeck,flip_tile(TILE_TYPES[rand() % NUM_TILE_TYPES],rand() % NUM_SIDES));
   return mydeck;
 }
 
@@ -53,10 +60,6 @@ struct board_t *initialize_board(){
   game_board->size=0;
   igraph_empty(game_board->g,0,IGRAPH_UNDIRECTED);
   return game_board;
-}
-
-int empty_tile(struct tile_t t){
-  return (sizeof(get_tile_colors(&t)) == 0);
 }
 
 void change_neighbours(struct board_t* board,int id_in_empty){
@@ -88,7 +91,8 @@ int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty) {
   struct lelement*elt=get_lelement_from_empty(board->empty, id_in_empty);
   for (int i = 0; i < 4; i++) {
     int tile_id=get_ith_neighbor(elt,i);
-      if (tile_id!=-1 && !check_compatible_colors(tile, TILE_TYPES[board->tiles[tile_id].type_id], i, (i + 2) % 4)) {
+      if (tile_id!=-1 && !check_compatible_colors(tile, flip_tile(TILE_TYPES[board->tiles[tile_id].status.type_id],\
+                  board->tiles[tile_id].status.rotation), i, (i + 2) % 4)) {
         return 0;
     
     }
@@ -103,7 +107,8 @@ struct pos_t* get_possible_moves(struct board_t*board, struct tile_t tile){
   int size=set_size(board->empty);
   for(int i=0;i<size;i++){
     if(correct_pasting(board,tile,i)){
-      	(new_empty+count)->type_id=i; //on stocke les indices des positions disponibles de empty dans new_empty
+      	(new_empty+count)->status.type_id=i; //on stocke les indices des positions disponibles de empty dans new_empty
+        (new_empty+count)->status.rotation=0;
         (new_empty+count)->box=get_data(first);
       	count++;
     }
@@ -112,13 +117,18 @@ struct pos_t* get_possible_moves(struct board_t*board, struct tile_t tile){
   new_empty=realloc(new_empty,sizeof(struct pos_t)*count);
   if(new_empty==NULL){
 	new_empty=malloc(sizeof(struct pos_t )*1);
-	new_empty->type_id=0;
+	new_empty->status.type_id=0;
+  new_empty->status.rotation=0;
 	new_empty->box=get_data(get_head(board->empty));
+  return new_empty;
   }
+  new_empty->status.rotation=count;
   return new_empty;
 
 }
-
+int get_size_possible_moves(struct pos_t * possible_moves){
+  return possible_moves->status.rotation;
+}
 /*struct case_t *get_optimal_case(struct board_t *board,struct tile_t tile,enum player_color_t c){
 	struct pos_t *avail_positions=get_possible_moves(board,tile);
   struct pos_t avail_pos;
@@ -144,20 +154,26 @@ int equal(unsigned int *t1,unsigned int *t2){
   return 1;
 }
 
-int tile_type_id(struct tile_t tile){
+struct status get_status(struct tile_t tile){
   for(int i=0;i<NUM_TILE_TYPES;i++){
-    if(equal(tile.t,TILE_TYPES[i].t) && equal(tile.c,TILE_TYPES[i].c))
-      return i;
+    for(int j=0;j<NUM_SIDES;j++){
+      struct tile_t flipped_tile = flip_tile(TILE_TYPES[i],j);
+      if(equal(tile.t,flipped_tile.t) && equal(tile.c,flipped_tile.c)){
+        struct status status={i,j};
+        return status;
+      }
+    }
   }
-  return -1;
+  struct status status={-1,0};
+  return status;
 }
 
 void add_tile(struct board_t *board,struct tile_t tile,struct pos_t optimal_pos){
 	
   //  board->g=add_tile_to_graph(board->g,tile,(optimal_pos.box)->neighbors,board->size);
   add_tile_to_graph(board->g,tile,(optimal_pos.box)->neighbors,board->size);  
-	change_neighbours(board,optimal_pos.type_id);
-	board->tiles[board->size].type_id=tile_type_id(tile);
+	change_neighbours(board,optimal_pos.status.type_id);
+	board->tiles[board->size].status=get_status(tile);
   board->tiles[board->size].box=optimal_pos.box;
   board->size+=1;
 }
@@ -166,7 +182,7 @@ void make_move(struct board_t *board,struct move_t move){
   struct tile_t tile=move.tile;
   int id_in_empty=get_id_in_empty(board->empty,move.x,move.y);
   struct case_t *box=get_data(get_lelement_from_empty(board->empty,id_in_empty));
-  struct pos_t pos={id_in_empty,box};
+  struct pos_t pos={.status={id_in_empty,0},.box=box};
   add_tile(board,tile,pos);
 
 }
@@ -203,7 +219,7 @@ void print_case(struct case_t *box){
 void print_board(struct board_t *board,char* prefix){
   printf("%s :\n size:%d\n,tiles:[",prefix,board->size);
   for(int i=0;i<board->size;i++){
-    printf("{%d",board->tiles[i].type_id);
+    printf("{(%d,%d)",board->tiles[i].status.type_id,board->tiles[i].status.rotation);
     print_case(board->tiles[i].box);
     printf("}");
   }

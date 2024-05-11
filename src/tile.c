@@ -26,3 +26,18 @@ int check_compatible_colors(struct tile_t t1,struct tile_t t2,enum direction_t d
 	free(side2);
 	return is_compatible;
 }
+
+struct tile_t flip_tile(struct tile_t tile,int d){
+	if(d == N)
+		return tile;
+	struct tile_t flipped_tile;
+	int i=0;
+	while(i<(MAX_CONNECTIONS-1)){
+		flipped_tile.t[(i+VER_NUMBER_PER_SIDE*d)%(MAX_CONNECTIONS-1)]=tile.t[i];
+		flipped_tile.c[(i+VER_NUMBER_PER_SIDE*d)%(MAX_CONNECTIONS-1)]=tile.c[i];
+		i++;
+	}
+	flipped_tile.t[i]=tile.t[i];
+	flipped_tile.c[i]=tile.c[i];
+	return flipped_tile;
+}

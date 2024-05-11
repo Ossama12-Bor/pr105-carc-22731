@@ -8,7 +8,8 @@ enum direction_t{
   N,
   E,
   S,
-  W
+  W,
+  NUM_SIDES,
 }; 
 
 
@@ -22,6 +23,6 @@ enum color_t* get_tile_side(struct tile_t *t,enum direction_t d);
 /* Checks if two tiles have compatible colors */
 int check_compatible_colors(struct tile_t t1,struct tile_t  t2,enum direction_t d1, enum direction_t d2);
 
-
+struct tile_t flip_tile(struct tile_t tile,int d);
 
 #endif
