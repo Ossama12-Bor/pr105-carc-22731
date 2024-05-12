@@ -5,19 +5,24 @@ struct player_t player;
 char const* get_player_name(){
   return "ssuaG";
 }
-
 void initialize(enum player_color_t player_id, const struct move_t first_move,struct gameconfig_t config){
   
   player.player_id = player_id;
   player.myboard = initialize_board();
   update_player_board(&player, first_move);
   player.score = 0;
-  if(config.mode == NO_MEEPLE)
+  if(config.mode == NO_MEEPLE){
     player.n_meeples = 0;
-  else if(config.mode == INFINITE_MEEPLE)
+    player.mode = NO_MEEPLE;
+    }
+  else if(config.mode == INFINITE_MEEPLE){
     player.n_meeples = -1;
-  else
+    player.mode = INFINITE_MEEPLE;
+    }
+  else{
     player.n_meeples = config.meeples;
+    player.mode = FINITE_MEEPLE;
+    }
   player.name = get_player_name();
 }
 

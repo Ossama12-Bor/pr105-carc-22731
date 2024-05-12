@@ -56,12 +56,16 @@ int added_score(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_d
 
 int number_of_vertices_in_new_component(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck, int direction, int vertex);
 
-igraph_vector_int_t * get_biggest_road_component_of_adversary_in_a_position(igraph_t *g, struct tile_t t, int neighbours_ids[4],  int id_in_deck , int player_id);
+igraph_vector_int_t * get_biggest_component_of_player_in_a_position(igraph_t *g, struct tile_t t, int neighbours_ids[4],  int id_in_deck , int player_id, enum color_t color, enum gamemode_t mode, int n_meeples);
 
 int meeple_can_be_added(igraph_t *g, int vertex_in_graph);
 
-int which_player_placed_the_meeple(igraph_t *g, int vertex_in_graph);
+int which_player_has_more_meeples_in_component(igraph_t *g, int vertex_in_graph);
+int meeple_can_be_added_in_a_position(igraph_t *g, struct tile_t t, int id_in_deck, int neighbours_ids[4]);
 
 void add_meeple(igraph_t *g, int vertex_in_graph, int player_id);
+
+int retrieve_meeples(igraph_t *g, int id_in_deck, int player_id); 
+
 void display_graph(igraph_t *graph, const char *filename);
 #endif

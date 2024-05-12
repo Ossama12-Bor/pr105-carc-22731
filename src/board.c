@@ -184,7 +184,6 @@ void make_move(struct board_t *board,struct move_t move){
   struct case_t *box=get_data(get_lelement_from_empty(board->empty,id_in_empty));
   struct pos_t pos={.status={id_in_empty,0},.box=box};
   add_tile(board,tile,pos);
-
 }
 
 int is_correctly_played(struct board_t *board,struct move_t move){

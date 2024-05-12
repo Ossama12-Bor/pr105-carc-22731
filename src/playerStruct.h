@@ -3,12 +3,13 @@
 
 #include "player.h"
 #include "board.h"
-
+#include "graph.h"
 // Structure to manipulate a player
 struct player_t{
   int player_id;
   struct board_t* myboard;
   unsigned int n_meeples;
+  enum gamemode_t mode;
   char const* name;
   int score;
 };
