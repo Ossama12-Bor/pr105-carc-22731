@@ -30,6 +30,7 @@ struct move_t play(const struct move_t previous_move, const struct tile_t tile){
   assert(possible_pos != NULL);
   struct move_t move_to_play = {.player_id = player.player_id, .tile = tile, .x = (possible_pos[0].box)->x, .y = (possible_pos[0].box)->y, .meeple = NO_CONNECTION};
   update_player_board(&player, move_to_play);
+  free(possible_pos);
   return move_to_play;
 
 }

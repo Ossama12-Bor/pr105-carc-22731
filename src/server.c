@@ -32,6 +32,8 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   void (*initialize[2]) (enum player_color_t, const struct move_t, struct gameconfig_t);
   
   struct move_t (*play[2]) (const struct move_t, const struct tile_t);
+
+  void (*finalize[2])();
   
   handle1 = dlopen (lib1, RTLD_LAZY);
   handle2 = dlopen (lib2, RTLD_LAZY);
@@ -55,6 +57,9 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   play[0] = dlsym(handle1, "play");
   play[1] = dlsym(handle2, "play");
 
+  finalize[0] = dlsym(handle1, "finalize");
+  finalize[1] = dlsym(handle2, "finalize");
+
   // server starts
 
   initialize_server(seed);
@@ -68,12 +73,14 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   size_t turn_counter = 1;
 
   struct move_t last_move_played = first_move;
-  while( turn_counter < deck_size(game_deck) ){
+  size_t d_size=deck_size(game_deck);
+  while( turn_counter < d_size ){
     struct tile_t curr_tile = deck_get(game_deck, turn_counter);
     struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);
-    print_case(get_possible_moves(game_board,curr_tile)[0].box);
+    struct pos_t *possible_moves = get_possible_moves(game_board,curr_tile);
+    print_case(possible_moves[0].box);
     printf("%d,%d\n",curr_move.x,curr_move.y);
-    
+    free(possible_moves);
 	if(!is_correctly_played(game_board,curr_move)){
     make_move(game_board, curr_move);
 		printf("player %ld made invalid move in %ld turn \n",(first_player+turn_counter-1)%2,turn_counter);
@@ -87,6 +94,9 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   }
   display_graph(get_graph(game_board), "test.dot");
   printf("game over !\n");
+
+  finalize[0]();
+  finalize[1]();
   // closing libraries
   dlclose(handle1);
   dlclose(handle2);
