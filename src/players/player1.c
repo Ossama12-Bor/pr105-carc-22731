@@ -77,9 +77,6 @@ struct move_t play(const struct move_t previous_move, const struct tile_t tile){
   if(player.player_id==WHITE ||(player.player_id==BLACK && board_size(player.myboard)!=1)){
     update_player_board(&player, previous_move);}
   
-  /* struct pos_t* possible_moves = get_possible_moves(player.myboard, tile); */
-  /* assert(possible_moves != NULL); */
-  /* struct move_t move_to_play = {.player_id = player.player_id, .tile = tile, .x = (possible_moves[0].box)->x, .y = (possible_moves[0].box)->y, .meeple = NO_CONNECTION}; */
   struct move_t *move_to_play = play_in_infinite_meeple(player.myboard, tile, player.player_id)  ;
   update_player_board(&player, *move_to_play);
   return *move_to_play;
