@@ -97,7 +97,7 @@ struct move_t play(const struct move_t previous_move, const struct tile_t tile){
   printf("sjsfhsiqgf\n");                 
   if(player.player_id==WHITE ||(player.player_id==BLACK && board_size(player.myboard)!=1)){
     update_player_board(&player, previous_move);}
-  struct move_t *move_to_play = play_in_finite_meeple(player.myboard, tile, player.player_id,0);
+  struct move_t *move_to_play = play_in_no_meeple(player.myboard, tile, player.player_id);
   update_player_board(&player, *move_to_play);
   return *move_to_play;
 

@@ -56,6 +56,7 @@ struct move_t *get_biggest_open_road_component(struct board_t *board, struct til
 	      optimal->y = (possible_moves_flipped[k].box)->y;
 //		printf("%d\n",n_meeples);	      			      
 	      if ((mode == FINITE_MEEPLE) && (n_meeples > 0)){
+		printf("olaaa\n");
 		optimal->meeple = _t[i] + j;
 		}
 	      else
