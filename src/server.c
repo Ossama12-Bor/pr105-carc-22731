@@ -17,7 +17,9 @@ void initialize_server(int seed){
 struct move_t play_first_move(){
   struct tile_t first_tile = deck_get(game_deck, 0);
   struct move_t first_move = {.player_id = -1, .x = 0, .y = 0, .tile = first_tile, .meeple = NO_CONNECTION};
+  printf("ll\n");  
   make_move(game_board, first_move);
+  printf("ll");
   return first_move;
 }
 
@@ -75,11 +77,12 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   struct move_t last_move_played = first_move;
   size_t d_size=deck_size(game_deck);
   while( turn_counter < d_size ){
+    printf("%d\n",turn_counter);
     struct tile_t curr_tile = deck_get(game_deck, turn_counter);
     struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);
     struct pos_t *possible_moves = get_possible_moves(game_board,curr_tile);
     print_case(possible_moves[0].box);
-    printf("%d,%d\n",curr_move.x,curr_move.y);
+  //  printf("%d,%d\n",curr_move.x,curr_move.y);
     free(possible_moves);
 	if(!is_correctly_played(game_board,curr_move)){
     make_move(game_board, curr_move);
@@ -87,9 +90,15 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
 		break;
 	}
     make_move(game_board, curr_move);
+ if (curr_move.meeple != NO_CONNECTION){
+    add_meeple(get_graph(game_board), (board_size(game_board)-1)*13 + curr_move.meeple, (first_player+turn_counter-1) % 2);
+    
+  }
+    retrieve_meeples(get_graph(game_board), board_size(game_board)-1, (first_player+turn_counter-1) % 2);
+    
     last_move_played = curr_move;
     if(turn_counter == 20)
-      display_graph(get_graph(game_board), "test.dot"); 
+      display_graph(get_graph(game_board), "test.dot");
     turn_counter++;
   }
   display_graph(get_graph(game_board), "test.dot");
@@ -143,7 +152,7 @@ int main(int argc, char* argv[]){
 
   initialize_server(seed);
   
-  struct gameconfig_t config = {.mode = mode, .meeples = meeples, .deck = game_deck};
+  struct gameconfig_t config = {.mode = INFINITE_MEEPLE, .meeples = 7, .deck = game_deck};
   run_game(config, lib[0], lib[1], seed);
   finalize_server();
   

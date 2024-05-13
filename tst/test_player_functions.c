@@ -24,7 +24,7 @@ void test_player(){
  struct move_t *move_4 = get_optimal_position_no_meeple(board, CARC_TILE_XROAD,-1);
  assert(move_4 != NULL);
   make_move(board, *move_4);
-  struct move_t *move_5 = get_biggest_open_road_component(board, CARC_TILE_XROAD, -1, NO_MEEPLE,7);
+  struct move_t *move_5 = get_biggest_open_road_component(board, CARC_TILE_XROAD, -1, NO_MEEPLE,7,GRAY);
  assert(move_5 != NULL);
   make_move(board, *move_5);
  struct move_t *move_6 = get_optimal_position_no_meeple(board, flip_tile(CARC_TILE_XROAD,1),-1);

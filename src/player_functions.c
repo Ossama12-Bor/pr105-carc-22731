@@ -30,7 +30,7 @@ struct move_t *get_optimal_position_no_meeple(struct board_t *board, struct tile
   return NULL;
 }
 
-struct move_t *get_biggest_open_road_component(struct board_t *board, struct tile_t t, int player_id, enum gamemode_t mode, int n_meeples){
+struct move_t *get_biggest_open_road_component(struct board_t *board, struct tile_t t, int player_id, enum gamemode_t mode, int n_meeples, enum color_t color){
   int _t[4] = { 0, 3 , 6, 9};  
   int size = 0;
   int verifier = -1;
@@ -43,9 +43,9 @@ struct move_t *get_biggest_open_road_component(struct board_t *board, struct til
     for (int k = 0; k < get_size_possible_moves(possible_moves_flipped); ++k){
       for (int i = 0; i < 4; ++i){
 	for (int j = 0; j < 3; ++j){
-	  if (t.c[_t[i] + j] == GRAY){
+	  if (t.c[_t[i] + j] == color){
 	    int size_test = number_of_vertices_in_new_component(get_graph(board), flipped_tile, possible_moves_flipped[k].box->neighbors, board_size(board), i, j);
-	    if (size_test > size && (mode == NO_MEEPLE || (player_id == 0 && (mode == FINITE_MEEPLE && size_test >=4)))) {
+	    if (size_test > size && (mode == NO_MEEPLE || (player_id == 0 && (mode == FINITE_MEEPLE && color == GRAY && size_test >=4)) || (player_id == 0 && (mode == FINITE_MEEPLE && color == BROWN) ))) {
 	      size = size_test;
 	      // Allouer une nouvelle structure move_t à chaque itération
 	      optimal = malloc(sizeof(struct move_t));
@@ -54,8 +54,10 @@ struct move_t *get_biggest_open_road_component(struct board_t *board, struct til
 	      optimal->tile = flipped_tile;
 	      optimal->x = (possible_moves_flipped[k].box)->x;
 	      optimal->y = (possible_moves_flipped[k].box)->y;
-	      if ((mode == FINITE_MEEPLE) && (n_meeples > 0))
+//		printf("%d\n",n_meeples);	      			      
+	      if ((mode == FINITE_MEEPLE) && (n_meeples > 0)){
 		optimal->meeple = _t[i] + j;
+		}
 	      else
 		optimal->meeple = NO_CONNECTION;
 

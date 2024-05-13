@@ -12,15 +12,18 @@ unsigned int get_player_meeples(struct player_t* p){
 void update_player_board(struct player_t* p,struct move_t m){
   make_move(p->myboard, m);
  if (m.meeple != NO_CONNECTION){
-  printf("%d\n",(board_size(p->myboard)-1)*13 + m.meeple);
     add_meeple(get_graph(p->myboard), (board_size(p->myboard)-1)*13 + m.meeple, p->player_id);
+  if (p->mode == FINITE_MEEPLE){
+    p->n_meeples--;
     
-  }
+    
+    
+  }}
   if (p->mode == FINITE_MEEPLE)
-    p->n_meeples += retrieve_meeples(get_graph(p->myboard), board_size(p->myboard), p->player_id);
+    p->n_meeples += retrieve_meeples(get_graph(p->myboard), board_size(p->myboard)-1, p->player_id);
   if (p->mode == INFINITE_MEEPLE){
-    retrieve_meeples(get_graph(p->myboard), board_size(p->myboard), p->player_id);    
-  }  
+    printf("r = %d\n",retrieve_meeples(get_graph(p->myboard), board_size(p->myboard)-1, p->player_id));    
+  }
   
 }
 
