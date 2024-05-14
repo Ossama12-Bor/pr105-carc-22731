@@ -10,7 +10,7 @@ LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_LIBDIR) -Wl,--rpath=$(IGRAPH_LIBDIR)
 BASE_FILES = \
         deck.c
 
-OBJS = build/liste.o build/board.o build/deck.o build/tile.o build/graph.o build/playerStruct.o
+OBJS = build/liste.o build/board.o build/deck.o build/tile.o build/graph.o build/playerStruct.o build/player_functions.o
 
 all: build 
 
@@ -27,15 +27,17 @@ client:	$(OBJS)
 	gcc -fPIC -shared -o install/libplayer1.so $(OBJS) src/players/player1.c -I src $(CFLAGS) -L install
 	gcc -fPIC -shared -o install/libplayer2.so $(OBJS) src/players/player2.c -I src $(CFLAGS) -L install
 
-alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/test_graph.o
+alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/test_graph.o build/test_player_functions.o
 	mkdir -p install/tests
 	gcc $(OBJS) build/test_list.o -o install/tests/test_list -I src -I tst $(LDFLAGS)
 	gcc $(OBJS) build/test_tile.o -o install/tests/test_tile -I src -I tst $(LDFLAGS)
 	gcc $(OBJS) build/test_board.o -o install/tests/test_board -I src -I tst $(LDFLAGS)
 	gcc $(OBJS) build/test_graph.o -o install/tests/test_graph -I src -I tst $(LDFLAGS)
+	gcc $(OBJS) build/test_player_functions.o -o install/tests/test_player_functions -I src -I tst $(LDFLAGS)
 
 build/%.o: tst/%.c 
 	$(CC) -c $< $(CFLAGS) -I src -o $@
+
 
 test: alltests
 
@@ -46,6 +48,6 @@ show:
 	eog game.png
 
 clean:
-	@rm -f *~ src/*~ *.o build/*.o -r install/tests
+	@rm -f *~ src/*~ *.o build/*.o -r install/tests *.png
 
 .PHONY: client install test clean
