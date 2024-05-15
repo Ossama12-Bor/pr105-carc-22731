@@ -68,7 +68,7 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   struct move_t first_move = play_first_move();
  
   int first_player = rand() % 2;
-  config.deck = generate_deck(42);
+  config.deck = game_deck;
   initialize[first_player](BLACK, first_move, config);
   initialize[1-first_player](WHITE, first_move, config);
   
