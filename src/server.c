@@ -5,8 +5,7 @@
 #include <time.h>
 #include "server.h"
 
-struct board_t* game_board;
-struct deck_t* game_deck;
+
 
 void initialize_server(int seed){
   srand(seed);
@@ -68,7 +67,7 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   struct move_t first_move = play_first_move();
  
   int first_player = rand() % 2;
-  config.deck = game_deck;
+  config.deck = deck_copy(game_deck);
   initialize[first_player](BLACK, first_move, config);
   initialize[1-first_player](WHITE, first_move, config);
   
@@ -151,7 +150,8 @@ int main(int argc, char* argv[]){
   }
 
 //  initialize_server(seed);
-  
+  struct board_t* game_board;
+  struct deck_t* game_deck;
   struct gameconfig_t config = {.mode = mode, .meeples = 7, .deck = game_deck};
   run_game(config, lib[0], lib[1], seed);
   finalize_server();
