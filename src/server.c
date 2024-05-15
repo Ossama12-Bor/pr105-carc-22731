@@ -75,13 +75,13 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   size_t turn_counter = 1;
 
   struct move_t last_move_played = first_move;
-  size_t d_size=deck_size(game_deck);
+  size_t d_size= deck_size(game_deck);
   while( turn_counter < d_size ){
     printf("%d\n",turn_counter);
     struct tile_t curr_tile = deck_get(game_deck, turn_counter);
     struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);
     struct pos_t *possible_moves = get_possible_moves(game_board,curr_tile);
-    print_case(possible_moves[0].box);
+//    print_case(possible_moves[0].box);
   //  printf("%d,%d\n",curr_move.x,curr_move.y);
     free(possible_moves);
 	if(!is_correctly_played(game_board,curr_move)){
@@ -150,9 +150,9 @@ int main(int argc, char* argv[]){
     lib[i-optind] = argv[i];
   }
 
-  initialize_server(seed);
+//  initialize_server(seed);
   
-  struct gameconfig_t config = {.mode = INFINITE_MEEPLE, .meeples = 7, .deck = game_deck};
+  struct gameconfig_t config = {.mode = mode, .meeples = 7, .deck = game_deck};
   run_game(config, lib[0], lib[1], seed);
   finalize_server();
   

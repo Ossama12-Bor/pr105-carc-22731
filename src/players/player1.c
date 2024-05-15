@@ -64,8 +64,8 @@ struct move_t *play_in_finite_meeple(struct board_t *board, const struct tile_t 
     
   struct move_t *open_brown_meeple = get_biggest_open_road_component(board, t, player_id,FINITE_MEEPLE,n_meeples,BROWN);
     if (open_brown_meeple != NULL) return open_brown_meeple;
-   struct move_t *open_road_meeple = get_biggest_open_road_component(board, t, player_id,FINITE_MEEPLE,n_meeples,GRAY);
-    if (open_road_meeple != NULL) return open_road_meeple;
+  struct move_t *open_road_meeple = get_biggest_open_road_component(board, t, player_id,FINITE_MEEPLE,n_meeples,GRAY);
+   if (open_road_meeple != NULL) return open_road_meeple;
     
     struct move_t *random = get_random_possible_position(board,t,player_id);
         
@@ -80,7 +80,7 @@ void initialize(enum player_color_t player_id, const struct move_t first_move,st
   player.score = 0;
   if(config.mode == NO_MEEPLE){
     player.n_meeples = 0;
-    player.mode = FINITE_MEEPLE;
+    player.mode = NO_MEEPLE;
     }
   else if(config.mode == INFINITE_MEEPLE){
     player.n_meeples = -1;
@@ -94,10 +94,18 @@ void initialize(enum player_color_t player_id, const struct move_t first_move,st
 }
 
 struct move_t play(const struct move_t previous_move, const struct tile_t tile){
-  printf("sjsfhsiqgf\n");                 
+  struct move_t *move_to_play = NULL;
   if(player.player_id==WHITE ||(player.player_id==BLACK && board_size(player.myboard)!=1)){
     update_player_board(&player, previous_move);}
-  struct move_t *move_to_play = play_in_no_meeple(player.myboard, tile, player.player_id);
+  if (player.mode == NO_MEEPLE){
+    move_to_play = play_in_no_meeple(player.myboard, tile, player.player_id);}
+  else if (player.mode == INFINITE_MEEPLE){
+    move_to_play = play_in_infinite_meeple(player.myboard, tile, player.player_id);}
+  else{
+    move_to_play = play_in_finite_meeple(player.myboard, tile, player.player_id, player.n_meeples);
+    printf("n_m == %d\n", player.n_meeples);
+    }
+  
   update_player_board(&player, *move_to_play);
   return *move_to_play;
 

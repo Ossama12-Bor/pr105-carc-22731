@@ -35,24 +35,21 @@ void test_components(void) {
   add_tile_to_graph(test, CARC_TILE_INIT, tests, 0);
 
   //tests for the first function
-  for (int i = 0; i < 3; ++i){
-    assert(does_adding_ends_a_certain_component(test, 0,0,i) == NULL);
-    
-    assert(does_adding_ends_a_certain_component(test, 0,1,i) == NULL);
-    assert(does_adding_ends_a_certain_component(test, 0,2,i) == NULL);
-    assert(does_adding_ends_a_certain_component(test, 0,3,i) == NULL);
-  }
+  for (int i = 0; i < 13; ++i){
+    assert(does_adding_ends_a_certain_component(test, 0,i) == NULL);
+      }
   tests[2] = 0;
   add_tile_to_graph(test , CARC_TILE_TINI, tests, 1);
-  for (int i =0; i < 3; ++i){
-    igraph_vector_int_t *result = does_adding_ends_a_certain_component(test, 13, 2, i);
+  for (int i =6; i < 9; ++i){
+
+    igraph_vector_int_t *result = does_adding_ends_a_certain_component(test, 13, i);    
     assert( result != NULL);
     igraph_vector_int_destroy(result) ;    	
     free(result);
       
   }
   printf("\n\n");
-  igraph_vector_int_t *result = does_adding_ends_a_certain_component(test, 13, 2, 0);
+  igraph_vector_int_t *result = does_adding_ends_a_certain_component(test, 13, 6);
   igraph_vector_int_print(result);      
   assert( result != NULL);
   igraph_vector_int_destroy(result) ;    	
@@ -61,38 +58,34 @@ void test_components(void) {
 
   printf("\n\n");
   for (int i =0; i < 3; ++i){
-    assert(does_adding_ends_a_certain_component(test, 13, 3, i) == NULL);
-    assert(does_adding_ends_a_certain_component(test, 13, 1, i) == NULL);
-    assert(does_adding_ends_a_certain_component(test, 13, 0, i) == NULL);      
+    assert(does_adding_ends_a_certain_component(test, 13, i + 9) == NULL);
+    assert(does_adding_ends_a_certain_component(test, 13, i + 3) == NULL);
+    assert(does_adding_ends_a_certain_component(test, 13, i) == NULL);      
 
   }
        
   tests[2] = 1;
   add_tile_to_graph(test , CARC_TILE_INIT, tests, 2);
-  assert(does_adding_ends_a_certain_component(test, 26, 2, 0) == NULL);
+  assert(does_adding_ends_a_certain_component(test, 26, 6) == NULL);
   tests[2] = -1;
   tests[3] = 2;
   add_tile_to_graph(test, CARC_TILE_XROAD, tests, 3);
   tests[3] = -1;
   tests[1] = 2;
   add_tile_to_graph(test, CARC_TILE_XROAD, tests, 4);    
-  assert(does_adding_ends_a_certain_component(test, 39, 3, 0) == NULL);
-  igraph_vector_int_t *result1 = does_adding_ends_a_certain_component(test, 39, 3, 1);
+  assert(does_adding_ends_a_certain_component(test, 39, 9) == NULL);
+  igraph_vector_int_t *result1 = does_adding_ends_a_certain_component(test, 39, 10);
   igraph_vector_int_print(result1);      
   assert( result != NULL);
   igraph_vector_int_destroy(result1) ;    	
   free(result1);
-    
-  //    assert(does_adding_ends_a_certain_component(test, 39, 3, 1) != NULL);
-  //      igraph_vector_int_print(does_adding_ends_a_certain_component(test, 39, 3, 1));    
     
   //tests for the second
   tests[0] = 3;
   tests[1] = -1;
   tests[2] = -1;
   tests[3] = 1;
-  igraph_vector_ptr_t *components = set_of_new_finished(test, CARC_TILE_XROAD, tests, 5);
-  //    test = add_tile_to_graph(test,CARC_TILE_XROAD, tests, 5);
+  igraph_vector_ptr_t *components = set_of_new_finished_components_after_adding(test, CARC_TILE_XROAD, tests, 5);
   assert(igraph_vector_ptr_size(components) != 0);
   for (int i = 0; i < igraph_vector_ptr_size(components); i++) {
     igraph_vector_int_t *vec = (igraph_vector_int_t *)igraph_vector_ptr_e(components, i);
@@ -105,7 +98,7 @@ void test_components(void) {
   tests[0] = 4;
   tests[1] = 1;
   tests[3] = -1;
-  igraph_vector_ptr_t *components_2 = set_of_new_finished(test, CARC_TILE_XROAD, tests, 5);
+  igraph_vector_ptr_t *components_2 = set_of_new_finished_components_after_adding(test, CARC_TILE_XROAD, tests, 5);
   for (int i = 0; i < igraph_vector_ptr_size(components_2); i++) {
     igraph_vector_int_t *vec = (igraph_vector_int_t *)igraph_vector_ptr_e(components_2, i);
     printf("Vector %d: ", i);
@@ -118,7 +111,7 @@ void test_components(void) {
   tests[1] = -1;
   tests[2] = -1;
   tests[3] = 1;    
-  igraph_vector_ptr_t *   components_3 = set_of_new_finished(test, CARC_TILE_XROAD, tests, 6);
+  igraph_vector_ptr_t *   components_3 = set_of_new_finished_components_after_adding(test, CARC_TILE_XROAD, tests, 6);
 
   for (int i = 0; i < igraph_vector_ptr_size(components_3); i++) {
     igraph_vector_int_t *vec = (igraph_vector_int_t *)igraph_vector_ptr_e(components_3, i);
@@ -157,7 +150,7 @@ void test_score(void){
   tests[1] = 0;
   s += added_score(graph, CARC_TILE_XROAD,tests ,3);
   assert(s == 0);
-  assert(number_of_vertices_in_new_component(graph,CARC_TILE_XROAD,tests,3,1,1) == 4);   
+  assert(number_of_vertices_in_new_component(graph,CARC_TILE_XROAD,tests,3,4) == 4);   
   add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,3);
   tests[1] = -1;
   tests[2] = 3;    
@@ -199,8 +192,11 @@ void test_score(void){
   tests[2] = 5;
   tests[3] = -1;
   enum color_t brown = BROWN;
-  igraph_vector_int_t *result = get_biggest_component_of_player_in_a_position(graph,CARC_TILE_XROAD,tests,8,0,brown,INFINITE_MEEPLE, 7);
-  igraph_vector_int_print(result);
+  igraph_vector_int_t *result2 = get_biggest_component_of_player_in_a_position(graph,CARC_TILE_XROAD,tests,8,0,brown,INFINITE_MEEPLE, 7);
+  igraph_vector_int_print(result2);
+  igraph_vector_int_print(result2);
+  igraph_vector_int_destroy(result2) ;
+  free(result2);
   tests[1] = -1;
   tests[2] = 2;
   tests[3] = 0;
@@ -208,9 +204,11 @@ void test_score(void){
   tests[1] = -1;
   tests[2] = 8;
   tests[3] = 7;
-  //    add_meeple(graph,95,1);
-  result = get_biggest_component_of_player_in_a_position(graph,CARC_TILE_XROAD,tests,9,1,1,INFINITE_MEEPLE, -1);
-  igraph_vector_int_print(result);
+  igraph_vector_int_t *result3 = get_biggest_component_of_player_in_a_position(graph,CARC_TILE_XROAD,tests,9,1,1,INFINITE_MEEPLE, -1);
+  igraph_vector_int_print(result3);
+  igraph_vector_int_print(result3);
+  igraph_vector_int_destroy(result3) ;
+  free(result3);
   add_meeple(graph,105,0);
   add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,9);
   assert(meeple_can_be_added(graph,124) == 0);
@@ -223,30 +221,32 @@ void test_score(void){
   tests[1] = 1;
   tests [2] = -1;
   tests[3] = 6;
-  result = get_biggest_component_of_player_in_a_position(graph,CARC_TILE_XROAD,tests,10,0,1,NO_MEEPLE, -1);
-  igraph_vector_int_print(result);
+  igraph_vector_int_t *result4 = get_biggest_component_of_player_in_a_position(graph,CARC_TILE_XROAD,tests,10,0,1,NO_MEEPLE, -1);
+  igraph_vector_int_print(result4);
+  igraph_vector_int_destroy(result4) ;
+  free(result4);
+  
   add_tile_to_graph(graph, CARC_TILE_XROAD,tests ,10);
   tests[0] = -1;
   tests[1] = 4;
   tests[2] = 5;
   tests[3] = -1;
   int position = meeple_can_be_added_in_a_position(graph, CARC_TILE_INIT, 11,tests );
-  assert(meeple_can_be_added(graph, 105) == 0);    
+  assert(meeple_can_be_added(graph, 105) == 0);
   assert(retrieve_meeples(graph, 104/13, 0) == 1);
   assert(meeple_can_be_added(graph, 105));
   add_meeple(graph, 43, 1);
   assert(meeple_can_be_added(graph, 10) == 0);
-  assert(retrieve_meeples(graph, 0, 0) == 1);        
-  assert(retrieve_meeples(graph, 0, 1) == 0);    
-  //    assert(meeple_can_be_added(graph, 10));    
+  assert(retrieve_meeples(graph, 0, 0) == 1);
+  assert(retrieve_meeples(graph, 0, 1) == 0);
   display_graph(graph,"test.dot");
     
   igraph_destroy(graph);
   free(graph);
 }
 int main() {    
-  //        test_graph_add();
-  //   test_components();  
+//          test_graph_add();
+//     test_components();  
   test_score();
   return 0;
 }
