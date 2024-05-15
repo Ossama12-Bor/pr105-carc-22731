@@ -115,6 +115,7 @@ struct pos_t* get_possible_moves(struct board_t*board, struct tile_t tile){
     first=first->next;
   }
   if(count == 0){
+    free(new_empty);
 	new_empty=malloc(sizeof(struct pos_t )*1);
 	new_empty->status.type_id=0;
   new_empty->status.rotation=0;
