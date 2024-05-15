@@ -37,11 +37,11 @@ struct move_t *play_in_infinite_meeple(struct board_t *board, const struct tile_
     struct move_t *road_adversary = get_biggest_finished_component(board, t, 1 - 0, GRAY, -1, INFINITE_MEEPLE);
     if (road_adversary != NULL) return road_adversary;
     
-    struct move_t *green = get_biggest_finished_component(board, t, 0, GREEN, -1, INFINITE_MEEPLE);
-    if (green != NULL) return green;
+   struct move_t *green = get_biggest_finished_component(board, t, 0, GREEN, -1, INFINITE_MEEPLE);
+   if (green != NULL) return green;
     
-   struct move_t *no_meeple = get_a_position_where_there_is_no_meeple(board, t, player_id);
-    if (no_meeple != NULL) return no_meeple;
+  struct move_t *no_meeple = get_a_position_where_there_is_no_meeple(board, t, player_id);
+   if (no_meeple != NULL) return no_meeple;
    
     // Allouer une nouvelle structure move_t
     struct move_t *random = get_random_possible_position(board,t,player_id);
@@ -95,19 +95,26 @@ void initialize(enum player_color_t player_id, const struct move_t first_move,st
 
 struct move_t play(const struct move_t previous_move, const struct tile_t tile){
   struct move_t *move_to_play = NULL;
+  struct move_t mv ;  
   if(player.player_id==WHITE ||(player.player_id==BLACK && board_size(player.myboard)!=1)){
     update_player_board(&player, previous_move);}
   if (player.mode == NO_MEEPLE){
-    move_to_play = play_in_no_meeple(player.myboard, tile, player.player_id);}
+    move_to_play = play_in_no_meeple(player.myboard, tile, player.player_id);
+    mv = *move_to_play;        
+  }
   else if (player.mode == INFINITE_MEEPLE){
-    move_to_play = play_in_infinite_meeple(player.myboard, tile, player.player_id);}
+    move_to_play = play_in_infinite_meeple(player.myboard, tile, player.player_id);
+    mv = *move_to_play;        
+  }
   else{
     move_to_play = play_in_finite_meeple(player.myboard, tile, player.player_id, player.n_meeples);
+    mv = *move_to_play;    
     printf("n_m == %d\n", player.n_meeples);
     }
   
   update_player_board(&player, *move_to_play);
-  return *move_to_play;
+  free(move_to_play);
+  return mv;
 
 }
 
