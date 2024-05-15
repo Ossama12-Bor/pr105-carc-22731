@@ -13,7 +13,7 @@ char const* get_player_name(){
 //modes
 
 struct move_t *play_in_no_meeple(struct board_t *board, const struct tile_t t, int player_id){ 
-    struct move_t *optimal = get_optimal_position_no_meeple(board, t, player_id);
+   struct move_t *optimal = get_optimal_position_no_meeple(board, t, player_id);
     
     if (optimal != NULL) return optimal;
     
@@ -60,7 +60,7 @@ struct move_t *play_in_finite_meeple(struct board_t *board, const struct tile_t 
     if (road_adversary != NULL) return road_adversary;
     
     struct move_t *green = get_biggest_finished_component(board, t, 0, GREEN, -1, FINITE_MEEPLE);
-    if (green != NULL) return green;    
+    if (green != NULL) return green;
     
   struct move_t *open_brown_meeple = get_biggest_open_road_component(board, t, player_id,FINITE_MEEPLE,n_meeples,BROWN);
     if (open_brown_meeple != NULL) return open_brown_meeple;

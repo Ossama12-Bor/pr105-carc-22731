@@ -96,6 +96,7 @@ struct move_t *get_biggest_finished_component(struct board_t *board, struct tile
 	  igraph_vector_int_t *component = get_biggest_component_of_player_in_a_position(get_graph(board), flipped_tile, possible_moves_flipped[k].box->neighbors, board_size(board), player_id, color, mode, n_meeples); 
 	  int size_test = igraph_vector_int_size(component); 
 	  if (size_test > size){
+	    free(optimal);
 	    size = size_test;
 	    optimal = initialize_move(player_id, flipped_tile, (possible_moves_flipped[k].box)->x, (possible_moves_flipped[k].box)->y, NO_CONNECTION);	    
 	  }
@@ -139,6 +140,7 @@ struct move_t *get_random_possible_position(struct board_t *board, struct tile_t
   random->x = (possible_moves[0].box)->x;
   random->y = (possible_moves[0].box)->y;
   random->meeple = NO_CONNECTION;
+  free(possible_moves);
   return random;
 }
 
