@@ -1,17 +1,16 @@
 IGRAPH_PATH ?= /net/npers/renault/save/igraph-0.10.10/install
 
-CFLAGS = -std=gnu99 -Wall -Wextra -Wno-trampolines -fPIC -g3 -O0 \
-	-I$(IGRAPH_PATH)/include/igraph -fprofile-arcs -ftest-coverage
+CFLAGS = -std=gnu99 -Wall -Wextra -Wno-trampolines -fPIC -g3 \
+	-I$(IGRAPH_PATH)/include/igraph
 IGRAPH_LIBDIR = $(shell [ -e $(IGRAPH_PATH)/lib ] && \
         echo $(IGRAPH_PATH)/lib || \
         echo $(IGRAPH_PATH)/lib64)
-LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_LIBDIR) -Wl,--rpath=$(IGRAPH_LIBDIR) -lgcov
+LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_LIBDIR) -Wl,--rpath=$(IGRAPH_LIBDIR)
 
 BASE_FILES = \
         deck.c
 
 OBJS = build/liste.o build/board.o build/deck.o build/tile.o build/graph.o build/playerStruct.o build/player_functions.o
-
 all: build 
 
 build: server client build/deck.o

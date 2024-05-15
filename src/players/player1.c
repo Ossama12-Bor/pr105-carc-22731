@@ -112,7 +112,7 @@ struct move_t play(const struct move_t previous_move, const struct tile_t tile){
     printf("n_m == %d\n", player.n_meeples);
     }
   
-  update_player_board(&player, *move_to_play);
+  update_player_board(&player, mv);
   free(move_to_play);
   return mv;
 
