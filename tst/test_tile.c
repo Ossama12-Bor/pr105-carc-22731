@@ -28,6 +28,7 @@ void test_tile(){
 	assert(aSide[0] == GREEN);
 	assert(aSide[1] == GRAY);
 	assert(aSide[2] == GREEN);
+	free(aSide);
 	
 	printf("OK!\n");
 	
