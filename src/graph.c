@@ -99,6 +99,7 @@ void add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], 
   initialize_new_tile(t,id_in_graph);
   attributes[id_in_graph + 12].vertex_is_open = 0;
   igraph_add_vertices(graph, 13, NULL);
+  create_graph_for_tile(graph, id_in_graph, t);  
   for (int direction = 0; direction < 4; direction++) {
     if (neighbours_ids[direction] != -1) {
       add_edges_between_vertices(graph, id_in_graph, 13 * neighbours_ids[direction], direction);
