@@ -33,7 +33,7 @@ alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/t
 #	gcc $(OBJS) build/test_board.o -o install/tests/test_board -I src -I tst $(LDFLAGS)
 #	gcc $(OBJS) build/test_graph.o -o install/tests/test_graph -I src -I tst $(LDFLAGS)
 #	gcc $(OBJS) build/test_player_functions.o -o install/tests/test_player_functions -I src -I tst $(LDFLAGS)
-	gcc -- coverage $^ -o install/alltests -I src -I tst $(LDFLAGS)
+	gcc  $^ -o install/alltests -I src -I tst $(LDFLAGS) --coverage
 build/%.o: tst/%.c 
 	$(CC) -c $< $(CFLAGS) -I src -I tst -o $@
 
@@ -47,6 +47,6 @@ show:
 	eog game.png
 
 clean:
-	@rm -f *~ src/*~ *.o build/*.o -r install/tests *.png
+	@rm -f *~ src/*~ *.o build/*.o build/*[ao] -r install/tests *.png
 
 .PHONY: client install test clean
