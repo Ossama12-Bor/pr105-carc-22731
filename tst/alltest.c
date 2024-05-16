@@ -12,7 +12,7 @@ int main(){
     test_components();
     test_score();
     list_test();
-    //test_player();
+    test_player();
     test_tile();
     return 0;
 

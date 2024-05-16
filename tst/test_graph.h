@@ -1,4 +1,4 @@
-#ifndef _TEST_GRAPH_H
+#ifndef _TEST_GRAPH_H_
 #define _TEST_GRAPH_H_
 
 
