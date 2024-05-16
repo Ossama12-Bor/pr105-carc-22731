@@ -23,7 +23,7 @@
                               .c={GREEN,GREEN,GREEN,GREEN,GRAY,GREEN,   \
                                   GREEN,GRAY,GREEN,GREEN,GREEN,GREEN,GRAY}})
 
-#define CARC_PIZZA  ((struct tile_t) { .t={0,0,0,1,2,3,3,3,3,3,2,1,2}, \
+#define CARC_PIZZA  ((struct tile_t) { .t={0,0,0,0,0,0,1,1,1,1,1,1,0}, \
                               .c={BROWN,BROWN,BROWN,BROWN,BROWN,BROWN,   \
                                   GREEN,GREEN,GREEN,GREEN,GREEN,GREEN,BROWN}})
                         
