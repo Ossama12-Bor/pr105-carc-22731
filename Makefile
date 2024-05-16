@@ -38,7 +38,7 @@ build/%.o: tst/%.c
 	$(CC) -c $< $(CFLAGS) -I src -I tst -o $@
 
 
-test: clean
+test: alltests
 	./install/alltests
 
 install: server client test
