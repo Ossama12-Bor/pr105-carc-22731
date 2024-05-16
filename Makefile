@@ -1,11 +1,11 @@
 IGRAPH_PATH ?= /net/npers/renault/save/igraph-0.10.10/install
 
-CFLAGS = -std=gnu99 -Wall -Wextra -Wno-trampolines -fPIC -g3\
+CFLAGS = -std=gnu99 -Wall -Wextra -Wno-trampolines -fPIC -g3 -fprofile-arcs -ftest-coverage\
 	-I$(IGRAPH_PATH)/include/igraph
 IGRAPH_LIBDIR = $(shell [ -e $(IGRAPH_PATH)/lib ] && \
         echo $(IGRAPH_PATH)/lib || \
         echo $(IGRAPH_PATH)/lib64)
-LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_LIBDIR) -Wl,--rpath=$(IGRAPH_LIBDIR)
+LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_LIBDIR) -Wl,--rpath=$(IGRAPH_LIBDIR) --coverage
 
 BASE_FILES = \
         deck.c
@@ -16,11 +16,11 @@ all: build
 build: server client build/deck.o
 
 build/%.o: src/%.c
-	$(CC) -fprofile-arcs -ftest-coverage $< $(CFLAGS) -c -o $@ 
+	$(CC)  $< $(CFLAGS) -c -o $@ 
 
 
 server: build/server.o $(OBJS)
-	gcc  -lgcov --coverage $(OBJS) build/server.o $(LDFLAGS) -o install/server
+	gcc  $(OBJS) build/server.o $(LDFLAGS) -o install/server
 
 client:	$(OBJS)
 	gcc -fPIC -shared -o install/libplayer1.so $(OBJS) src/players/player1.c -I src $(CFLAGS) -L install
@@ -33,9 +33,9 @@ alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/t
 #	gcc $(OBJS) build/test_board.o -o install/tests/test_board -I src -I tst $(LDFLAGS)
 #	gcc $(OBJS) build/test_graph.o -o install/tests/test_graph -I src -I tst $(LDFLAGS)
 #	gcc $(OBJS) build/test_player_functions.o -o install/tests/test_player_functions -I src -I tst $(LDFLAGS)
-	gcc  -lgcov --coverage $^ -o install/alltests -I src -I tst $(LDFLAGS) 
+	gcc  $^ -o install/alltests -I src -I tst $(LDFLAGS) 
 build/%.o: tst/%.c 
-	$(CC) -fprofile-arcs -ftest-coverage -c $< $(CFLAGS) -I src -I tst -o $@
+	$(CC) -c $< $(CFLAGS) -I src -I tst -o $@
 
 
 test: alltests
@@ -47,6 +47,6 @@ show:
 	eog game.png
 
 clean:
-	@rm -f *~ src/*~ *.o build/*.o build/*o -r install/tests *.png
+	@rm -f *~ src/*~ *.o build/*.o build/*[ao] -r install/tests *.png
 
 .PHONY: client install test clean
