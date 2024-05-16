@@ -5,6 +5,9 @@
 void test_player(){
   struct board_t *board;
   struct deck_t *deck;
+  struct gameconfig_t no_meeple = {.mode = NO_MEEPLE, .meeples = 7, .deck = deck};
+  struct gameconfig_t infinite_meeple = {.mode = INFINITE_MEEPLE, .meeples = 7, .deck = deck};
+  struct gameconfig_t finite_meeple = {.mode = FINITE_MEEPLE, .meeples = 7, .deck = deck};  
   deck = generate_deck(42);
   board = initialize_board();
 //  struct tile_t first_tile = deck_get(deck, 0);
@@ -25,7 +28,7 @@ void test_player(){
  assert(move_4 != NULL);
   make_move(board, *move_4);
   free(move_4);
-  struct move_t *move_5 = get_biggest_open_road_component(board, CARC_TILE_XROAD, -1, NO_MEEPLE,7,GRAY);
+  struct move_t *move_5 = get_biggest_open_road_component(board, CARC_TILE_XROAD, -1, no_meeple,GRAY);
  assert(move_5 != NULL);
   make_move(board, *move_5);
   free(move_5);
@@ -34,17 +37,17 @@ void test_player(){
   make_move(board, *move_6);
   free(move_6);
  add_meeple(get_graph(board),72,0);
- struct move_t *move_7 = get_biggest_finished_component(board, CARC_TILE_XROAD,0, GRAY,6,FINITE_MEEPLE);
+ struct move_t *move_7 = get_biggest_finished_component(board, CARC_TILE_XROAD,0, GRAY,finite_meeple);
  assert(move_7 != NULL);
  make_move(board, *move_7);
  free(move_7); 
  add_meeple(get_graph(board),85,1);
- struct move_t *move_8 = get_biggest_finished_component(board, CARC_TILE_XROAD,1, GRAY,0,FINITE_MEEPLE);
+ struct move_t *move_8 = get_biggest_finished_component(board, CARC_TILE_XROAD,1, GRAY, finite_meeple);
  assert(move_8 != NULL);
   make_move(board, *move_8);
  free(move_8);  
   add_meeple(get_graph(board),95,1);
- struct move_t *move_9 = get_biggest_finished_component(board, CARC_TILE_XROAD,1, GRAY,4,FINITE_MEEPLE);
+ struct move_t *move_9 = get_biggest_finished_component(board, CARC_TILE_XROAD,1, GRAY, finite_meeple);
  assert(move_9 != NULL);
   make_move(board, *move_9);
  free(move_9);  
