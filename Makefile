@@ -1,11 +1,11 @@
 IGRAPH_PATH ?= /net/npers/renault/save/igraph-0.10.10/install
 
-CFLAGS = -std=gnu99 -Wall -Wextra -Wno-trampolines -fPIC -g3 --coverage\
+CFLAGS = -std=gnu99 -Wall -Wextra -Wno-trampolines -fPIC -g3\
 	-I$(IGRAPH_PATH)/include/igraph
 IGRAPH_LIBDIR = $(shell [ -e $(IGRAPH_PATH)/lib ] && \
         echo $(IGRAPH_PATH)/lib || \
         echo $(IGRAPH_PATH)/lib64)
-LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_LIBDIR) -Wl,--rpath=$(IGRAPH_LIBDIR) --coverage
+LDFLAGS = -ligraph -lm -ldl -L$(IGRAPH_LIBDIR) -Wl,--rpath=$(IGRAPH_LIBDIR)
 
 BASE_FILES = \
         deck.c
@@ -33,7 +33,7 @@ alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/t
 #	gcc $(OBJS) build/test_board.o -o install/tests/test_board -I src -I tst $(LDFLAGS)
 #	gcc $(OBJS) build/test_graph.o -o install/tests/test_graph -I src -I tst $(LDFLAGS)
 #	gcc $(OBJS) build/test_player_functions.o -o install/tests/test_player_functions -I src -I tst $(LDFLAGS)
-	gcc $^ -o install/alltests -I src -I tst $(LDFLAGS)
+	gcc -- coverage $^ -o install/alltests -I src -I tst $(LDFLAGS)
 build/%.o: tst/%.c 
 	$(CC) -c $< $(CFLAGS) -I src -I tst -o $@
 
