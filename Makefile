@@ -50,6 +50,6 @@ clean:cleangcov
 	@rm -f *~ src/*~ *.o build/*.o -r install/tests *.png
 
 cleangcov:
-	@rm -f build/*[ao]  player*[ao]
+	@rm -f build/*[ao]  player*[ao] *.gcov
 
 .PHONY: client install test clean
