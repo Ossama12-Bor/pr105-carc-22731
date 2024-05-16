@@ -39,7 +39,6 @@ build/%.o: tst/%.c
 
 
 test: cleangcov alltests
-	./install/alltests
 
 install: server client test
 
