@@ -19,10 +19,10 @@ build/%.o: src/%.c
 	$(CC)  $< $(CFLAGS) -c -o $@ 
 
 
-server: build/server.o $(OBJS)
+server: cleangcov build/server.o $(OBJS)
 	gcc  $(OBJS) build/server.o $(LDFLAGS) -o install/server
 
-client:	$(OBJS)
+client:	cleangcov $(OBJS)
 	gcc -fPIC -shared -o install/libplayer1.so $(OBJS) src/players/player1.c -I src $(CFLAGS) -L install
 	gcc -fPIC -shared -o install/libplayer2.so $(OBJS) src/players/player2.c -I src $(CFLAGS) -L install
 
@@ -38,7 +38,7 @@ build/%.o: tst/%.c
 	$(CC) -c $< $(CFLAGS) -I src -I tst -o $@
 
 
-test: alltests
+test: cleangcov alltests
 	./install/alltests
 
 install: server client test
@@ -47,7 +47,10 @@ show:
 	dot -Kfdp -n -Tpng -o game.png test.dot
 	eog game.png
 
-clean:
-	@rm -f *~ src/*~ *.o build/*.o build/*[ao]  player*[ao] -r install/tests *.png
+clean:cleangcov
+	@rm -f *~ src/*~ *.o build/*.o -r install/tests *.png
+
+cleangcov:
+	@rm -f build/*[ao]  player*[ao]
 
 .PHONY: client install test clean
