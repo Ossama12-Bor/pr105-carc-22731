@@ -26,16 +26,16 @@ client:	$(OBJS)
 	gcc -fPIC -shared -o install/libplayer1.so $(OBJS) src/players/player1.c -I src $(CFLAGS) -L install
 	gcc -fPIC -shared -o install/libplayer2.so $(OBJS) src/players/player2.c -I src $(CFLAGS) -L install
 
-alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/test_graph.o build/test_player_functions.o
-	mkdir -p install/tests
-	gcc $(OBJS) build/test_list.o -o install/tests/test_list -I src -I tst $(LDFLAGS)
-	gcc $(OBJS) build/test_tile.o -o install/tests/test_tile -I src -I tst $(LDFLAGS)
-	gcc $(OBJS) build/test_board.o -o install/tests/test_board -I src -I tst $(LDFLAGS)
-	gcc $(OBJS) build/test_graph.o -o install/tests/test_graph -I src -I tst $(LDFLAGS)
-	gcc $(OBJS) build/test_player_functions.o -o install/tests/test_player_functions -I src -I tst $(LDFLAGS)
-
+alltests: $(OBJS) build/test_list.o build/test_tile.o build/test_board.o build/test_graph.o build/test_player_functions.o build/alltest.o
+#	mkdir -p install/tests
+#	gcc $(OBJS) build/test_list.o -o install/tests/test_list -I src -I tst $(LDFLAGS)
+#	gcc $(OBJS) build/test_tile.o -o install/tests/test_tile -I src -I tst $(LDFLAGS)
+#	gcc $(OBJS) build/test_board.o -o install/tests/test_board -I src -I tst $(LDFLAGS)
+#	gcc $(OBJS) build/test_graph.o -o install/tests/test_graph -I src -I tst $(LDFLAGS)
+#	gcc $(OBJS) build/test_player_functions.o -o install/tests/test_player_functions -I src -I tst $(LDFLAGS)
+	gcc $^ -o install/alltests -I src -I tst $(LDFLAGS)
 build/%.o: tst/%.c 
-	$(CC) -c $< $(CFLAGS) -I src -o $@
+	$(CC) -c $< $(CFLAGS) -I src -I tst -o $@
 
 
 test: alltests

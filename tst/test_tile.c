@@ -1,13 +1,10 @@
-#include "tile.h"
-#include "deck.h"
-#include<stdio.h>
-#include<assert.h>
+#include "test_tile.h"
 
 void test_start(char* s){
   printf("%s\n",s);
 }
 
-int main(){
+void test_tile(){
 	struct tile_t tile1=CARC_TILE_GREEN;
 	//struct tile_t tile2=CARC_TILE_EMPTY;
 	struct tile_t tile3=CARC_TILE_INIT;  
@@ -34,6 +31,4 @@ int main(){
 	
 	printf("OK!\n");
 	
-	
-	return 0;
 }

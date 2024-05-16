@@ -6,6 +6,7 @@
 
 
 #define NUM_TILE_TYPES 10
+/*we stock here all tile types without rotation*/
 
 struct tile_t TILE_TYPES[] = {CARC_TILE_INIT,
 				  CARC_TILE_GREEN,
@@ -21,10 +22,13 @@ struct tile_t TILE_TYPES[] = {CARC_TILE_INIT,
 
 
 struct board_t{
-  igraph_t* g;
-  struct pos_t* tiles;
-  int size;
-  struct set *empty;
+  igraph_t* g; // board graph
+  struct pos_t* tiles; /* tiles stock an array of {(type,rotation),{id_nN,id_nE,id_nS,id_nW}} where  
+                              type is the id in TILE_TYPES
+                              rotation is the rotation direction
+                              id_nw,id_nE,.._nS,nW are respectively the ids of the north,East,South,West neighbour*/
+  int size; // number of tiles placed on the board
+  struct set *empty; // list stocks empty postions in board borders
 };
 
 
@@ -61,7 +65,8 @@ struct board_t *initialize_board(){
   igraph_empty(game_board->g,0,IGRAPH_UNDIRECTED);
   return game_board;
 }
-
+// add neighbors of empty[id_in_empty] to empty and remove it from empty
+//change neighbors
 void change_neighbours(struct board_t* board,int id_in_empty){
   int d[4][2] ={{0,1},{1,0},{0,-1},{-1,0}};
   struct lelement *current_lelement=get_lelement_from_empty(board->empty,id_in_empty);
@@ -86,7 +91,7 @@ void change_neighbours(struct board_t* board,int id_in_empty){
   }
   set__remove(board->empty,current_lelement);
 }
-
+/*Check if it is possible to put tile in id empty[id_in_empty] position*/
 int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty) {
   struct lelement*elt=get_lelement_from_empty(board->empty, id_in_empty);
   for (int i = 0; i < 4; i++) {
@@ -100,6 +105,7 @@ int correct_pasting(struct board_t* board,struct tile_t tile, int id_in_empty) {
   return 1;
 }
 
+/* returns a list of all positions where it is possible to put tile in */
 struct pos_t* get_possible_moves(struct board_t*board, struct tile_t tile){
   struct pos_t *new_empty=malloc(sizeof(struct pos_t)*set_size(board->empty));
   int count=0;
@@ -127,26 +133,12 @@ struct pos_t* get_possible_moves(struct board_t*board, struct tile_t tile){
   return new_empty;
 
 }
+/* used to get the size of possible moves array*/
 int get_size_possible_moves(struct pos_t * possible_moves){
   return possible_moves->status.rotation;
 }
-/*struct case_t *get_optimal_case(struct board_t *board,struct tile_t tile,enum player_color_t c){
-	struct pos_t *avail_positions=get_possible_moves(board,tile);
-  struct pos_t avail_pos;
-  if(avail_positions != NULL){
-    avail_pos=avail_positions[0];
-    free(avail_positions);}
-  else{
-    avail_pos.type_id = 0;
-    avail_pos.box= get_data(get_head(board->empty));
-  }
-    struct case_t *optimal_tile=avail_pos.box;
-    board->g=add_tile_to_graph(board->g,tile,optimal_tile->neighbors,board->size);
-	  change_neighbours(board,avail_pos.type_id);
-	return optimal_tile;  
-}
 
-*/ 
+/*Returns a boolean indicating whether two arrays, each of size MAX_CONNECTIONS, are equal.*/
 int equal(unsigned int *t1,unsigned int *t2){
   for(int i=0;i<MAX_CONNECTIONS;i++){
     if(t1[i]!=t2[i])
@@ -154,7 +146,7 @@ int equal(unsigned int *t1,unsigned int *t2){
   }
   return 1;
 }
-
+/*takes a tile and returns its type and its rotation direction*/
 struct status get_status(struct tile_t tile){
   for(int i=0;i<NUM_TILE_TYPES;i++){
     for(int j=0;j<NUM_SIDES;j++){
@@ -168,17 +160,16 @@ struct status get_status(struct tile_t tile){
   struct status status={-1,0};
   return status;
 }
-
+/* add tile to the board in the optimal_pos*/
 void add_tile(struct board_t *board,struct tile_t tile,struct pos_t optimal_pos){
 	
-  //  board->g=add_tile_to_graph(board->g,tile,(optimal_pos.box)->neighbors,board->size);
   add_tile_to_graph(board->g,tile,(optimal_pos.box)->neighbors,board->size);  
 	change_neighbours(board,optimal_pos.status.type_id);
 	board->tiles[board->size].status=get_status(tile);
   board->tiles[board->size].box=optimal_pos.box;
   board->size+=1;
 }
-
+/* used to allow player to know his opponent move and also to  make his move*/
 void make_move(struct board_t *board,struct move_t move){
   struct tile_t tile=move.tile;
   int id_in_empty=get_id_in_empty(board->empty,move.x,move.y);
@@ -186,6 +177,7 @@ void make_move(struct board_t *board,struct move_t move){
   struct pos_t pos={.status={id_in_empty,0},.box=box};
   add_tile(board,tile,pos);
 }
+/* Check if a tile was correctly played*/ 
 
 int is_correctly_played(struct board_t *board,struct move_t move){
   struct tile_t tile=move.tile;
@@ -205,17 +197,19 @@ void free_board(struct board_t* game_board){
   free(game_board->g);
   free(game_board);
 }
+
+/* gets board size*/ 
 int get_size_board(struct board_t*board){
   return board->size;
 }
-
+/* print a certain position "box"*/
 void print_case(struct case_t *box){
   printf("{(%d,%d),{",box->x,box->y);
   for(int i=0;i<3;i++)
     printf("%d,",box->neighbors[i]);
   printf("%d}}",box->neighbors[3]);
 }
-
+/* prints the board*/
 void print_board(struct board_t *board,char* prefix){
   printf("%s :\n size:%d\n,tiles:[",prefix,board->size);
   for(int i=0;i<board->size;i++){
@@ -229,17 +223,19 @@ void print_board(struct board_t *board,char* prefix){
 
 
 }
-int board_size(struct board_t*board){
-	return board->size;
-}
-
+/* returns the board empty list*/
 struct set*get_board_empty(struct board_t*board){
 	return board->empty;
 }
+/* returns the board tiles array*/
 struct pos_t *get_board_tiles(struct board_t *board){
 	return board->tiles;
 }
-
+/* returns the board graph*/
 igraph_t * get_graph(struct board_t *board){
 	return board->g;
+}
+
+int board_size(struct board_t *board){
+  return board->size;
 }

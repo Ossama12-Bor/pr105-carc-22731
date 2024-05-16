@@ -6,6 +6,7 @@
 
 #include <igraph.h>
 
+ // adding some new tiles 
 #define CARC_V_CASTLE  ((struct tile_t) { .t={0,0,0,1,1,1,2,2,2,2,2,2,2}, \
                               .c={BROWN,BROWN,BROWN,BROWN,BROWN,BROWN,   \
                                   GREEN,GREEN,GREEN,GREEN,GREEN,GREEN,GREEN}})
@@ -31,18 +32,20 @@
                                   GREEN,GREEN,GREEN,GREEN,GREEN,GREEN,GREEN}})
 
 
-struct board_t;
+struct board_t; // board structure 
 
-extern struct tile_t TILE_TYPES[];
+extern struct tile_t TILE_TYPES[]; // declared extern in order to use it in other files
+
 
 struct case_t {
-  int x,y;
-  int *neighbors;
+  int x,y; // position (x,y)
+  int *neighbors; // array of neighbors ids (NORTH,EAST,SOUTH,WEST)
 };
 
+/* it gives the tile status*/
 struct status {
-  int type_id;
-  int rotation;
+  int type_id; // from 1 to 10
+  int rotation; // from 0 to 3
 };
 struct pos_t{
   struct status status;

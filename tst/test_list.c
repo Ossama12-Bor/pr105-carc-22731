@@ -1,9 +1,6 @@
-#include "liste.h"
-#include <stdio.h>
-#include <assert.h>
-#include <stdlib.h>
+#include "test_list.h"
 
-int main() {
+void list_test() {
     // Initialize an empty linked list
     struct set *test_set = set__empty();
     assert(test_set != NULL);
@@ -59,5 +56,4 @@ int main() {
     free_set(test_set);
 
     printf("All tests passed!\n");
-    return 0;
 }

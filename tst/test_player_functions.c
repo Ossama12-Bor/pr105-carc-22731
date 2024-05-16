@@ -1,7 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "player_functions.h"
-#include <assert.h>
+
+#include "test_player_functions.h"
+
 
 void test_player(){
   struct board_t *board;
@@ -66,6 +65,3 @@ void test_player(){
   deck_free(deck);
 }
 
-void main(){
-  test_player();
-}

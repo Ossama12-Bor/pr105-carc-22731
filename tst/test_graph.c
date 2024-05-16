@@ -1,8 +1,7 @@
+#include "test_graph.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "graph.h"
-#include <assert.h>
+
+
 void test_graph_add(void){
   igraph_t *graph = malloc(sizeof(igraph_t));
   igraph_empty(graph,0,IGRAPH_UNDIRECTED);
@@ -244,9 +243,4 @@ void test_score(void){
   igraph_destroy(graph);
   free(graph);
 }
-int main() {    
-//          test_graph_add();
-//     test_components();  
-  test_score();
-  return 0;
-}
+
