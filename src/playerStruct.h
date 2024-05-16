@@ -8,8 +8,7 @@
 struct player_t{
   int player_id;
   struct board_t* myboard;
-  unsigned int n_meeples;
-  enum gamemode_t mode;
+  struct gameconfig_t config;  
   char const* name;
   int score;
 };

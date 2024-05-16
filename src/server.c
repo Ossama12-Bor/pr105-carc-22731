@@ -68,9 +68,13 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   struct move_t first_move = play_first_move();
  
   int first_player = rand() % 2;
-  config.deck = deck_copy(game_deck);
-  initialize[first_player](BLACK, first_move, config);
-  initialize[1-first_player](WHITE, first_move, config);
+
+  struct deck_t* deck_black = deck_copy(game_deck);
+  struct deck_t* deck_white = deck_copy(game_deck);
+  struct gameconfig_t config_black = {.mode = config.mode, .meeples = 7, .deck = deck_black};
+  struct gameconfig_t config_white = {.mode = config.mode, .meeples = 7, .deck = deck_white};  
+  initialize[first_player](BLACK, first_move, config_black);
+  initialize[1-first_player](WHITE, first_move, config_white);
   
   size_t turn_counter = 1;
 
@@ -106,6 +110,7 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
 
   finalize[0]();
   finalize[1]();
+  
   // closing libraries
   dlclose(handle1);
   dlclose(handle2);

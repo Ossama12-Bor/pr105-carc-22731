@@ -99,7 +99,6 @@ void add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], 
   initialize_new_tile(t,id_in_graph);
   attributes[id_in_graph + 12].vertex_is_open = 0;
   igraph_add_vertices(graph, 13, NULL);
-  igraph_t *g= create_graph_for_tile(graph, id_in_graph, t);
   for (int direction = 0; direction < 4; direction++) {
     if (neighbours_ids[direction] != -1) {
       add_edges_between_vertices(graph, id_in_graph, 13 * neighbours_ids[direction], direction);
@@ -119,7 +118,6 @@ void add_tile_to_graph(igraph_t *graph, struct tile_t t, int neighbours_ids[4], 
  */
 
 igraph_vector_int_t * does_adding_ends_a_certain_component(igraph_t *graph, int id_in_graph, enum conn_t vertex){
-  int _t[4] = { 0, 3 , 6, 9};
   igraph_vector_int_t *result = malloc(sizeof(igraph_t));
   igraph_vector_int_init(result, 0);
   igraph_subcomponent(graph, result, id_in_graph + vertex, IGRAPH_ALL);
@@ -260,7 +258,6 @@ void free_components(igraph_vector_ptr_t *components) {
 
 
 int number_of_vertices_in_new_component(igraph_t *g, struct tile_t t, int neighbours_ids[4], int id_in_deck, enum conn_t vertex){
-  int _t[4] ={ 0, 3, 6, 9};
   int id_in_graph = id_in_deck * 13 ;  
   igraph_t *graph = malloc(sizeof(igraph_t));
   igraph_copy(graph,g);

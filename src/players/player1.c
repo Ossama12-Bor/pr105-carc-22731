@@ -12,29 +12,30 @@ char const* get_player_name(){
 
 //modes
 
-struct move_t *play_in_no_meeple(struct board_t *board, const struct tile_t t, int player_id){ 
+struct move_t *play_in_no_meeple(struct board_t *board, const struct tile_t t, int player_id){
+  struct gameconfig_t config = {.mode = NO_MEEPLE, .meeples = 7, .deck = player.config.deck};    
    struct move_t *optimal = get_optimal_position_no_meeple(board, t, player_id);
     
     if (optimal != NULL) return optimal;
     
-    optimal = get_biggest_open_road_component(board, t, player_id, NO_MEEPLE, 0,GRAY);
+    optimal = get_biggest_open_road_component(board, t, player_id, config,GRAY);
     
     if (optimal != NULL) return optimal;
     
-    // Allouer une nouvelle structure move_t
     optimal = get_random_possible_position(board,t,player_id);
         
     return optimal;
 }
 
 struct move_t *play_in_infinite_meeple(struct board_t *board, const struct tile_t t, int player_id){
-  struct move_t *brown = get_biggest_finished_component(board, t, 0, BROWN, -1, INFINITE_MEEPLE);
+  struct gameconfig_t config = {.mode = INFINITE_MEEPLE, .meeples = 7, .deck = player.config.deck};  
+  struct move_t *brown = get_biggest_finished_component(board, t, 0, BROWN, config);
     if (brown != NULL) return brown;
     
     /* struct move_t *road = get_biggest_finished_component(board, t, 0, GRAY, -1, INFINITE_MEEPLE); */
     /* if (road != NULL) return road; */
     
-    struct move_t *road_adversary = get_biggest_finished_component(board, t, 1 - 0, GRAY, -1, INFINITE_MEEPLE);
+    struct move_t *road_adversary = get_biggest_finished_component(board, t, 1 - 0, GRAY, config);
     if (road_adversary != NULL) return road_adversary;
     
    /* struct move_t *green = get_biggest_finished_component(board, t, 0, GREEN, -1, INFINITE_MEEPLE); */
@@ -49,22 +50,23 @@ struct move_t *play_in_infinite_meeple(struct board_t *board, const struct tile_
     return random;
 }
 
-struct move_t *play_in_finite_meeple(struct board_t *board, const struct tile_t t, int player_id, int n_meeples){
-  struct move_t *brown = get_biggest_finished_component(board, t, 0, BROWN, -1, FINITE_MEEPLE);
+struct move_t *play_in_finite_meeple(struct board_t *board, const struct tile_t t, int player_id, struct gameconfig_t config){
+
+  struct move_t *brown = get_biggest_finished_component(board, t, 0, BROWN, config);
     if (brown != NULL) return brown;
     
-    struct move_t *road = get_biggest_finished_component(board, t, 0, GRAY, -1, FINITE_MEEPLE);
+    struct move_t *road = get_biggest_finished_component(board, t, 0, GRAY, config);
     if (road != NULL) return road;
     
-    struct move_t *road_adversary = get_biggest_finished_component(board, t, 1 - 0, GRAY, -1, FINITE_MEEPLE);
+    struct move_t *road_adversary = get_biggest_finished_component(board, t, 1 - 0, GRAY, config);
     if (road_adversary != NULL) return road_adversary;
     
-    struct move_t *green = get_biggest_finished_component(board, t, 0, GREEN, -1, FINITE_MEEPLE);
+    struct move_t *green = get_biggest_finished_component(board, t, 0, GREEN, config);
     if (green != NULL) return green;
     
-  struct move_t *open_brown_meeple = get_biggest_open_road_component(board, t, player_id,FINITE_MEEPLE,n_meeples,BROWN);
+  struct move_t *open_brown_meeple = get_biggest_open_road_component(board, t, player_id,config,BROWN);
     if (open_brown_meeple != NULL) return open_brown_meeple;
-  struct move_t *open_road_meeple = get_biggest_open_road_component(board, t, player_id,FINITE_MEEPLE,n_meeples,GRAY);
+  struct move_t *open_road_meeple = get_biggest_open_road_component(board, t, player_id,config,GRAY);
    if (open_road_meeple != NULL) return open_road_meeple;
     
     struct move_t *random = get_random_possible_position(board,t,player_id);
@@ -76,19 +78,20 @@ void initialize(enum player_color_t player_id, const struct move_t first_move,st
   
   player.player_id = player_id;
   player.myboard = initialize_board();
+  player.config.deck = config.deck;  
   update_player_board(&player, first_move);
   player.score = 0;
   if(config.mode == NO_MEEPLE){
-    player.n_meeples = 0;
-    player.mode = NO_MEEPLE;
+    player.config.meeples = 0;
+    player.config.mode = NO_MEEPLE;
     }
   else if(config.mode == INFINITE_MEEPLE){
-    player.n_meeples = -1;
-    player.mode = INFINITE_MEEPLE;
+    player.config.meeples = -1;
+    player.config.mode = INFINITE_MEEPLE;
     }
   else{
-    player.n_meeples = config.meeples;
-    player.mode = FINITE_MEEPLE;
+    player.config.meeples = config.meeples;
+    player.config.mode = FINITE_MEEPLE;
     }
   player.name = get_player_name();
 }
@@ -98,18 +101,18 @@ struct move_t play(const struct move_t previous_move, const struct tile_t tile){
   struct move_t mv ;  
   if(player.player_id==WHITE ||(player.player_id==BLACK && board_size(player.myboard)!=1)){
     update_player_board(&player, previous_move);}
-  if (player.mode == NO_MEEPLE){
+  if (player.config.mode == NO_MEEPLE){
     move_to_play = play_in_no_meeple(player.myboard, tile, player.player_id);
     mv = *move_to_play;        
   }
-  else if (player.mode == INFINITE_MEEPLE){
+  else if (player.config.mode == INFINITE_MEEPLE){
     move_to_play = play_in_infinite_meeple(player.myboard, tile, player.player_id);
     mv = *move_to_play;        
   }
   else{
-    move_to_play = play_in_finite_meeple(player.myboard, tile, player.player_id, player.n_meeples);
+    move_to_play = play_in_finite_meeple(player.myboard, tile, player.player_id, player.config);
     mv = *move_to_play;    
-    printf("n_m == %d\n", player.n_meeples);
+    printf("n_m == %d\n", player.config.meeples);
     }
   
   update_player_board(&player, mv);
@@ -120,6 +123,7 @@ struct move_t play(const struct move_t previous_move, const struct tile_t tile){
 
 void finalize(){
   free_board(player.myboard);
+  deck_free(player.config.deck);
 }
 
 

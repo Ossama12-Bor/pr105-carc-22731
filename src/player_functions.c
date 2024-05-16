@@ -38,7 +38,7 @@ struct move_t *get_optimal_position_no_meeple(struct board_t *board, struct tile
   return NULL;
 }
 
-struct move_t *get_biggest_open_road_component(struct board_t *board, struct tile_t t, int player_id, enum gamemode_t mode, int n_meeples, enum color_t color){
+struct move_t *get_biggest_open_road_component(struct board_t *board, struct tile_t t, int player_id, struct gameconfig_t config, enum color_t color){
   int _t[4] = { 0, 3 , 6, 9};  
   int size = 0;
   int verifier = -1;
@@ -52,7 +52,7 @@ struct move_t *get_biggest_open_road_component(struct board_t *board, struct til
       for (int i = 0; i < 13; ++i){
 	  if (t.c[i] == color){
 	    int size_test = number_of_vertices_in_new_component(get_graph(board), flipped_tile, possible_moves_flipped[k].box->neighbors, board_size(board), i);
-	    if (size_test > size && (mode == NO_MEEPLE || (player_id == 0 && (mode == FINITE_MEEPLE && color == GRAY && size_test >=4)) || (player_id == 0 && (mode == FINITE_MEEPLE && color == BROWN) ))) {
+	    if (size_test > size && (config.mode == NO_MEEPLE || (player_id == 0 && (config.mode == FINITE_MEEPLE && color == GRAY && size_test >=4)) || (player_id == 0 && (config.mode == FINITE_MEEPLE && color == BROWN) ))) {
 	      size = size_test;
 	      free(optimal);
 	      // Allouer une nouvelle structure move_t à chaque itération
@@ -62,8 +62,8 @@ struct move_t *get_biggest_open_road_component(struct board_t *board, struct til
 	      optimal->tile = flipped_tile;
 	      optimal->x = (possible_moves_flipped[k].box)->x;
 	      optimal->y = (possible_moves_flipped[k].box)->y;
-//		printf("%d\n",n_meeples);	      			      
-	      if ((mode == FINITE_MEEPLE) && (n_meeples > 0)){
+//		printf("%d\n",config.meeples);	      			      
+	      if ((config.mode == FINITE_MEEPLE) && (config.meeples > 0)){
 		printf("olaaa\n");
 		optimal->meeple = i;
 		}
@@ -84,7 +84,7 @@ struct move_t *get_biggest_open_road_component(struct board_t *board, struct til
 
 //infinite meeple functions
 
-struct move_t *get_biggest_finished_component(struct board_t *board, struct tile_t t, int player_id, enum color_t color, int n_meeples, enum gamemode_t mode){
+struct move_t *get_biggest_finished_component(struct board_t *board, struct tile_t t, int player_id, enum color_t color, struct gameconfig_t config){
   int size = 0;
   struct move_t *optimal = NULL;
 
@@ -93,7 +93,7 @@ struct move_t *get_biggest_finished_component(struct board_t *board, struct tile
     struct pos_t *possible_moves_flipped = get_possible_moves(board, flipped_tile);
 
     for (int k = 0; k < get_size_possible_moves(possible_moves_flipped); ++k){
-	  igraph_vector_int_t *component = get_biggest_component_of_player_in_a_position(get_graph(board), flipped_tile, possible_moves_flipped[k].box->neighbors, board_size(board), player_id, color, mode, n_meeples); 
+	  igraph_vector_int_t *component = get_biggest_component_of_player_in_a_position(get_graph(board), flipped_tile, possible_moves_flipped[k].box->neighbors, board_size(board), player_id, color, config.mode, config.meeples); 
 	  int size_test = igraph_vector_int_size(component); 
 	  if (size_test > size){
 	    free(optimal);
