@@ -38,7 +38,8 @@ build/%.o: tst/%.c
 	$(CC) -c $< $(CFLAGS) -I src -I tst -o $@
 
 
-test: alltests
+test: clean
+	./install/alltests
 
 install: server client test
 
@@ -47,6 +48,6 @@ show:
 	eog game.png
 
 clean:
-	@rm -f *~ src/*~ *.o build/*.o build/*[ao] -r install/tests *.png
+	@rm -f *~ src/*~ *.o build/*.o build/*[ao]  player*[ao] -r install/tests *.png
 
 .PHONY: client install test clean
