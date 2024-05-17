@@ -1,5 +1,4 @@
 #include "playerStruct.h"
-#include "board.h"
 #include "player_functions.h"
 #include <assert.h>
 struct player_t player;

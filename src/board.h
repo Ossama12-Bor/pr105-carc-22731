@@ -2,6 +2,7 @@
 #define _BOARD_H_
 #define NUM_TILES 72
 #include "move.h"
+#include "graph.h"
 #include "liste.h"
 
 #include <igraph.h>
