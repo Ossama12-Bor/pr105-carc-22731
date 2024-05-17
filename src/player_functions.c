@@ -1,6 +1,7 @@
 #include "player_functions.h"
 //no meeple functions
 
+// Initialize a move with given parameters.
 struct move_t* initialize_move(int player_id, struct tile_t tile, int x, int y, int meeple) {
     struct move_t* optimal = malloc(sizeof(struct move_t));
     if (optimal == NULL) {
@@ -14,7 +15,7 @@ struct move_t* initialize_move(int player_id, struct tile_t tile, int x, int y, 
     return optimal;
 }
 
-/* functtion to calculate the optimal position in no meeple mode, it returns the first move with the max score if it  exists*/
+// Calculate the optimal position in no meeple mode.
 struct move_t *get_optimal_position_no_meeple(struct board_t *board, struct tile_t t, int player_id){
   int size = 0;
   int verifier = -1;
@@ -37,8 +38,7 @@ struct move_t *get_optimal_position_no_meeple(struct board_t *board, struct tile
   if (verifier == 1) return optimal;
   return NULL;
 }
-
-
+// Calculate the move that creates the largest new open component.
 struct move_t *get_biggest_open_component(struct board_t *board, struct tile_t t, int player_id, struct gameconfig_t config, enum color_t color){
   int _t[4] = { 0, 3, 6, 9};  
   int size = 0;
@@ -79,9 +79,7 @@ struct move_t *get_biggest_open_component(struct board_t *board, struct tile_t t
   return NULL;
 }
 
-//infinite meeple functions
-
-
+// Calculate the move that creates the largest new finished component.
 struct move_t *get_biggest_finished_component(struct board_t *board, struct tile_t t, int player_id, enum color_t color, struct gameconfig_t config){
   int size = 0;
   struct move_t *optimal = NULL;
@@ -105,8 +103,7 @@ struct move_t *get_biggest_finished_component(struct board_t *board, struct tile
   }
   return optimal;
 }
-
-/* returns a move that allows you to put a meeple if it exists, returns NULL otherwise */
+// Find a position where a meeple can be placed.
 struct move_t *get_a_position_where_there_is_no_meeple(struct board_t *board, struct tile_t t, int player_id){
   for (int d = 0; d < 4; ++d){
     struct tile_t flipped_tile = flip_tile(t, d);
@@ -129,7 +126,7 @@ struct move_t *get_a_position_where_there_is_no_meeple(struct board_t *board, st
   return NULL; 
 }
 
-/* returns any correct move, otherwise a random move */
+// Get a random possible move.
 struct move_t *get_random_possible_position(struct board_t *board, struct tile_t t, int player_id){
   struct move_t *random = malloc(sizeof(struct move_t));  
   struct pos_t *possible_moves = get_possible_moves(board, t);

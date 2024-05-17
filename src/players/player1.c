@@ -31,14 +31,14 @@ struct move_t *play_in_infinite_meeple(struct board_t *board, const struct tile_
   struct move_t *brown = get_biggest_finished_component(board, t, 0, BROWN, config);
     if (brown != NULL) return brown;
     
-    
+    if (rand()%2 == 0){
     struct move_t *road_adversary = get_biggest_finished_component(board, t, 1 - 0, GRAY, config);
     if (road_adversary != NULL) return road_adversary;
-    
-    
-  struct move_t *no_meeple = get_a_position_where_there_is_no_meeple(board, t, player_id);
-   if (no_meeple != NULL) return no_meeple;
-   
+    }
+    else{
+    struct move_t *no_meeple = get_a_position_where_there_is_no_meeple(board, t, player_id);
+    if (no_meeple != NULL) return no_meeple;
+    }
 
     struct move_t *random = get_random_possible_position(board,t,player_id);
         
@@ -48,22 +48,14 @@ struct move_t *play_in_infinite_meeple(struct board_t *board, const struct tile_
 struct move_t *play_in_finite_meeple(struct board_t *board, const struct tile_t t, int player_id, struct gameconfig_t config){
 
   struct move_t *brown = get_biggest_finished_component(board, t, 0, BROWN, config);
-    if (brown != NULL) return brown;
-    
-    struct move_t *road = get_biggest_finished_component(board, t, 0, GRAY, config);
-    if (road != NULL) return road;
-    
-    struct move_t *road_adversary = get_biggest_finished_component(board, t, 1 - 0, GRAY, config);
-    if (road_adversary != NULL) return road_adversary;
-    
-    struct move_t *green = get_biggest_finished_component(board, t, 0, GREEN, config);
-    if (green != NULL) return green;
-    
-  struct move_t *open_brown_meeple = get_biggest_open_component(board, t, player_id,config,BROWN);
-    if (open_brown_meeple != NULL) return open_brown_meeple;
+   if (brown != NULL) return brown;
+   if (rand()%2 == 0){     
+   struct move_t *road_adversary = get_biggest_finished_component(board, t, 1 - 0, GRAY, config);
+   if (road_adversary != NULL) return road_adversary;
+       } else {
   struct move_t *open_road_meeple = get_biggest_open_component(board, t, player_id,config,GRAY);
    if (open_road_meeple != NULL) return open_road_meeple;
-    
+   }
     struct move_t *random = get_random_possible_position(board,t,player_id);
         
     return random;
