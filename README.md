@@ -32,3 +32,6 @@ Pour compiler l'ensemble du code sans les tests,lancez:
 
             ./install/server ./install/libplayer1.so ./install/libplayer2.so
 
+Pour visualiser le graphe aprés éxecution :
+
+     	make show
