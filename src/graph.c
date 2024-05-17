@@ -3,7 +3,7 @@
 
 
   
-struct attribute attributes[13*NUM_TILES];
+struct attribute_t attributes[13*NUM_TILES];
 
 
 /* Section 1 : adding a Tile to graph functions */

@@ -16,7 +16,7 @@ struct coord{
  * Structure describing attributes/information about nodes in a graph.
  */
  
-struct attribute {
+struct attribute_t {
     int is_there_meeple[2]; // Array indicating if player 0 or 1 has a meeple on this node
     int does_vertex_exist_in_renault; // Flag indicating if the vertex exists in Renault
     enum color_t color; // Color of the node
