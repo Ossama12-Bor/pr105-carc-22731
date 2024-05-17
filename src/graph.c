@@ -26,7 +26,7 @@ void initialize_coordinates_of_first_tile(){
 
 /* Function to add edges between nodes to represent the tile given as a parameter, where its id in the graph of the board is id_in_graph */
 
-igraph_t *create_graph_for_tile(igraph_t *graph, int id_in_graph, struct tile_t t){
+void create_graph_for_tile(igraph_t *graph, int id_in_graph, struct tile_t t){
   if (id_in_graph == 0){
     initialize_coordinates_of_first_tile(); //Treating the First tile of id = 0 separately to initialize it's Coordinates
   }
@@ -38,7 +38,6 @@ igraph_t *create_graph_for_tile(igraph_t *graph, int id_in_graph, struct tile_t 
       }
     }
   }
-  return graph; 
 }
 
 /* Function to initialize attributes for the new 13 vertices of the graph */
@@ -46,7 +45,7 @@ igraph_t *create_graph_for_tile(igraph_t *graph, int id_in_graph, struct tile_t 
 
 void initialize_new_tile(struct tile_t t,int id_in_graph){
   for(int i = id_in_graph ; i < id_in_graph + 13; ++i){
-    attributes[i].does_vertex_exist_in_renault = 1;
+    attributes[i].is_merged = 1;
     attributes[i].color = t.c[i-id_in_graph];
     attributes[i].vertex_is_open = 1;
     attributes[i].is_there_meeple[0] = 0;
@@ -78,7 +77,7 @@ void add_edges_between_vertices(igraph_t *graph, int id_in_graph, int neighbour_
 //  int neighbour_id = 13 * neighbours_ids[direction];
   for (int j = 0; j < 3; j++) {
     igraph_add_edge(graph, id_in_graph + t_[direction] + j, neighbour_id + t_neighb[direction]+2-j);
-    attributes[neighbour_id + t_neighb[direction]+2-j].does_vertex_exist_in_renault = 0;
+    attributes[neighbour_id + t_neighb[direction]+2-j].is_merged = 0;
     attributes[neighbour_id + t_neighb[direction]+2-j].vertex_is_open = 0;
     attributes[id_in_graph + t_[direction] + j].vertex_is_open = 0;
     change__coord_attribute(id_in_graph, neighbour_id, direction);
@@ -211,13 +210,13 @@ int calculate_score_in_a_component(igraph_vector_int_t *component) {
   int s = 0;
   for (int i = 0; i < igraph_vector_int_size(component); ++i) {
     enum color_t color = attributes[VECTOR(*component)[i]].color;
-    if (color == BROWN && attributes[VECTOR(*component)[i]].does_vertex_exist_in_renault == 1)
+    if (color == BROWN && attributes[VECTOR(*component)[i]].is_merged == 1)
       s += 8;
 
-    if (color == GRAY && attributes[VECTOR(*component)[i]].does_vertex_exist_in_renault == 1)
+    if (color == GRAY && attributes[VECTOR(*component)[i]].is_merged == 1)
       s += 4;
 
-    if (color == GREEN && attributes[VECTOR(*component)[i]].does_vertex_exist_in_renault == 1)
+    if (color == GREEN && attributes[VECTOR(*component)[i]].is_merged == 1)
       s += 1;
   }
   return s;

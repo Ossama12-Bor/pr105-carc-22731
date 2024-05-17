@@ -18,7 +18,7 @@ struct coord{
  
 struct attribute_t {
     int is_there_meeple[2]; // Array indicating if player 0 or 1 has a meeple on this node
-    int does_vertex_exist_in_renault; // Flag indicating if the vertex exists in Renault
+    int is_merged; // Flag indicating if the vertex exists in our representation but will be omitted when calculating score
     enum color_t color; // Color of the node
     int vertex_is_open; // Flag indicating if another edge can be added to this node when adding other tiles
     struct coord coord; // Coordinates of this node for display purposes
@@ -29,7 +29,7 @@ struct attribute_t {
 
 /* Function to add edges between nodes to represent the tile given as a parameter, where its id in the graph of the board is id_in_graph */
 
-igraph_t *create_graph_for_tile(igraph_t *graph, int id_in_graph, struct tile_t t);
+void create_graph_for_tile(igraph_t *graph, int id_in_graph, struct tile_t t);
 
 /* 
  * After creating a graph for a tile, this function adds edges between the tile and its neighbor.
