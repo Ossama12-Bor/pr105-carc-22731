@@ -14,7 +14,7 @@ struct move_t* initialize_move(int player_id, struct tile_t tile, int x, int y, 
     return optimal;
 }
 
-
+/* functtion to calculate the optimal position in no meeple mode, it returns the first move with the max score if it  exists*/
 struct move_t *get_optimal_position_no_meeple(struct board_t *board, struct tile_t t, int player_id){
   int size = 0;
   int verifier = -1;
@@ -38,8 +38,9 @@ struct move_t *get_optimal_position_no_meeple(struct board_t *board, struct tile
   return NULL;
 }
 
-struct move_t *get_biggest_open_road_component(struct board_t *board, struct tile_t t, int player_id, struct gameconfig_t config, enum color_t color){
-  int _t[4] = { 0, 3 , 6, 9};  
+
+struct move_t *get_biggest_open_component(struct board_t *board, struct tile_t t, int player_id, struct gameconfig_t config, enum color_t color){
+  int _t[4] = { 0, 3, 6, 9};  
   int size = 0;
   int verifier = -1;
   struct move_t *optimal = NULL;
@@ -50,21 +51,17 @@ struct move_t *get_biggest_open_road_component(struct board_t *board, struct til
         
     for (int k = 0; k < get_size_possible_moves(possible_moves_flipped); ++k){
       for (int i = 0; i < 13; ++i){
-	  if (t.c[i] == color){
+	  if (flipped_tile.c[i] == color){
 	    int size_test = number_of_vertices_in_new_component(get_graph(board), flipped_tile, possible_moves_flipped[k].box->neighbors, board_size(board), i);
 	    if (size_test > size && (config.mode == NO_MEEPLE || (player_id == 0 && (config.mode == FINITE_MEEPLE && color == GRAY && size_test >=4)) || (player_id == 0 && (config.mode == FINITE_MEEPLE && color == BROWN) ))) {
 	      size = size_test;
 	      free(optimal);
-	      // Allouer une nouvelle structure move_t à chaque itération
 	      optimal = malloc(sizeof(struct move_t));
-	      // Copier les valeurs dans la nouvelle structure
 	      optimal->player_id = player_id;
 	      optimal->tile = flipped_tile;
 	      optimal->x = (possible_moves_flipped[k].box)->x;
 	      optimal->y = (possible_moves_flipped[k].box)->y;
-//		printf("%d\n",config.meeples);	      			      
 	      if ((config.mode == FINITE_MEEPLE) && (config.meeples > 0)){
-		printf("olaaa\n");
 		optimal->meeple = i;
 		}
 	      else
@@ -76,13 +73,14 @@ struct move_t *get_biggest_open_road_component(struct board_t *board, struct til
 	}
       }
     
-    free(possible_moves_flipped); // Libérer la mémoire allouée pour possible_moves_flipped
+    free(possible_moves_flipped); 
   }
   if (verifier == 1) return optimal;
   return NULL;
 }
 
 //infinite meeple functions
+
 
 struct move_t *get_biggest_finished_component(struct board_t *board, struct tile_t t, int player_id, enum color_t color, struct gameconfig_t config){
   int size = 0;
@@ -108,7 +106,7 @@ struct move_t *get_biggest_finished_component(struct board_t *board, struct tile
   return optimal;
 }
 
-
+/* returns a move that allows you to put a meeple if it exists, returns NULL otherwise */
 struct move_t *get_a_position_where_there_is_no_meeple(struct board_t *board, struct tile_t t, int player_id){
   for (int d = 0; d < 4; ++d){
     struct tile_t flipped_tile = flip_tile(t, d);
@@ -131,7 +129,7 @@ struct move_t *get_a_position_where_there_is_no_meeple(struct board_t *board, st
   return NULL; 
 }
 
-
+/* returns any correct move, otherwise a random move */
 struct move_t *get_random_possible_position(struct board_t *board, struct tile_t t, int player_id){
   struct move_t *random = malloc(sizeof(struct move_t));  
   struct pos_t *possible_moves = get_possible_moves(board, t);

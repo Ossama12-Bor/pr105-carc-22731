@@ -10,7 +10,6 @@ struct player_t{
   struct board_t* myboard;
   struct gameconfig_t config;  
   char const* name;
-  int score;
 };
 
 /* Returns the player's id */

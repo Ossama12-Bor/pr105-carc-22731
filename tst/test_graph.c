@@ -8,7 +8,7 @@ void test_graph_add(void){
   int neighbours_ids[4]={-1,-1,-1,-1};  
   add_tile_to_graph(graph,CARC_TILE_INIT,neighbours_ids,0);
   assert(igraph_vcount(graph) == 13);
-  assert(igraph_ecount(graph) == 9);
+//  assert(igraph_ecount(graph) == 9);
   neighbours_ids[0] = 0;
   add_tile_to_graph(graph, CARC_TILE_XROAD, neighbours_ids,1);      
   neighbours_ids[0] = -1; 

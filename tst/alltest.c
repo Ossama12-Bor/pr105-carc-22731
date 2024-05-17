@@ -7,13 +7,14 @@
 
 int main(){
     test_board();
-    second_test_board();
+   second_test_board();
     test_graph_add();
     test_components();
     test_score();
     list_test();
     test_player();
     test_tile();
+    tst_rapport();
     return 0;
 
 }

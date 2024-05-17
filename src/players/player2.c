@@ -11,7 +11,6 @@ void initialize(enum player_color_t player_id, const struct move_t first_move,st
   player.myboard = initialize_board();
   player.config.deck = config.deck;  
   update_player_board(&player, first_move);
-  player.score = 0;
   if(config.mode == NO_MEEPLE){
     player.config.meeples = 0;
     player.config.mode = NO_MEEPLE;

@@ -290,10 +290,9 @@ igraph_vector_int_t * get_biggest_component_of_player_in_a_position(igraph_t *g,
   igraph_vector_int_init(result, 0);  
   add_tile_to_graph(graph, t, neighbours_ids, id_in_deck);
   int size =0;
-  for (int i = 0; i < 4; ++i){
+  for (int i = 0; i < 13; ++i){
       igraph_vector_int_t *result_test = does_adding_ends_a_certain_component(graph, id_in_graph, i);
       if (result_test != NULL){
-	if (mode == INFINITE_MEEPLE || ( mode == FINITE_MEEPLE && n_meeples >= 1 )) add_meeple(graph, id_in_graph + i, player_id);
 	int size_test = igraph_vector_int_size(result_test);
 	if (attributes[id_in_graph + i].color == color && (size_test > size) && (which_player_has_more_meeples_in_component(graph, id_in_graph + i) == player_id || mode == NO_MEEPLE)){
 	  size = size_test;

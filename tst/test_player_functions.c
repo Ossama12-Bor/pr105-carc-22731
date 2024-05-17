@@ -28,7 +28,7 @@ void test_player(){
  assert(move_4 != NULL);
   make_move(board, *move_4);
   free(move_4);
-  struct move_t *move_5 = get_biggest_open_road_component(board, CARC_TILE_XROAD, -1, no_meeple,GRAY);
+  struct move_t *move_5 = get_biggest_open_component(board, CARC_TILE_XROAD, -1, no_meeple,GRAY);
  assert(move_5 != NULL);
   make_move(board, *move_5);
   free(move_5);
@@ -68,3 +68,21 @@ void test_player(){
   deck_free(deck);
 }
 
+void tst_rapport(){
+  struct board_t *board;
+  struct deck_t *deck;  
+  struct gameconfig_t no_meeple = {.mode = NO_MEEPLE, .meeples = 7, .deck = deck};
+  struct gameconfig_t infinite_meeple = {.mode = INFINITE_MEEPLE, .meeples = 7, .deck = deck};
+  struct gameconfig_t finite_meeple = {.mode = FINITE_MEEPLE, .meeples = 7, .deck = deck};  
+  board = initialize_board();
+  deck = generate_deck(42);  
+  struct move_t move_1 = {.player_id = -1, .x = 0, .y = 0, .tile = CARC_TILE_XROAD, .meeple = NO_CONNECTION};
+  make_move(board, move_1);
+  struct move_t move_2 = {.player_id = -1, .x = 1, .y = 0, .tile = CARC_TILE_XROAD, .meeple = NO_CONNECTION};
+  make_move(board, move_2);
+  add_meeple(get_graph(board), 4, 1);
+  
+  display_graph(get_graph(board), "test.dot");    
+  free_board(board);
+  deck_free(deck);  
+}

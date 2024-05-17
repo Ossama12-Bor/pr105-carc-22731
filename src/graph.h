@@ -95,7 +95,7 @@ igraph_vector_int_t * get_biggest_component_of_player_in_a_position(igraph_t *g,
 
 
 
-int meeple_can_be_added(igraph_t *g, int vertex_in_graph);
+int meeple_can_be_added(igraph_t *g, int index_in_graph);
 
 /* 
  * Function that calculates the number of meeples each player has in a component represented by the node of index index_in_graph and returns the ID of the player 
@@ -103,7 +103,7 @@ int meeple_can_be_added(igraph_t *g, int vertex_in_graph);
  */
 
 
-int which_player_has_more_meeples_in_component(igraph_t *g, int vertex_in_graph);
+int which_player_has_more_meeples_in_component(igraph_t *g, int index_in_graph);
 
 /* 
  * Function to determine if a meeple can be added when a tile of id id_in_deck is added to a specific position.
@@ -112,7 +112,7 @@ int which_player_has_more_meeples_in_component(igraph_t *g, int vertex_in_graph)
 
 int meeple_can_be_added_in_a_position(igraph_t *g, struct tile_t t, int id_in_deck, int neighbours_ids[4]);
 
-void add_meeple(igraph_t *g, int vertex_in_graph, int player_id);
+void add_meeple(igraph_t *g, int index_in_graph, int player_id);
 
 /* 
  * When finishing a component after adding a tile of id id_in_deck, the players retrieve their meeples from the component. 

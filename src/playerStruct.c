@@ -16,10 +16,9 @@ void update_player_board(struct player_t* p,struct move_t m){
     if (p->config.mode == FINITE_MEEPLE){
       p->config.meeples += retrieve_meeples(get_graph(p->myboard), board_size(p->myboard)-1, p->player_id);
       p->config.meeples--;
-      printf("\nconfig.meeples == %d\n",p->config.meeples);
     }
     if (p->config.mode == INFINITE_MEEPLE){
-      printf("r = %d\n",retrieve_meeples(get_graph(p->myboard), board_size(p->myboard)-1, p->player_id));    
+      retrieve_meeples(get_graph(p->myboard), board_size(p->myboard)-1, p->player_id);    
     }
  }
  }

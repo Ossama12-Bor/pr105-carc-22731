@@ -17,9 +17,7 @@ void initialize_server(int seed){
 struct move_t play_first_move(){
   struct tile_t first_tile = deck_get(game_deck, 0);
   struct move_t first_move = {.player_id = -1, .x = 0, .y = 0, .tile = first_tile, .meeple = NO_CONNECTION};
-  printf("ll\n");  
   make_move(game_board, first_move);
-  printf("ll");
   return first_move;
 }
 
@@ -63,6 +61,9 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   finalize[1] = dlsym(handle2, "finalize");
 
   // server starts
+  int s[2];
+  s[0] = 0;
+  s[1] = 0;
 
   initialize_server(seed);
   struct move_t first_move = play_first_move();
@@ -80,17 +81,19 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
 
   struct move_t last_move_played = first_move;
   size_t d_size= deck_size(game_deck);
+  int move_is_correct = 1;  
   while( turn_counter < d_size ){
-    printf("%ld\n",turn_counter);
     struct tile_t curr_tile = deck_get(game_deck, turn_counter);
     struct move_t curr_move = play[(first_player+turn_counter-1) % 2](last_move_played, curr_tile);
-    struct pos_t *possible_moves = get_possible_moves(game_board,curr_tile);
-//    print_case(possible_moves[0].box);
-  //  printf("%d,%d\n",curr_move.x,curr_move.y);
-    free(possible_moves);
+    struct tile_t tile=curr_move.tile;
+    int id_in_empty=get_id_in_empty(get_board_empty(game_board),curr_move.x,curr_move.y);
+    struct case_t *box=get_data(get_lelement_from_empty(get_board_empty(game_board),id_in_empty));
+    s[(first_player+turn_counter-1)%2] += added_score(get_graph(game_board), curr_move.tile, box->neighbors, board_size(game_board));
+  /* struct pos_t pos={.status={id_in_empty,0},.box=box};     */
 	if(!is_correctly_played(game_board,curr_move)){
     make_move(game_board, curr_move);
 		printf("player %ld made invalid move in %ld turn \n",(first_player+turn_counter-1)%2,turn_counter);
+		move_is_correct = 0;
 		break;
 	}
     make_move(game_board, curr_move);
@@ -110,7 +113,14 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
 
   finalize[0]();
   finalize[1]();
-  
+  if(move_is_correct == 1){
+  printf("score de 1er joueur : %d\n",s[0]);
+  printf("score de 2eme joueur : %d\n",s[1]);
+  if (s[1] > s[0])
+    printf("le joueur 2 a gagné!");
+  else
+    printf("le joueur 1 a gagné!\n");
+  }
   // closing libraries
   dlclose(handle1);
   dlclose(handle2);
@@ -150,7 +160,6 @@ int main(int argc, char* argv[]){
   char* lib[2];
   // non option arguments ( the libs )
   for(int i = optind; i < argc; i++){
-    //printf("%s",argv[i]);
     lib[i-optind] = argv[i];
   }
 
