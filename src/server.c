@@ -25,7 +25,7 @@ void run_game(struct gameconfig_t config, char* lib1, char* lib2, int seed){
   void *handle2;
   char *error;
   // function pointers of each player s functions
- // char const* (*get_player_name[2])(void);
+  // char const* (*get_player_name[2])(void);
 
   void (*initialize[2]) (enum player_color_t, const struct move_t, struct gameconfig_t);
   
