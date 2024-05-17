@@ -1,9 +1,6 @@
-#include <igraph.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#define NUM_TILES 72
 #include "graph.h"
+#define NUM_TILES 72
+
 
   
 struct attribute attributes[13*NUM_TILES];

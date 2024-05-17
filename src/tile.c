@@ -1,5 +1,4 @@
 #include "tile.h"
-#include <stdlib.h>
 #define VER_NUMBER_PER_SIDE 3
 int same_colors(enum color_t *t1,enum color_t *t2,int n){
 	for(int i=0;i<n;i++){

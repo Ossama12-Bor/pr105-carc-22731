@@ -1,5 +1,5 @@
 #include "playerStruct.h"
-#include <stdio.h>
+
 
 int get_player_id(struct player_t* p){
   return p->player_id;

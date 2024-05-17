@@ -1,6 +1,4 @@
 #include "liste.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include <stddef.h>
 
 int get_ith_neighbor(struct lelement *elt,enum direction_t d){
