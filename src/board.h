@@ -104,4 +104,5 @@ struct set*get_board_empty(struct board_t*board);
 
 igraph_t * get_graph(struct board_t *board);
 
+int equal_ignore(unsigned int *t1,unsigned int *t2);
 #endif // _BOARD_H_

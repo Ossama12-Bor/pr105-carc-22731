@@ -144,12 +144,28 @@ int equal(unsigned int *t1,unsigned int *t2){
   }
   return 1;
 }
+int equal_ignore(unsigned int *t1,unsigned int *t2){
+  int changes[9]={-1,-1,-1,-1,-1,-1,-1,-1,-1};
+  int count=0;
+  for(int i=0;i<MAX_CONNECTIONS;i++){
+    if(changes[t1[i]]!=changes[t2[i]])
+      return 0;
+    else if(t1[i]!=t2[i]){
+      changes[t1[i]]=count;
+      changes[t2[i]]=count;
+      count++;
+    }
+    else
+      changes[t1[i]]=count;
+  }
+  return 1;
+}
 /*takes a tile and returns its type and its rotation direction*/
 struct status get_status(struct tile_t tile){
   for(int i=0;i<NUM_TILE_TYPES;i++){
     for(int j=0;j<NUM_SIDES;j++){
       struct tile_t flipped_tile = flip_tile(TILE_TYPES[i],j);
-      if(equal(tile.t,flipped_tile.t) && equal(tile.c,flipped_tile.c)){
+      if(equal_ignore(tile.t,flipped_tile.t) && equal(tile.c,flipped_tile.c)){
         struct status status={i,j};
         return status;
       }
