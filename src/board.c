@@ -165,7 +165,7 @@ struct status get_status(struct tile_t tile){
   for(int i=0;i<NUM_TILE_TYPES;i++){
     for(int j=0;j<NUM_SIDES;j++){
       struct tile_t flipped_tile = flip_tile(TILE_TYPES[i],j);
-      if(equal_ignore(tile.t,flipped_tile.t) && equal(tile.c,flipped_tile.c)){
+      if(equal(tile.t,flipped_tile.t) && equal(tile.c,flipped_tile.c)){
         struct status status={i,j};
         return status;
       }
