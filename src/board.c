@@ -171,6 +171,7 @@ struct status get_status(struct tile_t tile){
       }
     }
   }
+  printf("yes no way");
   struct status status={-1,0};
   return status;
 }
