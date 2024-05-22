@@ -85,7 +85,7 @@ void initialize(enum player_color_t player_id, const struct move_t first_move,st
 struct move_t play(const struct move_t previous_move, const struct tile_t tile){
   struct move_t *move_to_play = NULL;
   struct move_t mv ;  
-  if(player.player_id==WHITE ||(player.player_id==BLACK && board_size(player.myboard)!=1)){
+  if(player.player_id==BLACK||(player.player_id==WHITE && board_size(player.myboard)!=1)){
     printf("(%d,%d) my previous move\n",previous_move.x,previous_move.y);
     update_player_board(&player, previous_move);}
   if (player.config.mode == NO_MEEPLE){
