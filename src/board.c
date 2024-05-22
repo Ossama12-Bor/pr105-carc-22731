@@ -123,7 +123,6 @@ struct pos_t* get_possible_moves(struct board_t*board, struct tile_t tile){
 	new_empty=malloc(sizeof(struct pos_t )*1);
 	new_empty->status.type_id=0;
   new_empty->status.rotation=0;
-  printf("i am so sorry\n");
 	new_empty->box=get_data(get_head(board->empty));
   return new_empty;
   }
@@ -172,7 +171,6 @@ struct status get_status(struct tile_t tile){
       }
     }
   }
-  printf("yes no way\n");
   struct status status={-1,0};
   return status;
 }
