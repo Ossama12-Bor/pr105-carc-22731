@@ -28,7 +28,7 @@ void initialize(enum player_color_t player_id, const struct move_t first_move,st
 
 struct move_t play(const struct move_t previous_move, const struct tile_t tile){
 	
-  if(player.player_id!=-1){
+  if(previous_move.player_id!=-1){
     update_player_board(&player, previous_move);}
 	
   struct pos_t* possible_pos = get_possible_moves(player.myboard, tile);
