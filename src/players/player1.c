@@ -90,7 +90,7 @@ struct move_t play(const struct move_t previous_move, const struct tile_t tile){
     update_player_board(&player, previous_move);}
   if (player.config.mode == NO_MEEPLE){
     move_to_play = play_in_no_meeple(player.myboard, tile, player.player_id);
-    printf("(%d,%d) my  move\n",move_to_play.x,move_to_play.y);
+    printf("(%d,%d) my  move\n",move_to_play->x,move_to_play->y);
     mv = *move_to_play;        
   }
   else if (player.config.mode == INFINITE_MEEPLE){
