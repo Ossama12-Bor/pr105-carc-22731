@@ -4,13 +4,6 @@
 
 https://www.labri.fr/perso/renault/working/teaching/projets/2023-24-S6-C-Carcassonne.php
 
-#La page sur thor :
-
-https://thor.enseirb-matmeca.fr/ruby/projects/pr105-carc
-
-#Le rapport :
-
-https://www.overleaf.com/5585327627tpxqnfgvfzbw#9c24b4
 
 #La complilation :
 
